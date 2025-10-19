@@ -1,6 +1,7 @@
-using UnityEngine;
-using TMPro;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
 
 public class ClickerManager : MonoBehaviour
 {
@@ -13,8 +14,8 @@ public class ClickerManager : MonoBehaviour
     public GameObject moneyEffectContainer;
     public List<TMP_Text> moneyEffects = new List<TMP_Text>();
 
-    public Vector2 spawnMin = new Vector2(-0.96f, 0.5f);
-    public Vector2 spawnMax = new Vector2(-0.15f, 0.92f);
+    public Vector2 spawnMin = new Vector2(-155f, -37f);
+    public Vector2 spawnMax = new Vector2(166f, 112f);
 
 
     public void Awake()
@@ -57,27 +58,69 @@ public class ClickerManager : MonoBehaviour
 
         if (moneyEffects == null) moneyEffects = new List<TMP_Text>();
         moneyEffects.Add(moneyE);
+        StartCoroutine(FloatUpAndFade(moneyE, 400f, 1.5f));
+
     }
 
+    private IEnumerator FloatUpAndFade(TMP_Text text, float floatDistance = 50f, float duration = 1.5f)
+    {
+        RectTransform rect = text.GetComponent<RectTransform>();
+        Vector3 startPos = rect.anchoredPosition;
+        Vector3 endPos = startPos + new Vector3(0, floatDistance, 0);
+        Color originalColor = text.color;
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            // Move upward
+            rect.anchoredPosition = Vector3.Lerp(startPos, endPos, t);
+
+            // Fade out
+            float alpha = Mathf.Lerp(1f, 0f, t);
+            text.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+
+            yield return null;
+        }
+
+        moneyEffects.Remove(text);
+        Destroy(text.gameObject);
+    }
+
+
+
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+        if (moneyEffectContainer == null)
+            return;
 
-        Vector3 min = new Vector3(Mathf.Min(spawnMin.x, spawnMax.x), Mathf.Min(spawnMin.y, spawnMax.y), 0f);
-        Vector3 max = new Vector3(Mathf.Max(spawnMin.x, spawnMax.x), Mathf.Max(spawnMin.y, spawnMax.y), 0f);
+        // Get the container's RectTransform (where text spawns)
+        RectTransform rect = moneyEffectContainer.GetComponent<RectTransform>();
+        if (rect == null)
+            return;
 
-        Vector3 centerLocal = (min + max) * 0.5f;
-        Vector3 sizeLocal = max - min;
+        // Calculate center and size in local UI coordinates
+        Vector2 spawnCenter = (spawnMin + spawnMax) * 0.5f;
+        Vector2 spawnSize = new Vector2(Mathf.Abs(spawnMax.x - spawnMin.x), Mathf.Abs(spawnMax.y - spawnMin.y));
 
-        Vector3 centerWorld = transform.TransformPoint(centerLocal);
-        Vector3 sizeWorld = transform.TransformVector(sizeLocal);
+        // Convert local UI position to world position for Gizmos
+        Vector3 worldCenter = rect.TransformPoint(spawnCenter);
+        Vector3 worldSize = rect.TransformVector(spawnSize);
 
-        Color fill = new Color(1f, 0.8f, 0f, 0.12f);
+        // Colors
+        Color fill = new Color(1f, 0.8f, 0f, 0.1f);
         Color outline = new Color(1f, 0.8f, 0f, 0.9f);
 
+        // Draw box in the Scene view
         Gizmos.color = fill;
-        Gizmos.DrawCube(centerWorld, new Vector3(sizeWorld.x, sizeWorld.y, 0.01f));
+        Gizmos.DrawCube(worldCenter, new Vector3(worldSize.x, worldSize.y, 0.01f));
 
         Gizmos.color = outline;
-        Gizmos.DrawWireCube(centerWorld, new Vector3(sizeWorld.x, sizeWorld.y, 0.01f));
+        Gizmos.DrawWireCube(worldCenter, new Vector3(worldSize.x, worldSize.y, 0.01f));
     }
+#endif
 }

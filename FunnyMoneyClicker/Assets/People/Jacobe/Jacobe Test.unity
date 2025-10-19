@@ -632,13 +632,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0217789bd682394d868f6b4e17baf8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  money: 1
+  money: 0
   moneyText: {fileID: 605500815}
   moneyEffectPrefab: {fileID: 8318789264204852143, guid: e7dc153bbea8f624ba2d287d2dd567c3, type: 3}
   moneyEffectContainer: {fileID: 1361020695}
   moneyEffects: []
-  spawnMin: {x: -155, y: -37}
-  spawnMax: {x: 166, y: 112}
+  spawnMin: {x: -200, y: -70}
+  spawnMax: {x: 200, y: 150}
 --- !u!4 &957291751
 Transform:
   m_ObjectHideFlags: 0
@@ -757,8 +757,8 @@ Canvas:
   m_GameObject: {fileID: 1577376212}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 244019991}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
