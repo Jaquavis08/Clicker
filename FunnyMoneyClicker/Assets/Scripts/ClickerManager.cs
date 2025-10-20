@@ -7,6 +7,10 @@ public class ClickerManager : MonoBehaviour
 {
     public static ClickerManager instance;
 
+    public ClickerItem clickerItem;
+    public GameObject clickerParticleSystem;
+    public GameObject canvas;
+
     public int money;
     public TMP_Text moneyText;
 
@@ -37,6 +41,7 @@ public class ClickerManager : MonoBehaviour
         money += moneyValue;
 
         MoneyEffect(moneyValue);
+        ClickingParticle();
     }
 
     public void MoneyEffect(int moneyValue)
@@ -76,10 +81,8 @@ public class ClickerManager : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
 
-            // Move upward
             rect.anchoredPosition = Vector3.Lerp(startPos, endPos, t);
 
-            // Fade out
             float alpha = Mathf.Lerp(1f, 0f, t);
             text.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
 
@@ -90,7 +93,37 @@ public class ClickerManager : MonoBehaviour
         Destroy(text.gameObject);
     }
 
+    private void ClickingParticle()
+    {
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(
+            new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 1f)
+        );
 
+        GameObject clickingParticleSystemInstance = Instantiate(clickerParticleSystem, worldPos, Quaternion.identity, canvas.transform);
+
+        ParticleSystem ps = clickingParticleSystemInstance.GetComponent<ParticleSystem>();
+        if (ps != null && ps.GetComponent<Renderer>().material != clickerItem.ClciekrMaterial)
+        {
+            ps.GetComponent<Renderer>().material = clickerItem.ClciekrMaterial;
+        }
+
+        clickingParticleSystemInstance.SetActive(true);
+        ps.Play();
+        Destroy(clickingParticleSystemInstance, 0.75f);
+    }
+
+    private Vector2 GetMousePositionInCanvas()
+    {
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvas.GetComponent<RectTransform>(),
+            Input.mousePosition,
+            canvas.GetComponent<Canvas>().renderMode == RenderMode.ScreenSpaceOverlay
+                ? null
+                : canvas.GetComponent<Canvas>().worldCamera,
+            out Vector2 localPoint);
+
+        return localPoint;
+    }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
@@ -98,24 +131,19 @@ public class ClickerManager : MonoBehaviour
         if (moneyEffectContainer == null)
             return;
 
-        // Get the container's RectTransform (where text spawns)
         RectTransform rect = moneyEffectContainer.GetComponent<RectTransform>();
         if (rect == null)
             return;
 
-        // Calculate center and size in local UI coordinates
         Vector2 spawnCenter = (spawnMin + spawnMax) * 0.5f;
         Vector2 spawnSize = new Vector2(Mathf.Abs(spawnMax.x - spawnMin.x), Mathf.Abs(spawnMax.y - spawnMin.y));
 
-        // Convert local UI position to world position for Gizmos
         Vector3 worldCenter = rect.TransformPoint(spawnCenter);
         Vector3 worldSize = rect.TransformVector(spawnSize);
 
-        // Colors
         Color fill = new Color(1f, 0.8f, 0f, 0.1f);
         Color outline = new Color(1f, 0.8f, 0f, 0.9f);
 
-        // Draw box in the Scene view
         Gizmos.color = fill;
         Gizmos.DrawCube(worldCenter, new Vector3(worldSize.x, worldSize.y, 0.01f));
 
