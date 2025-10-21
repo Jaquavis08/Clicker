@@ -11,7 +11,6 @@ public class ClickerManager : MonoBehaviour
     public GameObject clickerParticleSystem;
     public GameObject canvas;
 
-    public int money;
     public TMP_Text moneyText;
 
     public TMP_Text moneyEffectPrefab;
@@ -29,16 +28,16 @@ public class ClickerManager : MonoBehaviour
 
     private void Update()
     {
-        if (money.ToString() != moneyText.ToString())
+        if (SaveDataController.currentData.moneyCount.ToString() != moneyText.ToString())
         {
-            moneyText.text = "$" + money.ToString();
+            moneyText.text = "$" + SaveDataController.currentData.moneyCount.ToString();
         }
     }
 
     public void Click()
     {
         int moneyValue = 1;
-        money += moneyValue;
+        SaveDataController.currentData.moneyCount += moneyValue;
 
         MoneyEffect(moneyValue);
         ClickingParticle();
