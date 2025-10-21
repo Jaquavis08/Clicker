@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   defaultData:
-    moneyCount: 7
+    moneyCount: 67
     lastPos: {x: 6, y: 7}
     test:
-    - {x: 7, y: 6, z: 6}
+    - {x: 67, y: 76, z: 0}
