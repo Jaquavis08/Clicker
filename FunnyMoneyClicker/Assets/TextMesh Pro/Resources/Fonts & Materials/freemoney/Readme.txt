@@ -1,0 +1,2 @@
+Hi.  Thank you for your interest in Free money.  This font is free for non commercial use, if you use if commercialy please make a donation.  My Paypal address is Jeremywoodsster@gmail.com  
+If you use this font somewhere interesting I would love to hear about it.  My email is Jeremywoodsster@gmail.com  Please check back for more of my fonts.
