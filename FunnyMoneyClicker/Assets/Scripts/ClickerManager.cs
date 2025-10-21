@@ -46,8 +46,10 @@ public class ClickerManager : MonoBehaviour
 
     public void MoneyEffect(int moneyValue)
     {
-        if (moneyEffectPrefab == null) return;
-
+        if (moneyEffectPrefab == null)
+        {
+            return;
+        }
         float minX = Mathf.Min(spawnMin.x, spawnMax.x);
         float maxX = Mathf.Max(spawnMin.x, spawnMax.x);
         float minY = Mathf.Min(spawnMin.y, spawnMax.y);
