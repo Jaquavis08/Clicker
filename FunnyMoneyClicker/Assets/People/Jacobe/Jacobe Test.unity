@@ -643,7 +643,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 810896660}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -738,7 +738,6 @@ MonoBehaviour:
   clickerItem: {fileID: 11400000, guid: a5aa0072ea722f1448cdb81cde9b2045, type: 2}
   clickerParticleSystem: {fileID: 8575960750205124052, guid: 2a7acfa3d993b214eb56506254a0f9d2, type: 3}
   canvas: {fileID: 1577376212}
-  money: 0
   moneyText: {fileID: 605500815}
   moneyEffectPrefab: {fileID: 8318789264204852143, guid: e7dc153bbea8f624ba2d287d2dd567c3, type: 3}
   moneyEffectContainer: {fileID: 1361020695}
