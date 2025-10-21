@@ -112,19 +112,6 @@ public class ClickerManager : MonoBehaviour
         Destroy(clickingParticleSystemInstance, 0.75f);
     }
 
-    private Vector2 GetMousePositionInCanvas()
-    {
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            canvas.GetComponent<RectTransform>(),
-            Input.mousePosition,
-            canvas.GetComponent<Canvas>().renderMode == RenderMode.ScreenSpaceOverlay
-                ? null
-                : canvas.GetComponent<Canvas>().worldCamera,
-            out Vector2 localPoint);
-
-        return localPoint;
-    }
-
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
