@@ -8,6 +8,6 @@ public struct SaveData
     public int moneyCount;
     public float playTime;
     public List<Vector3> test;
-    public bool upgrade1Purchased;
+    public int upgrade1Purchased;
 }
 

@@ -2,18 +2,17 @@ using UnityEngine;
 
 public class AutoClicker : MonoBehaviour
 {
-    public bool CreatingDollar = false;
-    public static int DollarIncrease = 1;
-    public int InternalIncrease;
-
+    public float maxTime = 1f;
+    public float currentTime = 0f;
+   
     void Update()
-    {
-        InternalIncrease = DollarIncrease;
-        if (CreatingDollar == false)
+    { 
+        if (SaveDataController.currentData.upgrade1Purchased == 1 && currentTime >= maxTime )
         {
-            CreatingDollar = true;
-            //StartCoroutine(CreatingDollar)
             ClickerManager.instance.Click();
+            currentTime = 0f;
         }
+        currentTime += Time.deltaTime;
+
     }
 }
