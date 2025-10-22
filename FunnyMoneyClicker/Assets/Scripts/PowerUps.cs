@@ -26,7 +26,7 @@ public class PowerUps : MonoBehaviour
         upgrade1LevelText.text = "Level " + SaveDataController.currentData.upgrade1Level.ToString();
         
         cost1.text = "$" + upgrade1Cost.ToString();
-        range.text = "Rate:  " + upgrade1Cost;
+        range.text = "Rate:  " + moneyPerInterval + "/" + maxTime + "s";
     }
 
     public void ActivatePowerUp1()
