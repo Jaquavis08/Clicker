@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   defaultData:
-    moneyCount: 67
-    lastPos: {x: 6, y: 7}
+    moneyCount: 10
+    playTime: 0
     test:
     - {x: 67, y: 76, z: 0}
+    upgrade1Level: 0
+    upgrade2Level: 0
+    moreMoney1: 0
+    cost1: 0

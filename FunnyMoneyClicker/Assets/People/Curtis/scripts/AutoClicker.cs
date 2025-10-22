@@ -7,12 +7,12 @@ public class AutoClicker : MonoBehaviour
    
     void Update()
     { 
-        if (SaveDataController.currentData.upgrade1Purchased == 1 && currentTime >= maxTime )
-        {
-            ClickerManager.instance.Click();
-            currentTime = 0f;
-        }
-        currentTime += Time.deltaTime;
+        //if (SaveDataController.currentData.upgrade1Level == 1 && currentTime >= maxTime )
+        //{
+        //    ClickerManager.instance.Click();
+        //    currentTime = 0f;
+        //}
+        //currentTime += Time.deltaTime;
 
     }
 }

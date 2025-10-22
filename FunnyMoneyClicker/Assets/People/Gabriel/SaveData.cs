@@ -5,9 +5,12 @@ using UnityEngine;
 [Serializable]
 public struct SaveData  
 {
-    public int moneyCount;
+    public float moneyCount;
     public float playTime;
     public List<Vector3> test;
-    public int upgrade1Purchased;
+    public int upgrade1Level;
+    public int upgrade2Level;
+    public float moreMoney1;
+    public float cost1;
 }
 
