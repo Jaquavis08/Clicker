@@ -64,8 +64,47 @@ public class ClickerManager : MonoBehaviour
 
         if (moneyEffects == null) moneyEffects = new List<TMP_Text>();
         moneyEffects.Add(moneyE);
+        StartCoroutine(ShakeClicker());
         StartCoroutine(FloatUpAndFade(moneyE, 400f, 1.5f));
 
+    }
+
+    private IEnumerator ShakeClicker()
+    {
+        Transform target = moneyEffectContainer.transform;
+        Quaternion originalRotation = target.rotation;
+
+        // Pick a random rotation angle (never zero)
+        float randomZ = Random.Range(-10f, 10f);
+        if (Mathf.Abs(randomZ) < 2f) // avoid being too close to 0
+            randomZ = Mathf.Sign(randomZ) * 5f;
+
+        // Rotate instantly to the random tilt
+        target.rotation = Quaternion.Euler(0f, 0f, randomZ);
+
+        // Hold that tilt briefly
+        yield return new WaitForSeconds(0.1f);
+
+        // Smoothly settle to a *different* small final rotation (not 0)
+        float finalZ = Random.Range(-5f, 5f);
+        if (Mathf.Abs(finalZ) < 1f)
+            finalZ = Mathf.Sign(finalZ) * 2f;
+
+        float resetDuration = 0.15f;
+        float elapsed = 0f;
+
+        Quaternion startRot = target.rotation;
+        Quaternion endRot = Quaternion.Euler(0f, 0f, finalZ);
+
+        while (elapsed < resetDuration)
+        {
+            elapsed += Time.deltaTime;
+            target.rotation = Quaternion.Slerp(startRot, endRot, elapsed / resetDuration);
+            yield return null;
+        }
+
+        // Ensure it stops at that small angle (never 0)
+        target.rotation = endRot;
     }
 
     private IEnumerator FloatUpAndFade(TMP_Text text, float floatDistance = 50f, float duration = 1.5f)
