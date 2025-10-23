@@ -1,43 +1,74 @@
-using UnityEngine;
-using TMPro;
+//using UnityEngine;
+//using TMPro;
 
-public class PowerUps : MonoBehaviour
-{
-    public float maxTime = 1f;
-    public float currentTime = 0f;
-    public float upgrade1Cost = 10f;
-    public TMP_Text upgrade1LevelText;
-    public TMP_Text cost1;
-    public float moneyPerInterval = 1f;
-    public TMP_Text range;
+//public class PowerUps : MonoBehaviour
+//{
+//    [Header("Base Settings")]
+//    public float baseCost = 10f;
+//    public float baseProduction = 1f;
+//    public float costIncreaseRate = 1.15f; // each level increases cost by +15%
+//    public float productionIncreaseRate = 1.05f; // small boost per level
+//    public float baseInterval = 1f;
 
+//    [Header("UI References")]
+//    public TMP_Text levelText;
+//    public TMP_Text costText;
+//    public TMP_Text rateText;
 
-    void Update()
-    {
-        upgrade1Cost = Mathf.Round(5f * Mathf.Pow(1.5f, SaveDataController.currentData.upgrade1Level + 1));
-        if (SaveDataController.currentData.upgrade1Level >= 1 && currentTime >= maxTime)
-        {
-            moneyPerInterval = Mathf.Round(2f * Mathf.Pow(1.4f, SaveDataController.currentData.upgrade1Level));
-            SaveDataController.currentData.moneyCount += moneyPerInterval;
+//    private float currentTime = 0f;
 
-            currentTime = 0f;
-        }
-        currentTime += Time.deltaTime;
-        upgrade1LevelText.text = "Level " + SaveDataController.currentData.upgrade1Level.ToString();
-        
-        cost1.text = "$" + upgrade1Cost.ToString();
-        range.text = "Rate:  " + upgrade1Cost;
-    }
+//    private void Update()
+//    {
+//        int level = SaveDataController.currentData.upgrade1Level;
 
-    public void ActivatePowerUp1()
-    {
-        if (SaveDataController.currentData.moneyCount >= upgrade1Cost)
-        {
-         
-            SaveDataController.currentData.moneyCount -= upgrade1Cost;
+//        float cost = GetUpgradeCost(level);
+//        float production = GetProduction(level);
 
-            SaveDataController.currentData.upgrade1Level += 1;
-        }
-    }
+//        // Auto money generation
+//        if (level > 0)
+//        {
+//            currentTime += Time.deltaTime;
+//            if (currentTime >= baseInterval)
+//            {
+//                currentTime = 0f;
+//                SaveDataController.currentData.moneyCount += production;
+//            }
+//        }
 
-}
+//        // UI
+//        levelText.text = $"Level {level}";
+//        costText.text = $"${NumberFormatter.Format(cost)}";
+//        rateText.text = $"Rate: {NumberFormatter.Format(production)}/{baseInterval}s";
+//    }
+
+//    public void ActivatePowerUp1()
+//    {
+//        int level = SaveDataController.currentData.upgrade1Level;
+//        float cost = GetUpgradeCost(level);
+
+//        if (SaveDataController.currentData.moneyCount >= cost)
+//        {
+//            SaveDataController.currentData.moneyCount -= cost;
+//            SaveDataController.currentData.upgrade1Level++;
+//        }
+//    }
+
+//    // --- Math Functions ---
+
+//    private float GetUpgradeCost(int level)
+//    {
+//        return Mathf.Round(baseCost * Mathf.Pow(costIncreaseRate, level));
+//    }
+
+//    private float GetProduction(int level)
+//    {
+//        // Base production grows slightly faster per level
+//        // with milestone multipliers every 25 levels
+//        float production = baseProduction * Mathf.Pow(productionIncreaseRate, level);
+
+//        int milestoneBonus = level / 25;
+//        production *= Mathf.Pow(2f, milestoneBonus); // doubles every 25 levels
+
+//        return production;
+//    }
+//}

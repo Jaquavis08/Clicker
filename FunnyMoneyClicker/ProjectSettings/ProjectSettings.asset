@@ -758,7 +758,8 @@ PlayerSettings:
   XboxOneOverrideIdentityName: 
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Purchasing: 1
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -780,11 +781,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: e463f68a-e67b-4ae7-9a1e-f32f3a9cc75f
+  cloudProjectId: 36259792-8d47-4047-a970-7d359850058b
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: FunnyMoneyClicker 2025-10-21_08-02-41
-  organizationId: jaquavistheallmighty
+  projectName: FunnyMoneyClicker
+  organizationId: dailygamerexposed
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
