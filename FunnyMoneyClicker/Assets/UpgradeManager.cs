@@ -40,11 +40,18 @@ public class UpgradeManager : MonoBehaviour
             upgrade.costText.text = $"${NumberFormatter.Format(cost)}";
 
         if (upgrade.rateText != null)
-            upgrade.rateText.text = $"Rate: {NumberFormatter.Format(production)}/{upgrade.baseInterval}s";
+        {
+            if (level > 0)
+                upgrade.rateText.text = $"Rate: +{NumberFormatter.Format(production)} per {upgrade.baseInterval}s";
+            else
+                upgrade.rateText.text = "";
+        }
     }
 
     public void BuyUpgrade(int index)
     {
+        index -= 1;
+
         if (index < 0 || index >= upgrades.Count) return;
 
         var upgrade = upgrades[index];
