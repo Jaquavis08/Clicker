@@ -6,7 +6,7 @@ using UnityEngine;
 public class ClickerManager : MonoBehaviour
 {
     public static ClickerManager instance;
-
+    public int moneyValue = 1;
     public ClickerItem clickerItem;
     public GameObject clickerParticleSystem;
     public GameObject canvas;
@@ -36,7 +36,7 @@ public class ClickerManager : MonoBehaviour
 
     public void Click()
     {
-        int moneyValue = 1;
+        
         SaveDataController.currentData.moneyCount += moneyValue;
 
         MoneyEffect(moneyValue);

@@ -13,11 +13,7 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   defaultData:
-    moneyCount: 10
+    moneyCount: 0
     playTime: 0
-    test:
-    - {x: 67, y: 76, z: 0}
-    upgrade1Level: 0
-    upgrade2Level: 0
-    moreMoney1: 0
-    cost1: 0
+    upgradeLevels: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
+    powerLevels: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
