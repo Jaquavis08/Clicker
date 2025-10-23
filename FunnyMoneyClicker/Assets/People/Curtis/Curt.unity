@@ -3138,6 +3138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0217789bd682394d868f6b4e17baf8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moneyValue: 1
   clickerItem: {fileID: 11400000, guid: a5aa0072ea722f1448cdb81cde9b2045, type: 2}
   clickerParticleSystem: {fileID: 8575960750205124052, guid: 2a7acfa3d993b214eb56506254a0f9d2, type: 3}
   canvas: {fileID: 1577376212}
@@ -4984,7 +4985,7 @@ RectTransform:
   m_GameObject: {fileID: 1413153802}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.83206, y: 0.83206, z: 0.83206}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 624722930}
@@ -5007,14 +5008,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -1770455771882255882, guid: def92a81b53f88b4f82448e65b22a869, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
