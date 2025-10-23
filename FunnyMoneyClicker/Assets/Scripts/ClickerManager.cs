@@ -30,7 +30,7 @@ public class ClickerManager : MonoBehaviour
     {
         if (SaveDataController.currentData.moneyCount.ToString() != moneyText.ToString())
         {
-            moneyText.text = "$" + SaveDataController.currentData.moneyCount.ToString();
+            moneyText.text = "$" + NumberFormatter.Format(SaveDataController.currentData.moneyCount);
         }
     }
 

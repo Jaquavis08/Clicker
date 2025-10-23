@@ -2468,13 +2468,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 843f90edaadf5e94d956d9827ec30739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTime: 1
+  baseCost: 10
+  baseProduction: 1
+  costIncreaseRate: 1.15
+  productionIncreaseRate: 1.05
+  baseInterval: 1
+  levelText: {fileID: 1389617949}
+  costText: {fileID: 2093461003}
+  rateText: {fileID: 1981677188}
   currentTime: 0
-  upgrade1Cost: 10
-  upgrade1LevelText: {fileID: 1389617949}
-  cost1: {fileID: 2093461003}
-  moneyPerInterval: 1
-  range: {fileID: 1981677188}
 --- !u!1 &920711318
 GameObject:
   m_ObjectHideFlags: 0
@@ -2926,10 +2928,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 913486902}
-        m_TargetAssemblyTypeName: PowerUps, Assembly-CSharp
-        m_MethodName: ActivatePowerUp1
-        m_Mode: 1
+      - m_Target: {fileID: 1404791520}
+        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
+        m_MethodName: BuyUpgrade
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4036,7 +4038,6 @@ GameObject:
   - component: {fileID: 1315345856}
   - component: {fileID: 1315345855}
   - component: {fileID: 1315345854}
-  - component: {fileID: 1315345857}
   m_Layer: 0
   m_Name: SaveDataController
   m_TagString: Untagged
@@ -4129,20 +4130,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1315345857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1315345853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28793b632ba2420449888d33fea77640, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxTime: 1
-  currentTime: 0
 --- !u!1 &1361020695
 GameObject:
   m_ObjectHideFlags: 0
@@ -4325,6 +4312,7 @@ GameObject:
   - component: {fileID: 1404791517}
   - component: {fileID: 1404791518}
   - component: {fileID: 1404791519}
+  - component: {fileID: 1404791520}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -4398,6 +4386,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &1404791520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404791516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d8aebf5f5d74f44bb55cee09244dfc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgrades:
+  - upgradeName: Upgrade1
+    baseCost: 10
+    baseProduction: 1
+    costIncreaseRate: 1.15
+    productionIncreaseRate: 1.05
+    baseInterval: 1
+    levelText: {fileID: 1389617949}
+    costText: {fileID: 2093461003}
+    rateText: {fileID: 1981677188}
+    currentTime: 0
 --- !u!1 &1405937046
 GameObject:
   m_ObjectHideFlags: 0
