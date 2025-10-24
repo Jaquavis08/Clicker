@@ -14,6 +14,9 @@ public class LeaderboardManager : MonoBehaviour
     [Header("Settings")]
     public float refreshInterval = 10f;
 
+    [Tooltip("How many top ranks to show on the leaderboard.")]
+    public int leaderboardLimit = 100;
+
     private float curTime = 0f;
     private const string leaderboardId = "Top_Funny_Money";
 
@@ -29,16 +32,13 @@ public class LeaderboardManager : MonoBehaviour
     {
         try
         {
-            // Initialize Unity Services
             await UnityServices.InitializeAsync();
 
-            // Sign in anonymously
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             Debug.Log("Signed in: " + AuthenticationService.Instance.IsSignedIn);
 
             isInitialized = true;
 
-            // Load initial leaderboard
             await RefreshLeaderboard();
         }
         catch (System.Exception e)
@@ -57,16 +57,14 @@ public class LeaderboardManager : MonoBehaviour
             curTime = 0f;
 
             SubmitIfChanged();
-            _ = RefreshLeaderboard(); // Refresh UI
+            _ = RefreshLeaderboard();
         }
     }
 
     private void SubmitIfChanged()
     {
-        // Get current money from save data
         long currentMoney = (long)SaveDataController.currentData.moneyCount;
 
-        // Only submit if it has changed since last submission
         if (currentMoney > lastSubmittedScore)
         {
             lastSubmittedScore = currentMoney;
@@ -80,17 +78,15 @@ public class LeaderboardManager : MonoBehaviour
 
         try
         {
-            // Get top 10 scores
             var scoresResponse = await LeaderboardsService.Instance.GetScoresAsync(
                 leaderboardId,
-                new GetScoresOptions { Limit = 10 });
+                new GetScoresOptions { Limit = leaderboardLimit });
 
             if (scoresResponse.Results.Count == 0)
             {
                 Debug.Log("Leaderboard is empty.");
             }
 
-            // Update UI
             ui.PopulateLeaderboard(scoresResponse.Results);
         }
         catch (System.Exception e)
@@ -105,15 +101,12 @@ public class LeaderboardManager : MonoBehaviour
 
         try
         {
-            // Cast double to long safely
             long scoreToSubmit = (long)System.Math.Min(totalMoney, long.MaxValue);
 
-            // Submit total money to leaderboard
             await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, scoreToSubmit);
 
             Debug.Log($"Score submitted: {scoreToSubmit}");
 
-            // Optional: Refresh after submitting
             await RefreshLeaderboard();
         }
         catch (System.Exception e)

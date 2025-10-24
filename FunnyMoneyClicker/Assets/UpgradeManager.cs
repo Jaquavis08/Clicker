@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 
@@ -6,19 +6,29 @@ public class UpgradeManager : MonoBehaviour
 {
     public List<UpgradeData> upgrades = new List<UpgradeData>();
 
+    [Header("UI")]
+    public TMP_Text totalRateText;
+
     private const float costIncreaseRate = 1.145f;
     private const float productionIncreaseRate = 1.07f;
     private const float baseInterval = 1;
 
     private void Update()
     {
+        float totalRate = 0f;
+
         for (int i = 0; i < upgrades.Count; i++)
         {
-            HandleUpgrade(upgrades[i], i);
+            totalRate += HandleUpgrade(upgrades[i], i);
+        }
+
+        if (totalRateText != null)
+        {
+            totalRateText.text = $"+${NumberFormatter.Format(totalRate)} / sec";
         }
     }
 
-    private void HandleUpgrade(UpgradeData upgrade, int index)
+    private float HandleUpgrade(UpgradeData upgrade, int index)
     {
         if (upgrade.costIncreaseRate != costIncreaseRate) upgrade.costIncreaseRate = costIncreaseRate;
         if (upgrade.productionIncreaseRate != productionIncreaseRate) upgrade.productionIncreaseRate = productionIncreaseRate;
@@ -52,6 +62,8 @@ public class UpgradeManager : MonoBehaviour
             else
                 upgrade.rateText.text = "";
         }
+
+        return (level > 0) ? (production / upgrade.baseInterval) : 0f;
     }
 
     public void BuyUpgrade(int index)
