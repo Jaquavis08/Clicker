@@ -9802,6 +9802,7 @@ GameObject:
   - component: {fileID: 1315345856}
   - component: {fileID: 1315345855}
   - component: {fileID: 1315345854}
+  - component: {fileID: 1315345857}
   m_Layer: 0
   m_Name: SaveDataManager
   m_TagString: Untagged
@@ -9894,6 +9895,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1679078174}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1315345857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315345853}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55630c212637c96479e1731cf48b20f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  versionUrl: https://github.com/Anthony966-web/FunnyMoneyClicker-Version-Check/blob/main/version.json
 --- !u!1 &1361020695
 GameObject:
   m_ObjectHideFlags: 0
