@@ -6,12 +6,12 @@ public class PowerData
 {
     [Header("Power Settings")]
     public string upgradeName; // The display name of the upgrade (e.g. "Auto Clicker", "Miner", "Factory")
-
     public float baseCost = 10f; // Starting price for the first level of this upgrade
     public float baseProduction = 1f; // How much money (or resources) this upgrade produces per cycle at level 1
-    [HideInInspector] public float costIncreaseRate = 1.145f; // Multiplier for cost growth each level (e.g. cost *= 1.15)
-    [HideInInspector] public float productionIncreaseRate = 1.07f; // Multiplier for production increase each level (e.g. production *= 1.05)
-    [HideInInspector] public float baseInterval = 1f; // Time in seconds between each automatic production tick
+
+    public float costIncreaseRate = 1.225f; // Multiplier for cost growth each level (e.g. cost *= 1.15)
+    public float productionIncreaseRate = 1.175f; // Multiplier for production increase each level (e.g. production *= 1.05)
+    [HideInInspector] public float baseInterval = 0.1f; // Time in seconds between each automatic production tick
 
     [Header("UI")]
     public TMP_Text levelText; // Reference to the UI text showing the upgrade's current level

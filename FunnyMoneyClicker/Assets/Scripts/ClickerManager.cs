@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine;
 public class ClickerManager : MonoBehaviour
 {
     public static ClickerManager instance;
-    public int moneyValue = 1;
+    public float moneyValue = 1;
     public ClickerItem clickerItem;
     public GameObject clickerParticleSystem;
     public GameObject canvas;
@@ -20,6 +20,11 @@ public class ClickerManager : MonoBehaviour
     public Vector2 spawnMin = new Vector2(-155f, -37f);
     public Vector2 spawnMax = new Vector2(166f, 112f);
 
+    [Header("Critical Click Settings")]
+    [Range(0f, 1f)] public float critChance = 0.05f; // 5% chance
+    public float critMultiplier = 2f;
+    public Color critTextColor = Color.red;
+
 
     public void Awake()
     {
@@ -28,27 +33,35 @@ public class ClickerManager : MonoBehaviour
 
     private void Update()
     {
-        if (SaveDataController.currentData.moneyCount.ToString() != moneyText.ToString())
-        {
-            moneyText.text = "$" + NumberFormatter.Format(SaveDataController.currentData.moneyCount);
-        }
+
+        moneyText.text = "$" + NumberFormatter.Format(SaveDataController.currentData.moneyCount);
     }
 
     public void Click()
     {
-        
-        SaveDataController.currentData.moneyCount += moneyValue;
+        float finalValue = moneyValue;
+        bool isCrit = Random.value < critChance;
 
-        MoneyEffect(moneyValue);
+        if (isCrit)
+        {
+            finalValue *= critMultiplier;
+            MoneyEffect(finalValue, true);
+        }
+        else
+        {
+            MoneyEffect(finalValue, false);
+        }
+
+        SaveDataController.currentData.moneyCount += finalValue;
+
         ClickingParticle();
     }
 
-    public void MoneyEffect(int moneyValue)
+    public void MoneyEffect(float moneyValue, bool isCrit = false)
     {
         if (moneyEffectPrefab == null)
-        {
             return;
-        }
+
         float minX = Mathf.Min(spawnMin.x, spawnMax.x);
         float maxX = Mathf.Max(spawnMin.x, spawnMax.x);
         float minY = Mathf.Min(spawnMin.y, spawnMax.y);
@@ -60,13 +73,25 @@ public class ClickerManager : MonoBehaviour
         Vector3 spawnPos = new Vector3(randX1, randY1, 0f);
         TMP_Text moneyE = Instantiate(moneyEffectPrefab, spawnPos, Quaternion.identity, transform);
         moneyE.transform.SetParent(moneyEffectContainer.transform, false);
-        moneyE.text = "$" + moneyValue;
 
-        if (moneyEffects == null) moneyEffects = new List<TMP_Text>();
+        if (isCrit)
+        {
+            //moneyE.text = $"<b>CRIT! ${NumberFormatter.Format(moneyValue)}</b>";
+            moneyE.text = "$" + NumberFormatter.Format(moneyValue);
+            moneyE.color = critTextColor;
+            moneyE.fontSize *= 1.4f;
+        }
+        else
+        {
+            moneyE.text = "$" + NumberFormatter.Format(moneyValue);
+        }
+
+        if (moneyEffects == null)
+            moneyEffects = new List<TMP_Text>();
+
         moneyEffects.Add(moneyE);
         StartCoroutine(ShakeClicker());
-        StartCoroutine(FloatUpAndFade(moneyE, 400f, 1.5f));
-
+        StartCoroutine(FloatUpAndFade(moneyE, isCrit ? 500f : 400f, isCrit ? 2f : 1.5f));
     }
 
     private IEnumerator ShakeClicker()
@@ -74,18 +99,14 @@ public class ClickerManager : MonoBehaviour
         Transform target = moneyEffectContainer.transform;
         Quaternion originalRotation = target.rotation;
 
-        // Pick a random rotation angle (never zero)
         float randomZ = Random.Range(-10f, 10f);
-        if (Mathf.Abs(randomZ) < 2f) // avoid being too close to 0
+        if (Mathf.Abs(randomZ) < 2f)
             randomZ = Mathf.Sign(randomZ) * 5f;
 
-        // Rotate instantly to the random tilt
         target.rotation = Quaternion.Euler(0f, 0f, randomZ);
 
-        // Hold that tilt briefly
         yield return new WaitForSeconds(0.1f);
 
-        // Smoothly settle to a *different* small final rotation (not 0)
         float finalZ = Random.Range(-5f, 5f);
         if (Mathf.Abs(finalZ) < 1f)
             finalZ = Mathf.Sign(finalZ) * 2f;
@@ -103,7 +124,6 @@ public class ClickerManager : MonoBehaviour
             yield return null;
         }
 
-        // Ensure it stops at that small angle (never 0)
         target.rotation = endRot;
     }
 
