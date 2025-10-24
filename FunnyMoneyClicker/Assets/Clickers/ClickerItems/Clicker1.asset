@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f532e66815783d14893cb3867d98a7d1, type: 3}
   m_Name: Clicker1
   m_EditorClassIdentifier: 
-  ClciekrMaterial: {fileID: 2100000, guid: 8d55c26bc52a5ae42beaae3379c25f3b, type: 2}
+  ClciekrMaterial: {fileID: 2100000, guid: ea15eee914cb2354f90e363cce30de03, type: 2}
   ClcikerSkin: {fileID: -4605435184206162098, guid: a2803541571ef334f96c11ad2f5aebac, type: 3}
