@@ -17,7 +17,17 @@ public static class NumberFormatter
         {7, "Sx" },
         {8, "Oc" },
         {9, "No" },
-        {10, "De" }
+        {10, "De" },
+        {11, "Ud" },
+        {12, "Dd" },
+        {13, "Td" },
+        {14, "Qa" },
+        {15, "Qi" },
+        {16, "Sx" },
+        {17, "Sv" },
+        {18, "Oc" },
+        {19, "No" },
+        {20, "Vg" }
     };
 
     private static readonly int charA = Convert.ToInt32('a');

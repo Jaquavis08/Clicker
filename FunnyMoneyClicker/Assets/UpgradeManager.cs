@@ -6,6 +6,10 @@ public class UpgradeManager : MonoBehaviour
 {
     public List<UpgradeData> upgrades = new List<UpgradeData>();
 
+    private const float costIncreaseRate = 1.145f;
+    private const float productionIncreaseRate = 1.07f;
+    private const float baseInterval = 1;
+
     private void Update()
     {
         for (int i = 0; i < upgrades.Count; i++)
@@ -16,12 +20,15 @@ public class UpgradeManager : MonoBehaviour
 
     private void HandleUpgrade(UpgradeData upgrade, int index)
     {
+        if (upgrade.costIncreaseRate != costIncreaseRate) upgrade.costIncreaseRate = costIncreaseRate;
+        if (upgrade.productionIncreaseRate != productionIncreaseRate) upgrade.productionIncreaseRate = productionIncreaseRate;
+        if (upgrade.baseInterval != baseInterval) upgrade.baseInterval = baseInterval;
+
         int level = SaveDataController.currentData.upgradeLevels[index];
 
         float cost = GetUpgradeCost(upgrade, level);
         float production = GetProduction(upgrade, level);
 
-        // Auto income
         if (level > 0)
         {
             upgrade.currentTime += Time.deltaTime;
@@ -32,7 +39,6 @@ public class UpgradeManager : MonoBehaviour
             }
         }
 
-        // Update UI
         if (upgrade.levelText != null)
             upgrade.levelText.text = $"Level {level}";
 
