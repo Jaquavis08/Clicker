@@ -1,22 +1,37 @@
 using System.IO;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public static class Serializer
 {
-    public static T Load<T>(T defaultValue, string filePath, string fileName) 
+    public static T Load<T>(T defaultValue, string filePath, string fileName)
     {
-        if (!File.Exists(Path.Combine(filePath, fileName)))
+        string fullPath = Path.Combine(filePath, fileName);
+
+        if (!File.Exists(fullPath))
         {
-            Debug.Log($"Save data successfully loaded default as {JsonUtility.ToJson(defaultValue)}");
-            return defaultValue;
+            Debug.Log($"No save file found. Using default data: {JsonConvert.SerializeObject(defaultValue)}");
+            return DeepCopy(defaultValue);
         }
 
-        using StreamReader sr = new(Path.Combine(filePath, fileName));
-        string json = sr.ReadToEnd();
+        string json = File.ReadAllText(fullPath);
 
-        Debug.Log($"Save data successfully loaded as {json}");
+        if (string.IsNullOrEmpty(json))
+        {
+            Debug.Log($"Save file empty. Using default data: {JsonConvert.SerializeObject(defaultValue)}");
+            return DeepCopy(defaultValue);
+        }
 
-        return JsonUtility.FromJson<T>(json);
+        T loadedData = JsonConvert.DeserializeObject<T>(json);
+
+        if (loadedData == null)
+        {
+            Debug.LogWarning("Loaded data was null or incompatible. Using default data.");
+            return DeepCopy(defaultValue);
+        }
+
+        Debug.Log($"Save data successfully loaded: {json}");
+        return loadedData;
     }
 
     public static void Save<T>(T data, string filePath, string fileName)
@@ -24,12 +39,16 @@ public static class Serializer
         if (!Directory.Exists(filePath))
             Directory.CreateDirectory(filePath);
 
-        string json = JsonUtility.ToJson(data);
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+        File.WriteAllText(Path.Combine(filePath, fileName), json);
 
-        using StreamWriter sw = new(Path.Combine(filePath, fileName));
-        sw.Write(json);
-        sw.Flush();
+        Debug.Log($"Save data successfully saved: {json}");
+    }
 
-        Debug.Log($"Save data successfully saved as {json}");
+    private static T DeepCopy<T>(T obj)
+    {
+        if (obj == null) return default;
+        string json = JsonConvert.SerializeObject(obj);
+        return JsonConvert.DeserializeObject<T>(json);
     }
 }

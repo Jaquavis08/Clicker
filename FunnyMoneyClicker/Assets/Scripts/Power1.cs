@@ -1,12 +1,14 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Services.Economy.Model;
 using UnityEngine;
 
 public class Power1 : MonoBehaviour
 {
-
-
     public List<PowerData> Powers = new List<PowerData>();
+
+    //private const float costIncreaseRate = 1.225f;
+    //private const float productionIncreaseRate = 1.175f;
+    private const float baseInterval = 0.1f;
 
     private void Update()
     {
@@ -18,37 +20,78 @@ public class Power1 : MonoBehaviour
 
     private void HandlePowers(PowerData power, int index)
     {
+        //if (power.costIncreaseRate != costIncreaseRate) power.costIncreaseRate = costIncreaseRate;
+        //if (power.productionIncreaseRate != productionIncreaseRate) power.productionIncreaseRate = productionIncreaseRate;
+        if (power.baseInterval != baseInterval) power.baseInterval = baseInterval;
+
         int level = SaveDataController.currentData.powerLevels[index];
 
         float cost = GetPowerCost(power, level);
         float production = GetProduction(power, level);
 
-        // Auto income
         if (level > 0)
         {
-            ClickerManager.instance.moneyValue = level + 1;
             power.currentTime += Time.deltaTime;
             if (power.currentTime >= power.baseInterval)
             {
+                print(index);
+
+                if (index == 0) // Upgrade 1
+                {
+                    ClickerManager.instance.moneyValue = production;
+                }
+                else if (index == 1) // Upgrade 2
+                {
+                    
+                }
+                else if (index == 2)// Upgrade 3
+                {
+
+                }
+                else if (index == 3)// Upgrade 4
+                {
+                    ClickerManager.instance.critChance = production;
+                }
+                else if (index == 4)// Upgrade 5
+                {
+
+                }
+                else if (index == 5)// Upgrade 6
+                {
+
+                }
+                else if (index == 6)// Upgrade 7
+                {
+
+                }
+
                 power.currentTime = 0f;
-                //SaveDataController.currentData.moneyCount += production;
             }
         }
 
-        // Update UI
         if (power.levelText != null)
             power.levelText.text = $"Level {level}";
 
         if (power.costText != null)
             power.costText.text = $"${NumberFormatter.Format(cost)}";
 
-        //if (power.rateText != null)
-        //{
-        //    if (level > 0)
-        //        power.rateText.text = $"Rate: +{NumberFormatter.Format(production)} per {power.baseInterval}s";
-        //    else
-        //        power.rateText.text = "";
-        //}
+        if (power.rateText != null)
+        {
+            if (level > 0)
+                power.rateText.text = GetPowerDescription(index, production);
+            else
+                power.rateText.text = "";
+        }
+    }
+
+    private string GetPowerDescription(int index, float production)
+    {
+        switch (index)
+        {
+            case 0: return $"+${NumberFormatter.Format(production)} per click";
+            case 3: return $"🎯 Crit chance: {production * 10:F1}%";
+            default: return "";
+        }
     }
 
     public void BuyUpgrade(int index)
@@ -75,7 +118,6 @@ public class Power1 : MonoBehaviour
 
     private float GetProduction(PowerData power, int level)
     {
-
         float production = power.baseProduction * Mathf.Pow(power.productionIncreaseRate, level);
         int milestoneBonus = level / 25;
         production *= Mathf.Pow(2f, milestoneBonus);

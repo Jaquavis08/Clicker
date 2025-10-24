@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.IO;
 using UnityEngine;
 
@@ -11,7 +12,9 @@ public class SaveDataController : MonoBehaviour
 
     public void Load()
     {
-        currentData = Serializer.Load(defaultData.defaultData, Path.Combine(Application.persistentDataPath, filePath), fileName);
+        SaveData loadedData = Serializer.Load(defaultData.defaultData, Path.Combine(Application.persistentDataPath, filePath), fileName);
+
+        currentData = JsonConvert.DeserializeObject<SaveData>(JsonConvert.SerializeObject(loadedData));
     }
 
     public void Save()
