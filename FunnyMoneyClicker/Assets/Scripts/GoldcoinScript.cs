@@ -1,5 +1,3 @@
-using System.Threading;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GoldcoinScript : MonoBehaviour
