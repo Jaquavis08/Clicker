@@ -57,10 +57,13 @@ public class Power1 : MonoBehaviour
                         ClickerManager.instance.critChance = critChance;
                         break;
                     case 4: // Upgrade 5
-
+                        float newTime = power.baseProduction - (level * power.productionIncreaseRate);
+                        UpgradeManager.instance.baseInterval = newTime;
+                        print(newTime);
                         break;
                     case 5: // Upgrade 6
-
+                        float offlineIncome = power.baseProduction + (level * power.productionIncreaseRate);
+                        SaveDataController.currentData.offlineEarningsMultiplier = offlineIncome;
                         break;
                     case 6: // Upgrade 7
 
@@ -90,9 +93,13 @@ public class Power1 : MonoBehaviour
     {
         switch (index)
         {
-            case 0: return $"+${NumberFormatter.Format(production)} per click";
+            case 0: return $"${NumberFormatter.Format(production)} Per click";
             case 1: return $"Spawn chance: {GoldCoinSpawner.instance.spawnChance * 100:F1}%";
+            case 2: return null;
             case 3: return $"Crit chance: {ClickerManager.instance.critChance * 100:F1}%";
+            case 4: return $"Upgrade Rate: {UpgradeManager.instance.baseInterval:F2}/s";
+            case 5: return $"Offline Income: {SaveDataController.currentData.offlineEarningsMultiplier * 100:F1}%"; ;
+            case 6: return null;
             default: return "";
         }
     }

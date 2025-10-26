@@ -4,14 +4,23 @@ using System.Collections.Generic;
 
 public class UpgradeManager : MonoBehaviour
 {
+    public static UpgradeManager instance;
+
     public List<UpgradeData> upgrades = new List<UpgradeData>();
 
     [Header("UI")]
     public TMP_Text totalRateText;
+    public double moneyPerSecond;
 
     private const float costIncreaseRate = 1.145f;
     private const float productionIncreaseRate = 1.07f;
-    private const float baseInterval = 1;
+
+    public float baseInterval = 1;
+
+    public void Awake()
+    {
+        instance = this;
+    }
 
     private void Update()
     {
@@ -24,6 +33,7 @@ public class UpgradeManager : MonoBehaviour
 
         if (totalRateText != null)
         {
+            moneyPerSecond = totalRate;
             totalRateText.text = $"+${NumberFormatter.Format(totalRate)} / sec";
         }
     }
@@ -58,7 +68,9 @@ public class UpgradeManager : MonoBehaviour
         if (upgrade.rateText != null)
         {
             if (level > 0)
+            {
                 upgrade.rateText.text = $"Rate: +{NumberFormatter.Format(production)} per {upgrade.baseInterval}s";
+            }
             else
                 upgrade.rateText.text = "";
         }
