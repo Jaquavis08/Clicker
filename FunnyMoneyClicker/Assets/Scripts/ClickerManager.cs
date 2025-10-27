@@ -38,10 +38,10 @@ public class ClickerManager : MonoBehaviour
 
         displayedMoney += (SaveDataController.currentData.moneyCount - displayedMoney) * Time.deltaTime * 4.0;
 
-        if (Mathf.Abs((int)(SaveDataController.currentData.moneyCount - displayedMoney)) < 0.01f)
-        {
+        //if (Mathf.Abs((int)(SaveDataController.currentData.moneyCount - displayedMoney)) < 0.01f)
+        //}
             displayedMoney = SaveDataController.currentData.moneyCount;
-        }
+        //}
         moneyText.text = "$" + NumberFormatter.Format(displayedMoney);
     }
 
