@@ -3,6 +3,7 @@ using Unity.Services.Economy.Model;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
+
 public class Power1 : MonoBehaviour
 {
     public List<PowerData> Powers = new List<PowerData>();
@@ -49,7 +50,8 @@ public class Power1 : MonoBehaviour
                         //GoldCoinSpawner.instance.bonusAmount = production;
                         break;
                     case 2: // Upgrade 3
-
+                        if (GachaManager.instance != null)
+                            GachaManager.instance.isGacha = true;
                         break;
                     case 3: // Upgrade 4
                             //ClickerManager.instance.critChance = production;
@@ -65,7 +67,7 @@ public class Power1 : MonoBehaviour
                         float offlineIncome = power.baseProduction + (level * power.productionIncreaseRate);
                         SaveDataController.currentData.offlineEarningsMultiplier = offlineIncome;
                         break;
-                    case 6: // Upgrade 7
+                    case 6: // Upgrade 7 -> open gacha based on level
 
                         break;
                 }
@@ -95,7 +97,7 @@ public class Power1 : MonoBehaviour
         {
             case 0: return $"${NumberFormatter.Format(production)} Per click";
             case 1: return $"Spawn chance: {GoldCoinSpawner.instance.spawnChance * 100:F1}%";
-            case 2: return null;
+            case 2: return "Gacha: Tap to pull a reward"; 
             case 3: return $"Crit chance: {ClickerManager.instance.critChance * 100:F1}%";
             case 4: return $"Upgrade Rate: {UpgradeManager.instance.baseInterval:F2}/s";
             case 5: return $"Offline Income: {SaveDataController.currentData.offlineEarningsMultiplier * 100:F1}%"; ;
