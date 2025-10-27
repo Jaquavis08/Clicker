@@ -14,6 +14,7 @@ public class ClickerManager : MonoBehaviour
     public TMP_Text moneyText;
 
     public TMP_Text moneyEffectPrefab;
+    public GameObject funnyMoney;
     public GameObject moneyEffectContainer;
     public List<TMP_Text> moneyEffects = new List<TMP_Text>();
 
@@ -25,6 +26,7 @@ public class ClickerManager : MonoBehaviour
     public float critMultiplier = 2f;
     public Color critTextColor = Color.red;
 
+    private double displayedMoney = 0;
 
     public void Awake()
     {
@@ -34,7 +36,13 @@ public class ClickerManager : MonoBehaviour
     private void Update()
     {
 
-        moneyText.text = "$" + NumberFormatter.Format(SaveDataController.currentData.moneyCount);
+        displayedMoney += (SaveDataController.currentData.moneyCount - displayedMoney) * Time.deltaTime * 4.0;
+
+        if (Mathf.Abs((int)(SaveDataController.currentData.moneyCount - displayedMoney)) < 0.01f)
+        {
+            displayedMoney = SaveDataController.currentData.moneyCount;
+        }
+        moneyText.text = "$" + NumberFormatter.Format(displayedMoney);
     }
 
     public void Click()
@@ -96,7 +104,7 @@ public class ClickerManager : MonoBehaviour
 
     private IEnumerator ShakeClicker()
     {
-        Transform target = moneyEffectContainer.transform;
+        Transform target = funnyMoney.transform;
         Quaternion originalRotation = target.rotation;
 
         float randomZ = Random.Range(-10f, 10f);
@@ -175,10 +183,10 @@ public class ClickerManager : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (moneyEffectContainer == null)
+        if (funnyMoney == null)
             return;
 
-        RectTransform rect = moneyEffectContainer.GetComponent<RectTransform>();
+        RectTransform rect = funnyMoney.GetComponent<RectTransform>();
         if (rect == null)
             return;
 

@@ -4,6 +4,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Leaderboards;
 using System.Threading.Tasks;
 using Unity.Services.Leaderboards.Models;
+using System;
 using System.Collections.Generic;
 
 public class LeaderboardManager : MonoBehaviour
@@ -13,15 +14,16 @@ public class LeaderboardManager : MonoBehaviour
 
     [Header("Settings")]
     public float refreshInterval = 10f;
-
-    [Tooltip("How many top ranks to show on the leaderboard.")]
     public int leaderboardLimit = 100;
 
     private float curTime = 0f;
     private const string leaderboardId = "Top_Funny_Money";
 
-    private long lastSubmittedScore = 0;
+    private double lastSubmittedScore = 0;
     private bool isInitialized = false;
+
+    // Always store a scaling factor for leaderboard
+    private double leaderboardScale = 1.0;
 
     async void Start()
     {
@@ -33,15 +35,13 @@ public class LeaderboardManager : MonoBehaviour
         try
         {
             await UnityServices.InitializeAsync();
-
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             Debug.Log("Signed in: " + AuthenticationService.Instance.IsSignedIn);
 
             isInitialized = true;
-
             await RefreshLeaderboard();
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Debug.LogError($"Leaderboard initialization failed: {e.Message}");
         }
@@ -55,7 +55,6 @@ public class LeaderboardManager : MonoBehaviour
         if (curTime >= refreshInterval)
         {
             curTime = 0f;
-
             SubmitIfChanged();
             _ = RefreshLeaderboard();
         }
@@ -63,7 +62,7 @@ public class LeaderboardManager : MonoBehaviour
 
     private void SubmitIfChanged()
     {
-        long currentMoney = (long)SaveDataController.currentData.moneyCount;
+        double currentMoney = SaveDataController.currentData.moneyCount;
 
         if (currentMoney > lastSubmittedScore)
         {
@@ -82,14 +81,9 @@ public class LeaderboardManager : MonoBehaviour
                 leaderboardId,
                 new GetScoresOptions { Limit = leaderboardLimit });
 
-            if (scoresResponse.Results.Count == 0)
-            {
-                Debug.Log("Leaderboard is empty.");
-            }
-
-            ui.PopulateLeaderboard(scoresResponse.Results);
+            ui.PopulateLeaderboard(scoresResponse.Results, SaveDataController.currentData.moneyCount);
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Debug.LogError($"Failed to refresh leaderboard: {e.Message}");
         }
@@ -101,15 +95,28 @@ public class LeaderboardManager : MonoBehaviour
 
         try
         {
-            long scoreToSubmit = (long)System.Math.Min(totalMoney, long.MaxValue);
+            if (totalMoney < 0) totalMoney = 0;
 
-            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, scoreToSubmit);
+            long scaledScore = 0;
 
-            Debug.Log($"Score submitted: {scoreToSubmit}");
+            if (totalMoney <= long.MaxValue)
+            {
+                // Safe to submit directly
+                scaledScore = (long)totalMoney;
+                leaderboardScale = 1.0;
+            }
+            else
+            {
+                // Scale down so it fits in long.MaxValue
+                leaderboardScale = totalMoney / long.MaxValue;
+                scaledScore = long.MaxValue;
+            }
 
-            await RefreshLeaderboard();
+            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, scaledScore);
+
+            Debug.Log($"Score submitted: {scaledScore} / realMoney: {totalMoney} / scale: {leaderboardScale}");
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Debug.LogError($"Failed to submit score: {e.Message}");
         }

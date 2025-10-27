@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Unity.Services.Economy.Model;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class Power1 : MonoBehaviour
@@ -9,6 +10,7 @@ public class Power1 : MonoBehaviour
     //private const float costIncreaseRate = 1.225f;
     //private const float productionIncreaseRate = 1.175f;
     private const float baseInterval = 0.1f;
+
 
     private void Update()
     {
@@ -25,7 +27,7 @@ public class Power1 : MonoBehaviour
         if (power.baseInterval != baseInterval) power.baseInterval = baseInterval;
 
         int level = SaveDataController.currentData.powerLevels[index];
-
+        
         float cost = GetPowerCost(power, level);
         float production = GetProduction(power, level);
 
@@ -35,34 +37,37 @@ public class Power1 : MonoBehaviour
             if (power.currentTime >= power.baseInterval)
             {
                 print(index);
+                switch (index)
+                {
+                    case 0: // Upgrade 1
+                        ClickerManager.instance.moneyValue = production;
+                        break;
+                    case 1: // Upgrade 2
+                        GoldCoinSpawner.instance.EnableSpawner(true);
+                        float goldCoinChance = power.baseProduction + (level * power.productionIncreaseRate);
+                        GoldCoinSpawner.instance.spawnChance = goldCoinChance;
+                        //GoldCoinSpawner.instance.bonusAmount = production;
+                        break;
+                    case 2: // Upgrade 3
 
-                if (index == 0) // Upgrade 1
-                {
-                    ClickerManager.instance.moneyValue = production;
-                }
-                else if (index == 1) // Upgrade 2
-                {
-                    
-                }
-                else if (index == 2)// Upgrade 3
-                {
+                        break;
+                    case 3: // Upgrade 4
+                            //ClickerManager.instance.critChance = production;
+                        float critChance = power.baseProduction + (level * power.productionIncreaseRate);
+                        ClickerManager.instance.critChance = critChance;
+                        break;
+                    case 4: // Upgrade 5
+                        float newTime = power.baseProduction - (level * power.productionIncreaseRate);
+                        UpgradeManager.instance.baseInterval = newTime;
+                        print(newTime);
+                        break;
+                    case 5: // Upgrade 6
+                        float offlineIncome = power.baseProduction + (level * power.productionIncreaseRate);
+                        SaveDataController.currentData.offlineEarningsMultiplier = offlineIncome;
+                        break;
+                    case 6: // Upgrade 7
 
-                }
-                else if (index == 3)// Upgrade 4
-                {
-                    ClickerManager.instance.critChance = production;
-                }
-                else if (index == 4)// Upgrade 5
-                {
-
-                }
-                else if (index == 5)// Upgrade 6
-                {
-
-                }
-                else if (index == 6)// Upgrade 7
-                {
-
+                        break;
                 }
 
                 power.currentTime = 0f;
@@ -88,8 +93,13 @@ public class Power1 : MonoBehaviour
     {
         switch (index)
         {
-            case 0: return $"+${NumberFormatter.Format(production)} per click";
-            case 3: return $"🎯 Crit chance: {production * 10:F1}%";
+            case 0: return $"${NumberFormatter.Format(production)} Per click";
+            case 1: return $"Spawn chance: {GoldCoinSpawner.instance.spawnChance * 100:F1}%";
+            case 2: return null;
+            case 3: return $"Crit chance: {ClickerManager.instance.critChance * 100:F1}%";
+            case 4: return $"Upgrade Rate: {UpgradeManager.instance.baseInterval:F2}/s";
+            case 5: return $"Offline Income: {SaveDataController.currentData.offlineEarningsMultiplier * 100:F1}%"; ;
+            case 6: return null;
             default: return "";
         }
     }
