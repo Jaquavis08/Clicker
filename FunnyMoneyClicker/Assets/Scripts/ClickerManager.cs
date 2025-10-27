@@ -177,7 +177,7 @@ public class ClickerManager : MonoBehaviour
 
         clickingParticleSystemInstance.SetActive(true);
         ps.Play();
-        Destroy(clickingParticleSystemInstance, 0.75f);
+        //ps.Emit(1000);
     }
 
 #if UNITY_EDITOR
