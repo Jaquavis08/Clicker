@@ -9,11 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/Game.unity
-    guid: b016534e61055ea4ba401c72280a303e
+    path: Assets/People/Gabriel/Gabe.unity
+    guid: 63974390db39a12459238c81641c214b
   - enabled: 1
     path: Assets/Scenes/Main menu.unity
     guid: 899d58d31b9bb5345be60867fdc4e5a8
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: b016534e61055ea4ba401c72280a303e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
