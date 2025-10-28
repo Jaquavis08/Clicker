@@ -2,8 +2,8 @@ using UnityEngine;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.Leaderboards;
-using System.Threading.Tasks;
 using Unity.Services.Leaderboards.Models;
+using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 
@@ -22,8 +22,7 @@ public class LeaderboardManager : MonoBehaviour
     private double lastSubmittedScore = 0;
     private bool isInitialized = false;
 
-    // Always store a scaling factor for leaderboard
-    private double leaderboardScale = 1.0;
+    private Dictionary<string, double> playerScales = new Dictionary<string, double>();
 
     async void Start()
     {
@@ -39,7 +38,7 @@ public class LeaderboardManager : MonoBehaviour
             Debug.Log("Signed in: " + AuthenticationService.Instance.IsSignedIn);
 
             isInitialized = true;
-            await RefreshLeaderboard();
+            //await RefreshLeaderboard();
         }
         catch (Exception e)
         {
@@ -81,7 +80,7 @@ public class LeaderboardManager : MonoBehaviour
                 leaderboardId,
                 new GetScoresOptions { Limit = leaderboardLimit });
 
-            ui.PopulateLeaderboard(scoresResponse.Results, SaveDataController.currentData.moneyCount);
+            ui.PopulateLeaderboard(scoresResponse.Results, playerScales);
         }
         catch (Exception e)
         {
@@ -97,24 +96,20 @@ public class LeaderboardManager : MonoBehaviour
         {
             if (totalMoney < 0) totalMoney = 0;
 
-            long scaledScore = 0;
+            double scale = 1.0;
 
-            if (totalMoney <= long.MaxValue)
+            if (totalMoney > long.MaxValue)
             {
-                // Safe to submit directly
-                scaledScore = (long)totalMoney;
-                leaderboardScale = 1.0;
-            }
-            else
-            {
-                // Scale down so it fits in long.MaxValue
-                leaderboardScale = totalMoney / long.MaxValue;
-                scaledScore = long.MaxValue;
+                scale = totalMoney / long.MaxValue;
             }
 
-            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, scaledScore);
+            long scoreToSubmit = (long)(totalMoney / scale);
 
-            Debug.Log($"Score submitted: {scaledScore} / realMoney: {totalMoney} / scale: {leaderboardScale}");
+            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, scoreToSubmit);
+
+            Debug.Log($"Score submitted: {scoreToSubmit} / realMoney: {totalMoney} / scale: {scale}");
+
+            playerScales[AuthenticationService.Instance.PlayerId] = scale;
         }
         catch (Exception e)
         {

@@ -38,10 +38,10 @@ public class ClickerManager : MonoBehaviour
 
         displayedMoney += (SaveDataController.currentData.moneyCount - displayedMoney) * Time.deltaTime * 4.0;
 
-        if (Mathf.Abs((int)(SaveDataController.currentData.moneyCount - displayedMoney)) < 0.01f)
-        {
+        //if (Mathf.Abs((int)(SaveDataController.currentData.moneyCount - displayedMoney)) < 0.01f)
+        //}
             displayedMoney = SaveDataController.currentData.moneyCount;
-        }
+        //}
         moneyText.text = "$" + NumberFormatter.Format(displayedMoney);
     }
 
@@ -167,7 +167,7 @@ public class ClickerManager : MonoBehaviour
             new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 1f)
         );
 
-        GameObject clickingParticleSystemInstance = Instantiate(clickerParticleSystem, worldPos, Quaternion.identity, canvas.transform);
+        GameObject clickingParticleSystemInstance = Instantiate(clickerParticleSystem, worldPos, Quaternion.identity, moneyEffectContainer.transform);
 
         ParticleSystem ps = clickingParticleSystemInstance.GetComponent<ParticleSystem>();
         if (ps != null && ps.GetComponent<Renderer>().material != clickerItem.ClciekrMaterial)
@@ -177,7 +177,7 @@ public class ClickerManager : MonoBehaviour
 
         clickingParticleSystemInstance.SetActive(true);
         ps.Play();
-        Destroy(clickingParticleSystemInstance, 0.75f);
+        //ps.Emit(1000);
     }
 
 #if UNITY_EDITOR

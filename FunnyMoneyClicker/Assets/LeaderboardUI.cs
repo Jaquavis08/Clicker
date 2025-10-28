@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Unity.Services.Leaderboards.Models;
-using System;
 
 public class LeaderboardUI : MonoBehaviour
 {
     [Header("UI References")]
     public Transform contentParent;
     public GameObject entryPrefab;
+    public GameObject leaderboardVisual;
 
     [Header("Rank Colors")]
     public Color firstPlaceColor = new Color(1f, 0.84f, 0f);
@@ -16,16 +16,22 @@ public class LeaderboardUI : MonoBehaviour
     public Color thirdPlaceColor = new Color(0.8f, 0.5f, 0.2f);
     public Color defaultColor = Color.white;
 
-    public void PopulateLeaderboard(List<LeaderboardEntry> entries, double realMoney)
+    private Dictionary<string, double> playerScales = new Dictionary<string, double>();
+
+    private void Awake()
     {
+        leaderboardVisual.gameObject.SetActive(false);
+    }
+
+    public void PopulateLeaderboard(List<LeaderboardEntry> entries, Dictionary<string, double> scales)
+    {
+
+        playerScales = scales;
+
         foreach (Transform child in contentParent)
             Destroy(child.gameObject);
 
-        if (entries == null || entries.Count == 0)
-        {
-            Debug.Log("No leaderboard entries to display.");
-            return;
-        }
+        if (entries == null || entries.Count == 0) return;
 
         int rank = 1;
         foreach (var entry in entries)
@@ -33,9 +39,12 @@ public class LeaderboardUI : MonoBehaviour
             GameObject lEntry = Instantiate(entryPrefab, contentParent);
             TMP_Text textComponent = lEntry.GetComponentInChildren<TMP_Text>();
 
-            // Display the real money using game data, not leaderboard scaled value
-            double displayMoney = SaveDataController.currentData.moneyCount;
-            string formattedScore = NumberFormatter.Format(displayMoney);
+            double scale = 1.0;
+            if (playerScales != null && playerScales.ContainsKey(entry.PlayerId))
+                scale = playerScales[entry.PlayerId];
+
+            double realScore = entry.Score * scale;
+            string formattedScore = NumberFormatter.Format(realScore);
 
             string displayName = !string.IsNullOrEmpty(entry.PlayerName) ? entry.PlayerName : entry.PlayerId;
             textComponent.text = $"{rank}. {displayName} - ${formattedScore}";
@@ -49,6 +58,9 @@ public class LeaderboardUI : MonoBehaviour
             }
 
             rank++;
+
         }
+
+        leaderboardVisual.gameObject.SetActive(true);
     }
 }

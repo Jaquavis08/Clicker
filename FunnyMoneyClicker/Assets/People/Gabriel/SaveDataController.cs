@@ -66,7 +66,15 @@ public class SaveDataController : MonoBehaviour
     private void OnApplicationPause(bool pause)
     {
         if (pause)
-            Save();
+        {
+            Save(); // save when leaving
+        }
+        else
+        {
+            // load and calculate offline earnings when returning
+            Load();
+            HandleOfflineEarnings();
+        }
     }
 
     private void OnApplicationQuit()
