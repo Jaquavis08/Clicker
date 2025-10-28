@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GachaManager : MonoBehaviour
@@ -10,10 +11,14 @@ public class GachaManager : MonoBehaviour
     public GameObject effect;
     public GameObject uiEffectContainer;
     public float luckMultiplier = 1f; // 1 = normal luck, 1.1 = +10% luck, etc.
+    public bool rolling = false;
+    public float cooldownTime;
+    public float maxtime = 2f;
 
     private void Update()
     {
         gacha.SetActive(isGacha);
+        cooldownTime += Time.deltaTime;
     }
 
     [System.Serializable]
@@ -36,14 +41,29 @@ public class GachaManager : MonoBehaviour
 
     public void TryOpenGacha()
     {
-        //int pulls = Mathf.Max(1, pullsPerOpen + (gachaLevel / 10));
-
-        for (int i = 0; i < pullsPerOpen; i++)
+        if (cooldownTime >= maxtime)
         {
-            var reward = PullReward();
-            GrantReward(reward);
+            if (rolling) return;
+            rolling = true;
+
+            if (SaveDataController.currentData.moneyCount >= 1000)
+            {
+                SaveDataController.currentData.moneyCount -= 1000;
+                //int pulls = Mathf.Max(1, pullsPerOpen + (gachaLevel / 10));
+
+                for (int i = 0; i < pullsPerOpen; i++)
+                {
+                    var reward = PullReward();
+                    GrantReward(reward);
+
+                }
+            }
+        cooldownTime = 0f;
         }
+
     }
+
+
 
     private GachaReward PullReward()
     {
@@ -91,7 +111,10 @@ public class GachaManager : MonoBehaviour
         {
             Instantiate(reward.prefab, ClickerManager.instance.transform.position, Quaternion.identity);
         }
-
+        if (SaveDataController.currentData.moneyCount <= 0)
+        { SaveDataController.currentData.moneyCount = 0; }
         Debug.Log($"🎉 Gacha: Won {reward.id}! +{reward.goldAmount}");
+
+        rolling = false;
     }
 }
