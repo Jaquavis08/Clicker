@@ -1,65 +1,78 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.Networking;
-using System.Threading.Tasks;
+using System.Collections;
 
 public class VersionChecker : MonoBehaviour
 {
-    //[Header("Version Settings")]
-    //public string versionUrl = "https://github.com/Anthony966-web/FunnyMoneyClicker-Version-Check/blob/main/version.json";
+    [Header("Version Check URL")]
+    public string versionFileURL = "https://raw.githubusercontent.com/Anthony966-web/FunnyMoneyClicker-Version-Check/main/version.json";
 
-    //private async void Awake()
-    //{
-    //    await CheckVersion();
-    //}
+    [Header("Current Game Version")]
+    public string currentVersion = "1.1.0";
 
-    //private async Task CheckVersion()
-    //{
-    //    using (UnityWebRequest request = UnityWebRequest.Get(versionUrl))
-    //    {
-    //        var operation = request.SendWebRequest();
-    //        while (!operation.isDone)
-    //            await Task.Yield();
+    private void Start()
+    {
+        StartCoroutine(CheckForUpdate());
+        // Optional: repeat check every few minutes
+        // StartCoroutine(CheckPeriodically(300f));
+    }
 
-    //        if (request.result != UnityWebRequest.Result.Success)
-    //        {
-    //            Debug.LogError("Failed to check version: " + request.error);
-    //            return;
-    //        }
+    IEnumerator CheckForUpdate()
+    {
+        UnityWebRequest www = UnityWebRequest.Get(versionFileURL);
+        yield return www.SendWebRequest();
 
-    //        var data = JsonUtility.FromJson<VersionData>(request.downloadHandler.text);
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogWarning("Failed to check version: " + www.error);
+            yield break;
+        }
 
-    //        if (IsOutdated(GameVersion.CURRENT, data.minimumVersion))
-    //        {
-    //            Debug.LogError("Game version too old! Blocking play.");
-    //            ShowForceUpdateMessage(data.forceUpdateMessage);
-    //        }
-    //        else
-    //        {
-    //            Debug.Log($"Version OK ({GameVersion.CURRENT}) — continuing.");
-    //        }
-    //    }
-    //}
+        VersionData data = JsonUtility.FromJson<VersionData>(www.downloadHandler.text);
+        if (IsNewerVersion(data.latestVersion, currentVersion))
+        {
+            Debug.Log("Update available! Latest: " + data.latestVersion);
+            if (data.mandatory)
+            {
+                // For PC, automatically open download link
+                Application.OpenURL(data.updateURL);
+                // Optionally quit game automatically
+                Application.Quit();
+            }
+            else
+            {
+                // Show update UI (button to download)
+                Debug.Log("Optional update available at: " + data.updateURL);
+            }
+        }
+        else
+        {
+            Debug.Log("Game is up to date!");
+        }
+    }
 
-    //private bool IsOutdated(string current, string minimum)
-    //{
-    //    System.Version curVer = new System.Version(current);
-    //    System.Version minVer = new System.Version(minimum);
-    //    return curVer < minVer;
-    //}
+    bool IsNewerVersion(string latest, string current)
+    {
+        System.Version latestV = new System.Version(latest);
+        System.Version currentV = new System.Version(current);
+        return latestV > currentV;
+    }
 
-    //private void ShowForceUpdateMessage(string message)
-    //{
-    //    Time.timeScale = 0f;
-    //    Debug.LogWarning(message);
-    //    // Example: open your game’s store page
-    //    Application.OpenURL("https://storepage.link/yourgame");
-    //}
+    [System.Serializable]
+    public class VersionData
+    {
+        public string latestVersion;
+        public string updateURL;
+        public bool mandatory;
+    }
 
-    //[System.Serializable]
-    //private class VersionData
-    //{
-    //    public string latestVersion;
-    //    public string minimumVersion;
-    //    public string forceUpdateMessage;
-    //}
+    // Optional: check periodically
+    IEnumerator CheckPeriodically(float interval)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(interval);
+            yield return CheckForUpdate();
+        }
+    }
 }

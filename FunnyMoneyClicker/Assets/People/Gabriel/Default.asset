@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: 
   defaultData:
-    moneyCount: 10
-    playTime: 0
+    moneyCount: 0
+    lastSaveTime: 0
+    offlineEarningsMultiplier: 0
     upgradeLevels: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
     powerLevels: 00000000000000000000000000000000000000000000000000000000000000000000000000000000

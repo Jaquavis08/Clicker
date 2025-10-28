@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Unity.Services.Economy.Model;
-using UnityEditor.PackageManager;
 using UnityEngine;
+
 
 public class Power1 : MonoBehaviour
 {
@@ -36,7 +36,6 @@ public class Power1 : MonoBehaviour
             power.currentTime += Time.deltaTime;
             if (power.currentTime >= power.baseInterval)
             {
-                print(index);
                 switch (index)
                 {
                     case 0: // Upgrade 1
@@ -46,13 +45,14 @@ public class Power1 : MonoBehaviour
                         GoldCoinSpawner.instance.EnableSpawner(true);
                         float goldCoinChance = power.baseProduction + (level * power.productionIncreaseRate);
                         GoldCoinSpawner.instance.spawnChance = goldCoinChance;
-                        //GoldCoinSpawner.instance.bonusAmount = production;
                         break;
                     case 2: // Upgrade 3
-
+                        if (GachaManager.instance != null)
+                            GachaManager.instance.isGacha = true;
+                        float luckBoost = power.baseProduction + (level * power.productionIncreaseRate);
+                        GachaManager.instance.luckMultiplier = luckBoost;
                         break;
                     case 3: // Upgrade 4
-                            //ClickerManager.instance.critChance = production;
                         float critChance = power.baseProduction + (level * power.productionIncreaseRate);
                         ClickerManager.instance.critChance = critChance;
                         break;
@@ -95,7 +95,7 @@ public class Power1 : MonoBehaviour
         {
             case 0: return $"${NumberFormatter.Format(production)} Per click";
             case 1: return $"Spawn chance: {GoldCoinSpawner.instance.spawnChance * 100:F1}%";
-            case 2: return null;
+            case 2: return $"Luck Boost: {(GachaManager.instance.luckMultiplier - 1f) * 100f:F1}%";
             case 3: return $"Crit chance: {ClickerManager.instance.critChance * 100:F1}%";
             case 4: return $"Upgrade Rate: {UpgradeManager.instance.baseInterval:F2}/s";
             case 5: return $"Offline Income: {SaveDataController.currentData.offlineEarningsMultiplier * 100:F1}%"; ;
