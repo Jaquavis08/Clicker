@@ -16425,6 +16425,9 @@ MonoBehaviour:
   effect: {fileID: 9035621867971336107, guid: 1682576c5e636314db2f9c4f953f33a5, type: 3}
   uiEffectContainer: {fileID: 122713848}
   luckMultiplier: 1
+  rolling: 0
+  cooldownTime: 0
+  maxtime: 2
   rewards:
   - id: Labubu
     prefab: {fileID: 0}
