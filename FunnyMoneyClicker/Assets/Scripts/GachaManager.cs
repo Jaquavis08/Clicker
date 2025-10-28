@@ -8,6 +8,7 @@ public class GachaManager : MonoBehaviour
     public bool isGacha;
     public GameObject gacha;
     public GameObject effect;
+    public GameObject uiEffectContainer;
     public float luckMultiplier = 1f; // 1 = normal luck, 1.1 = +10% luck, etc.
 
     private void Update()
@@ -26,7 +27,6 @@ public class GachaManager : MonoBehaviour
 
     public List<GachaReward> rewards = new List<GachaReward>();
     public int pullsPerOpen = 1;
-    public int gachaLevel;
 
     private void Awake()
     {
@@ -36,9 +36,9 @@ public class GachaManager : MonoBehaviour
 
     public void TryOpenGacha()
     {
-        int pulls = Mathf.Max(1, pullsPerOpen + (gachaLevel / 10));
+        //int pulls = Mathf.Max(1, pullsPerOpen + (gachaLevel / 10));
 
-        for (int i = 0; i < pulls; i++)
+        for (int i = 0; i < pullsPerOpen; i++)
         {
             var reward = PullReward();
             GrantReward(reward);
@@ -47,6 +47,12 @@ public class GachaManager : MonoBehaviour
 
     private GachaReward PullReward()
     {
+
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 1f));
+
+        GameObject effectSystemInstance = Instantiate(effect, worldPos, Quaternion.identity, uiEffectContainer.transform);
+        ParticleSystem ps = effectSystemInstance.GetComponent<ParticleSystem>();
+
         if (rewards == null || rewards.Count == 0)
             return null;
 
@@ -56,6 +62,9 @@ public class GachaManager : MonoBehaviour
 
         float roll = Random.Range(0f, Mathf.Max(totalChance, 100f));
         float acc = 0f;
+
+        effectSystemInstance.SetActive(true);
+        ps.Play();
 
         foreach (var r in rewards)
         {
