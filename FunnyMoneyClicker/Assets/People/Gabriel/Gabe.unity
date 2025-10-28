@@ -6858,8 +6858,8 @@ MonoBehaviour:
   - upgradeName: Best Upgrade
     baseCost: 250
     baseProduction: 0.01
-    costIncreaseRate: 1.225
-    productionIncreaseRate: 1.175
+    costIncreaseRate: 2.2451
+    productionIncreaseRate: 0.005
     baseInterval: 1
     levelText: {fileID: 1021026605}
     costText: {fileID: 230680481}
@@ -11143,7 +11143,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Description...
+  m_text: Works Hard To Increase Money Rate.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11415,7 +11415,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Description...
+  m_text: Farms Hard , Increases Money Rate
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11933,7 +11933,7 @@ RectTransform:
   m_GameObject: {fileID: 1413153802}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.83206, y: 0.83206, z: 0.83206}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 624722930}
@@ -11956,14 +11956,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -1770455771882255882, guid: def92a81b53f88b4f82448e65b22a869, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14824,7 +14824,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: Gacha
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -15521,7 +15521,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1828983548}
         m_TargetAssemblyTypeName: GachaManager, Assembly-CSharp
         m_MethodName: TryOpenGacha
-        m_Mode: 3
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -15675,14 +15675,14 @@ RectTransform:
   m_GameObject: {fileID: 1824035338}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.83206, y: 0.83206, z: 0.83206}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1524554861}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -394.5, y: 0.00001812}
+  m_AnchoredPosition: {x: -387.3, y: 0.00001812}
   m_SizeDelta: {x: 169.2, y: 145}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1824035340
@@ -15698,14 +15698,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 5934121854765881573, guid: 6cd3240dc12f1734b925dd2bde04648e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -15905,20 +15905,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGacha: 0
   gacha: {fileID: 517234956}
+  effect: {fileID: 9035621867971336107, guid: 1682576c5e636314db2f9c4f953f33a5, type: 3}
+  luckMultiplier: 1
   rewards:
   - id: Labubu
     prefab: {fileID: 0}
     goldAmount: 1
-    weight: 1
+    chance: 10
   - id: BadLabubu
     prefab: {fileID: 0}
     goldAmount: -100
-    weight: 3
+    chance: 10
   - id: GoldLabubu
     prefab: {fileID: 0}
     goldAmount: 1
-    weight: 2
-  pullsPerOpen: 10
+    chance: 10
+  pullsPerOpen: 1
+  gachaLevel: 0
 --- !u!1 &1838073585
 GameObject:
   m_ObjectHideFlags: 0
@@ -15965,7 +15968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ui: {fileID: 1838073589}
-  refreshInterval: 5
+  refreshInterval: 20
   leaderboardLimit: 100
 --- !u!114 &1838073589
 MonoBehaviour:
@@ -15981,6 +15984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   contentParent: {fileID: 1872773066}
   entryPrefab: {fileID: 5806352256487039978, guid: de8770c6360686c46bbe55f60ef3aa6e, type: 3}
+  leaderboardVisual: {fileID: 1844471852}
   firstPlaceColor: {r: 1, g: 0.84, b: 0, a: 1}
   secondPlaceColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
   thirdPlaceColor: {r: 0.8, g: 0.5, b: 0.2, a: 1}
@@ -18542,63 +18546,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121442496}
   m_CullTransparentMesh: 1
---- !u!1001 &3383914402653720074
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1785071928873831982, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_Name
-      value: SpecialEffect
-      objectReference: {fileID: 0}
-    - target: {fileID: 3837709698526879903, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.092
-      objectReference: {fileID: 0}
-    - target: {fileID: 3837709698526879903, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.827
-      objectReference: {fileID: 0}
-    - target: {fileID: 3837709698526879903, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 702.30023
-      objectReference: {fileID: 0}
-    - target: {fileID: 3837709698526879903, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3837709698526879903, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3837709698526879903, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3837709698526879903, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3837709698526879903, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3837709698526879903, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3837709698526879903, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2250149eef1703340bd955e58b3d63d0, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -18607,4 +18554,3 @@ SceneRoots:
   - {fileID: 1577376216}
   - {fileID: 589291112}
   - {fileID: 1679078174}
-  - {fileID: 3383914402653720074}

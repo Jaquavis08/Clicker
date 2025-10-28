@@ -11,8 +11,8 @@ public class GoldCoinSpawner : MonoBehaviour
     public RectTransform spawnArea;
 
     [Header("Settings")]
-    [Range(0f, 1f)] public float spawnChance = 0.05f; // 5% chance each check
-    public float checkInterval = 1f;                  // how often to roll chance
+    [Range(0f, 1f)] public float spawnChance = 0.05f;
+    public float checkInterval = 1f;
     public float moveSpeed = 250f;
     public float coinLifetime = 6f;
     public float bonusAmount = 1000f;
@@ -21,6 +21,8 @@ public class GoldCoinSpawner : MonoBehaviour
     private bool coinActive = false;
     private GameObject currentCoin;
     private Coroutine spawnRoutine;
+    private Coroutine moveRoutine;
+    private Coroutine lifetimeRoutine;
 
     private void Awake()
     {
@@ -33,10 +35,16 @@ public class GoldCoinSpawner : MonoBehaviour
 
         if (!state)
         {
-            if (spawnRoutine != null)
+            StopAllCoroutines();
+            spawnRoutine = null;
+            moveRoutine = null;
+            lifetimeRoutine = null;
+
+            if (currentCoin != null)
             {
-                StopCoroutine(spawnRoutine);
-                spawnRoutine = null;
+                Destroy(currentCoin);
+                currentCoin = null;
+                coinActive = false;
             }
             return;
         }
@@ -51,13 +59,9 @@ public class GoldCoinSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(checkInterval);
 
-            // Only try to spawn if no coin exists
             if (!coinActive && Random.value <= spawnChance)
-            {
                 SpawnCoin();
-            }
         }
-
         spawnRoutine = null;
     }
 
@@ -69,10 +73,7 @@ public class GoldCoinSpawner : MonoBehaviour
         coinActive = true;
 
         if (currentCoin != null)
-        {
             Destroy(currentCoin);
-            currentCoin = null;
-        }
 
         currentCoin = Instantiate(goldenCoinPrefab, spawnArea);
         currentCoin.SetActive(true);
@@ -84,8 +85,12 @@ public class GoldCoinSpawner : MonoBehaviour
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(() => OnCoinClicked(currentCoin));
 
-        StartCoroutine(MoveCoinSmoothly(rt));
-        StartCoroutine(CoinLifetime(currentCoin));
+
+        if (moveRoutine != null) StopCoroutine(moveRoutine);
+        if (lifetimeRoutine != null) StopCoroutine(lifetimeRoutine);
+
+        moveRoutine = StartCoroutine(MoveCoinSmoothly(rt));
+        lifetimeRoutine = StartCoroutine(CoinLifetime(currentCoin));
     }
 
     private IEnumerator MoveCoinSmoothly(RectTransform rt)
@@ -128,22 +133,47 @@ public class GoldCoinSpawner : MonoBehaviour
         yield return new WaitForSeconds(coinLifetime);
 
         if (coin != null)
-            Destroy(coin);
+        {
+            StartCoroutine(FadeAndDestroy(coin));
+        }
 
         coinActive = false;
         currentCoin = null;
     }
 
+    private IEnumerator FadeAndDestroy(GameObject coin)
+    {
+        Image img = coin.GetComponent<Image>();
+        if (img != null)
+        {
+            float fadeTime = 0.3f;
+            float t = 0f;
+            Color start = img.color;
+            while (t < fadeTime)
+            {
+                t += Time.deltaTime;
+                img.color = new Color(start.r, start.g, start.b, Mathf.Lerp(1f, 0f, t / fadeTime));
+                yield return null;
+            }
+        }
+        Destroy(coin);
+    }
+
     private void OnCoinClicked(GameObject coin)
     {
+        if (!coinActive) return;
+        coinActive = false;
+
         bonusAmount = (float)SaveDataController.currentData.moneyCount * 0.3f; // 30%
         SaveDataController.currentData.moneyCount += bonusAmount;
+
         Debug.Log($"🪙 Golden Coin clicked! +${bonusAmount}");
 
         if (coin != null)
-            Destroy(coin);
+        {
+            StartCoroutine(FadeAndDestroy(coin));
+        }
 
-        coinActive = false;
         currentCoin = null;
     }
 }

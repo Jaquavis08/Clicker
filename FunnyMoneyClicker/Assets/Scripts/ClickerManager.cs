@@ -167,7 +167,7 @@ public class ClickerManager : MonoBehaviour
             new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 1f)
         );
 
-        GameObject clickingParticleSystemInstance = Instantiate(clickerParticleSystem, worldPos, Quaternion.identity, canvas.transform);
+        GameObject clickingParticleSystemInstance = Instantiate(clickerParticleSystem, worldPos, Quaternion.identity, moneyEffectContainer.transform);
 
         ParticleSystem ps = clickingParticleSystemInstance.GetComponent<ParticleSystem>();
         if (ps != null && ps.GetComponent<Renderer>().material != clickerItem.ClciekrMaterial)

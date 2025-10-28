@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class GachaManager : MonoBehaviour
@@ -7,30 +7,26 @@ public class GachaManager : MonoBehaviour
 
     public bool isGacha;
     public GameObject gacha;
+    public GameObject effect;
+    public float luckMultiplier = 1f; // 1 = normal luck, 1.1 = +10% luck, etc.
 
     private void Update()
     {
-        if (isGacha)
-        {
-            gacha.SetActive(true);
-        }
-        else
-        {
-            gacha.SetActive(false);
-        }
+        gacha.SetActive(isGacha);
     }
 
     [System.Serializable]
     public class GachaReward
     {
         public string id;
-        public GameObject prefab;      // optional visual reward
-        public int goldAmount = 0;     // optional currency reward
-        public float weight = 1f; // relative probability
+        public GameObject prefab;  // optional visual reward
+        public int goldAmount = 0; // optional currency reward
+        [Range(0f, 100f)] public float chance = 10f; // percent chance (0–100)
     }
 
     public List<GachaReward> rewards = new List<GachaReward>();
     public int pullsPerOpen = 1;
+    public int gachaLevel;
 
     private void Awake()
     {
@@ -38,11 +34,10 @@ public class GachaManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    // Called from Power1 with the power level that triggered the gacha.
-    public void TryOpenGacha(int level)
+    public void TryOpenGacha()
     {
-        // Example: increase pulls with level or use cost checks here
-        int pulls = Mathf.Max(1, pullsPerOpen + (level / 10));
+        int pulls = Mathf.Max(1, pullsPerOpen + (gachaLevel / 10));
+
         for (int i = 0; i < pulls; i++)
         {
             var reward = PullReward();
@@ -52,39 +47,42 @@ public class GachaManager : MonoBehaviour
 
     private GachaReward PullReward()
     {
-        if (rewards == null || rewards.Count == 0) return null;
-        float total = 0f;
-        foreach (var r in rewards) total += Mathf.Max(0f, r.weight);
-        float roll = Random.Range(0f, total);
+        if (rewards == null || rewards.Count == 0)
+            return null;
+
+        float totalChance = 0f;
+        foreach (var r in rewards)
+            totalChance += Mathf.Clamp(r.chance, 0f, 100f);
+
+        float roll = Random.Range(0f, Mathf.Max(totalChance, 100f));
         float acc = 0f;
+
         foreach (var r in rewards)
         {
-            acc += Mathf.Max(0f, r.weight);
-            if (roll <= acc) return r;
+            acc += Mathf.Clamp(r.chance * luckMultiplier, 0f, 100f);
+            if (roll <= acc)
+                return r;
         }
-        return rewards[0];
+
+        return null;
     }
 
     private void GrantReward(GachaReward reward)
     {
-        if (reward == null) return;
+        if (reward == null)
+        {
+            Debug.Log("🎲 Gacha: No reward this time.");
+            return;
+        }
 
-        if (reward.goldAmount < SaveDataController.currentData.moneyCount)
-        {
-            SaveDataController.currentData.moneyCount += reward.goldAmount;
-            // show effect if manager exists
-            ClickerManager.instance?.MoneyEffect(reward.goldAmount);
-        }
-        if (SaveDataController.currentData.moneyCount <= 0)
-        {
-            SaveDataController.currentData.moneyCount = 0;
-        }
+        SaveDataController.currentData.moneyCount += reward.goldAmount;
+        ClickerManager.instance?.MoneyEffect(reward.goldAmount);
 
         if (reward.prefab != null && ClickerManager.instance != null)
         {
             Instantiate(reward.prefab, ClickerManager.instance.transform.position, Quaternion.identity);
         }
 
-        // You can add other reward-handling logic here (upgrades, items, etc.)
+        Debug.Log($"🎉 Gacha: Won {reward.id}! +{reward.goldAmount}");
     }
 }
