@@ -11957,9 +11957,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55630c212637c96479e1731cf48b20f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  versionUrl: https://raw.githubusercontent.com/Anthony966-web/FunnyMoneyClicker-Version-Check/main/version.json
-  updatePanel: {fileID: 1567672919}
-  updateMessageText: {fileID: 1675079820}
 --- !u!1 &1389617947
 GameObject:
   m_ObjectHideFlags: 0
