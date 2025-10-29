@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 using Unity.Services.Economy.Model;
 using UnityEngine;
 
@@ -10,6 +11,10 @@ public class Power1 : MonoBehaviour
     //private const float costIncreaseRate = 1.225f;
     //private const float productionIncreaseRate = 1.175f;
     private const float baseInterval = 0.1f;
+    public GameObject jumpscareHeHe;
+    public float jumpscareTime;
+    public float jumpscareMax = 10f;
+    public AudioSource Jumpsound;
 
 
     private void Update()
@@ -66,6 +71,18 @@ public class Power1 : MonoBehaviour
                         SaveDataController.currentData.offlineEarningsMultiplier = offlineIncome;
                         break;
                     case 6: // Upgrade 7
+                        if (jumpscareTime >= jumpscareMax)
+                        {
+                            jumpscareHeHe.SetActive(true);
+                            Jumpsound.Play();
+                            jumpscareTime = 0f;
+                            jumpscareMax = Random.Range(10f, 30f);
+                        }
+                        else
+                        {
+                            jumpscareHeHe.SetActive(false);
+                            jumpscareTime += Time.deltaTime;
+                        }
 
                         break;
                 }
