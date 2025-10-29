@@ -14,6 +14,7 @@ public class GachaManager : MonoBehaviour
     public bool rolling = false;
     public float cooldownTime;
     public float maxtime = 2f;
+    public AudioSource gachaSound;
 
     private void Update()
     {
@@ -43,6 +44,8 @@ public class GachaManager : MonoBehaviour
     {
         if (cooldownTime >= maxtime)
         {
+            gachaSound.Play();
+
             if (rolling) return;
             rolling = true;
 

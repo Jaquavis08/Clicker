@@ -10,6 +10,7 @@ public class ClickerManager : MonoBehaviour
     public ClickerItem clickerItem;
     public GameObject clickerParticleSystem;
     public GameObject canvas;
+    public AudioSource clicksound;
 
     public TMP_Text moneyText;
 
@@ -49,6 +50,7 @@ public class ClickerManager : MonoBehaviour
     {
         float finalValue = moneyValue;
         bool isCrit = Random.value < critChance;
+        clicksound.Play();
 
         if (isCrit)
         {
