@@ -8102,7 +8102,7 @@ MonoBehaviour:
     currentTime: 0
   jumpscareHeHe: {fileID: 1519564160}
   jumpscareTime: 0
-  jumpscareMax: 1
+  jumpscareMax: 0.5
   Jumpsound: {fileID: 639309402}
 --- !u!82 &639309402
 AudioSource:
