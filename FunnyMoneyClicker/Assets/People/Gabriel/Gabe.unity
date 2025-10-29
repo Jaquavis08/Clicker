@@ -10402,8 +10402,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 4f45a29fe48e3a54ba1bc197fc091b6e, type: 3}
-  m_Resource: {fileID: 8300000, guid: 4f45a29fe48e3a54ba1bc197fc091b6e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f06fb528e8736814b854ed78ebc6138d, type: 3}
+  m_Resource: {fileID: 8300000, guid: f06fb528e8736814b854ed78ebc6138d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -18871,29 +18871,41 @@ MonoBehaviour:
   gachaSound: {fileID: 1828983549}
   rewards:
   - id: Labubu
+    amount: 0
     prefab: {fileID: 0}
     goldAmount: 1
-    chance: 15
+    chance: 25
+    rewardTextPrefab: {fileID: 0}
   - id: BadLabubu
+    amount: 0
     prefab: {fileID: 0}
     goldAmount: -10000
     chance: 35
+    rewardTextPrefab: {fileID: 0}
   - id: GoldLabubu
+    amount: 0
     prefab: {fileID: 0}
     goldAmount: 25000
     chance: 10
+    rewardTextPrefab: {fileID: 0}
   - id: LegendaryLabubu
+    amount: 0
     prefab: {fileID: 9035621867971336107, guid: 1682576c5e636314db2f9c4f953f33a5, type: 3}
     goldAmount: 50000
-    chance: 10
+    chance: 5
+    rewardTextPrefab: {fileID: 0}
   - id: UNLUCKYLABUBU
+    amount: 0
     prefab: {fileID: 9035621867971336107, guid: 1682576c5e636314db2f9c4f953f33a5, type: 3}
     goldAmount: -100000
     chance: 10
+    rewardTextPrefab: {fileID: 0}
   - id: labubu?
+    amount: 0
     prefab: {fileID: 9035621867971336107, guid: 1682576c5e636314db2f9c4f953f33a5, type: 3}
     goldAmount: -1
     chance: 5
+    rewardTextPrefab: {fileID: 0}
   pullsPerOpen: 100
 --- !u!82 &1828983549
 AudioSource:
