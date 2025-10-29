@@ -34,7 +34,7 @@ public class UpgradeManager : MonoBehaviour
         if (totalRateText != null)
         {
             moneyPerSecond = totalRate;
-            totalRateText.text = $"+${NumberFormatter.Format(moneyPerSecond)} / " + baseInterval + " Seconds";
+            totalRateText.text = $"+${NumberFormatter.Format(moneyPerSecond)} / " + baseInterval + "s";
         }
     }
 
@@ -69,7 +69,7 @@ public class UpgradeManager : MonoBehaviour
         {
             if (level > 0)
             {
-                upgrade.rateText.text = $"Rate: +{NumberFormatter.Format(production)} per {upgrade.baseInterval}s";
+                upgrade.rateText.text = $"Rate: ${NumberFormatter.Format(production)} per {upgrade.baseInterval}s";
             }
             else
                 upgrade.rateText.text = "";

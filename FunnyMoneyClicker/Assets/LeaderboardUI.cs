@@ -1,7 +1,10 @@
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using Unity.Services.Authentication;
 using Unity.Services.Leaderboards.Models;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class LeaderboardUI : MonoBehaviour
 {
@@ -16,51 +19,67 @@ public class LeaderboardUI : MonoBehaviour
     public Color thirdPlaceColor = new Color(0.8f, 0.5f, 0.2f);
     public Color defaultColor = Color.white;
 
-    private Dictionary<string, double> playerScales = new Dictionary<string, double>();
+    //public Color localPlayerColor = Color.green;      // Color for your player
+    [HideInInspector] public bool boldLocalPlayer = true;               // Bold text for your player
 
     private void Awake()
     {
-        leaderboardVisual.gameObject.SetActive(false);
+        if (leaderboardVisual != null)
+            leaderboardVisual.SetActive(false);
     }
 
-    public void PopulateLeaderboard(List<LeaderboardEntry> entries, Dictionary<string, double> scales)
+    public void PopulateLeaderboard(List<LeaderboardEntry> entries)
     {
+        if (contentParent == null || entryPrefab == null) return;
 
-        playerScales = scales;
-
+        // Clear previous entries
         foreach (Transform child in contentParent)
             Destroy(child.gameObject);
 
-        if (entries == null || entries.Count == 0) return;
-
-        int rank = 1;
-        foreach (var entry in entries)
+        if (entries == null || entries.Count == 0)
         {
-            GameObject lEntry = Instantiate(entryPrefab, contentParent);
-            TMP_Text textComponent = lEntry.GetComponentInChildren<TMP_Text>();
-
-            double scale = 1.0;
-            if (playerScales != null && playerScales.ContainsKey(entry.PlayerId))
-                scale = playerScales[entry.PlayerId];
-
-            double realScore = entry.Score * scale;
-            string formattedScore = NumberFormatter.Format(realScore);
-
-            string displayName = !string.IsNullOrEmpty(entry.PlayerName) ? entry.PlayerName : entry.PlayerId;
-            textComponent.text = $"{rank}. {displayName} - ${formattedScore}";
-
-            switch (rank)
-            {
-                case 1: textComponent.color = firstPlaceColor; break;
-                case 2: textComponent.color = secondPlaceColor; break;
-                case 3: textComponent.color = thirdPlaceColor; break;
-                default: textComponent.color = defaultColor; break;
-            }
-
-            rank++;
-
+            if (leaderboardVisual != null) leaderboardVisual.SetActive(false);
+            return;
         }
 
-        leaderboardVisual.gameObject.SetActive(true);
+        if (leaderboardVisual != null) leaderboardVisual.SetActive(true);
+
+        string localPlayerId = AuthenticationService.Instance.PlayerId;
+        int rank = 1;
+
+        foreach (var entry in entries)
+        {
+            try
+            {
+                double score = entry.Score; // Already a double
+                if (score <= 0) continue;
+
+                GameObject lEntry = Instantiate(entryPrefab, contentParent);
+                TMP_Text text = lEntry.GetComponentInChildren<TMP_Text>();
+                if (text == null) { Destroy(lEntry); continue; }
+
+                string formatted = NumberFormatter.Format(score);
+                bool isLocalPlayer = entry.PlayerId == localPlayerId;
+                string displayName = isLocalPlayer
+                    ? $"{(string.IsNullOrEmpty(entry.PlayerName) ? entry.PlayerId : entry.PlayerName)} (YOU)"
+                    : (string.IsNullOrEmpty(entry.PlayerName) ? entry.PlayerId : entry.PlayerName);
+
+                text.text = $"{rank}. {displayName} - ${formatted}";
+
+                text.color = rank switch
+                {
+                    1 => firstPlaceColor,
+                    2 => secondPlaceColor,
+                    3 => thirdPlaceColor,
+                    _ => defaultColor
+                };
+
+                rank++;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"[LB UI] Skipped entry {entry.PlayerId}: {ex.Message}");
+            }
+        }
     }
 }
