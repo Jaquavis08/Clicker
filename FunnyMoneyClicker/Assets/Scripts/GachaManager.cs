@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using static GachaManager;
 
 public class GachaManager : MonoBehaviour
 {
@@ -26,9 +28,11 @@ public class GachaManager : MonoBehaviour
     public class GachaReward
     {
         public string id;
+        public float amount;
         public GameObject prefab;  // optional visual reward
         public int goldAmount = 0; // optional currency reward
         [Range(0f, 100f)] public float chance = 10f; // percent chance (0–100)
+        public TextMeshPro rewardTextPrefab;
     }
 
     public List<GachaReward> rewards = new List<GachaReward>();
@@ -119,5 +123,6 @@ public class GachaManager : MonoBehaviour
         Debug.Log($"🎉 Gacha: Won {reward.id}! +{reward.goldAmount}");
 
         rolling = false;
+        reward.rewardTextPrefab.text = reward.id + ": " + reward.amount;
     }
 }
