@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d842e9da46a31fe41af3d3c0e7654d61
+guid: 4548ba1af5e53f147ac8a205bd5ff5bb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3098415006802565225
-    second: funny temple_0
+      213: 875346418093169333
+    second: downsized tenna_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +46,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 75
+  spritePixelsToUnits: 125
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: funny temple_0
+      name: downsized tenna_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 66
-        height: 75
+        width: 125
+        height: 57
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 968d4375808cffa20800000000000000
-      internalID: 3098415006802565225
+      spriteID: 5ba9ad1fdead52c00800000000000000
+      internalID: 875346418093169333
       vertices: []
       indices: 
       edges: []
@@ -164,7 +164,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      funny temple_0: 3098415006802565225
+      downsized tenna_0: 875346418093169333
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

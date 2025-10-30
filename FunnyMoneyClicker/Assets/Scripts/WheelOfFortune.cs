@@ -2,200 +2,203 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class WheelOfFortune : MonoBehaviour
 {
-    [Header("References")]
-    public RectTransform wheelContainer;        // parent that will be rotated
-    public GameObject slicePrefab;              // prefab should contain an Image (wedge sprite) and a Text child
-    public Transform resultSpawnPoint;          // where to spawn visual reward (e.g., ClickerManager.instance.transform)
-    public Button spinButton;
+    //[Header("References")]
+    //public RectTransform wheelContainer; // parent that will rotate
+    //public GameObject slicePrefab; // prefab with Image + Text
+    //public Transform resultSpawnPoint;
+    //public Button spinButton;
+    //public TextMeshProUGUI rewardTextUI;
 
-    [Header("Spin settings")]
-    public float spinDuration = 3.0f;
-    public int extraSpins = 3;                  // full rotations before landing
-    public AnimationCurve spinEasing = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    //[Header("Spin settings")]
+    //public float spinDuration = 3.0f;
+    //public int extraSpins = 3;
+    //public AnimationCurve spinEasing = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    // internal
-    private List<GachaManager.GachaReward> rewards = new List<GachaManager.GachaReward>();
-    private List<(float startAngle, float sweepAngle)> segments = new List<(float, float)>();
-    private float totalWeight = 0f;
-    private bool isSpinning = false;
+    //// Internal
+    //private class WheelReward
+    //{
+    //    public string id;
+    //    public int goldAmount;
+    //    public bool isSkin;
+    //    public float chance;
+    //}
 
-    private void Start()
-    {
-        if (spinButton != null) spinButton.onClick.AddListener(Spin);
-        BuildWheel();
-    }
+    //private List<WheelReward> rewards = new List<WheelReward>();
+    //private List<(float startAngle, float sweepAngle)> segments = new List<(float, float)>();
+    //private float totalWeight = 0f;
+    //private bool isSpinning = false;
 
-    [ContextMenu("Build Wheel")]
-    public void BuildWheel()
-    {
-        if (GachaManager.instance == null)
-        {
-            Debug.LogWarning("WheelOfFortune: No GachaManager.instance found.");
-            return;
-        }
+    //private void Start()
+    //{
+    //    if (spinButton != null) spinButton.onClick.AddListener(Spin);
+    //    BuildWheel();
+    //}
 
-        rewards = GachaManager.instance.rewards;
-        float luck = GachaManager.instance.luckMultiplier;
-        // clear existing slices
-        for (int i = wheelContainer.childCount - 1; i >= 0; i--)
-            DestroyImmediate(wheelContainer.GetChild(i).gameObject);
+    //[ContextMenu("Build Wheel")]
+    //public void BuildWheel()
+    //{
+    //    rewards.Clear();
+    //    segments.Clear();
+    //    totalWeight = 0f;
 
-        segments.Clear();
-        totalWeight = 0f;
-        foreach (var r in rewards)
-            totalWeight += Mathf.Clamp(r.chance * luck, 0f, 100f);
+    //    // ✅ Build from your GachaManager
+    //    var gacha = GachaManager.instance;
+    //    if (gacha == null)
+    //    {
+    //        Debug.LogWarning("WheelOfFortune: No GachaManager.instance found.");
+    //        return;
+    //    }
 
-        // Ensure there's at least a default full circle if totalWeight <= 0
-        if (totalWeight <= 0f && rewards.Count > 0)
-        {
-            // give equal weight
-            totalWeight = rewards.Count;
-            for (int i = 0; i < rewards.Count; i++)
-                rewards[i].chance = 1f;
-        }
+    //    float luck = gacha.luckMultiplier;
 
-        float accAngle = 0f;
-        for (int i = 0; i < rewards.Count; i++)
-        {
-            var r = rewards[i];
-            float w = Mathf.Clamp(r.chance * luck, 0f, 100f);
-            float sweep = (w / totalWeight) * 360f;
+    //    // Add money rewards
+    //    rewards.Add(new WheelReward { id = "💰 $500", goldAmount = 500, chance = 50f, isSkin = false });
+    //    rewards.Add(new WheelReward { id = "💰 $1000", goldAmount = 1000, chance = 30f, isSkin = false });
+    //    rewards.Add(new WheelReward { id = "💰 $2500", goldAmount = 2500, chance = 10f, isSkin = false });
 
-            // instantiate slice
-            var go = Instantiate(slicePrefab, wheelContainer);
-            go.name = $"Slice_{i}_{r.id}";
-            var rt = go.GetComponent<RectTransform>();
-            // position pivot at center and rotate slice so it occupies the correct wedge
-            rt.localRotation = Quaternion.Euler(0f, 0f, -accAngle);
+    //    // Add skin rewards (optional — weighted lower)
+    //    if (gacha.clickerDatabase != null && gacha.clickerDatabase.allClickers != null)
+    //    {
+    //        foreach (var skin in gacha.clickerDatabase.allClickers)
+    //        {
+    //            rewards.Add(new WheelReward
+    //            {
+    //                id = skin.skinName,
+    //                goldAmount = 0,
+    //                chance = skin.chance > 0 ? skin.chance : 5f,
+    //                isSkin = true
+    //            });
+    //        }
+    //    }
 
-            // if slice prefab has an Image we can set fillAmount (for radial wedge prefabs)
-            var img = go.GetComponent<Image>();
-            if (img != null)
-            {
-                // Many wedge prefabs use Image.fillAmount to determine wedge size (0..1)
-                img.fillAmount = Mathf.Clamp01(sweep / 360f);
-            }
+    //    foreach (var r in rewards)
+    //        totalWeight += Mathf.Max(0.01f, r.chance * luck);
 
-            // try set label text
-            var txt = go.GetComponentInChildren<Text>();
-            if (txt != null)
-            {
-                txt.text = $"{r.id}\n{r.goldAmount}";
-                // position label roughly in middle of wedge by rotating it back so it reads upright
-                txt.rectTransform.localRotation = Quaternion.Euler(0f, 0f, accAngle + sweep * 0.5f);
-            }
+    //    // clear existing slices
+    //    for (int i = wheelContainer.childCount - 1; i >= 0; i--)
+    //        DestroyImmediate(wheelContainer.GetChild(i).gameObject);
 
-            segments.Add((accAngle, sweep));
-            accAngle += sweep;
-        }
-    }
+    //    float accAngle = 0f;
+    //    foreach (var r in rewards)
+    //    {
+    //        float sweep = (r.chance * luck / totalWeight) * 360f;
 
-    public void Spin()
-    {
-        if (isSpinning) return;
-        if (GachaManager.instance == null)
-        {
-            Debug.LogWarning("WheelOfFortune: No GachaManager.instance found.");
-            return;
-        }
+    //        var go = Instantiate(slicePrefab, wheelContainer);
+    //        go.name = $"Slice_{r.id}";
+    //        var rt = go.GetComponent<RectTransform>();
+    //        rt.localRotation = Quaternion.Euler(0f, 0f, -accAngle);
 
-        if (rewards == null || rewards.Count == 0)
-        {
-            Debug.LogWarning("WheelOfFortune: No rewards to spin.");
-            return;
-        }
+    //        var img = go.GetComponent<Image>();
+    //        if (img != null)
+    //            img.fillAmount = Mathf.Clamp01(sweep / 360f);
 
-        StartCoroutine(SpinRoutine());
-    }
+    //        var txt = go.GetComponentInChildren<TextMeshProUGUI>();
+    //        if (txt != null)
+    //        {
+    //            txt.text = r.id;
+    //            txt.rectTransform.localRotation = Quaternion.Euler(0f, 0f, accAngle + sweep * 0.5f);
+    //        }
 
-    private IEnumerator SpinRoutine()
-    {
-        isSpinning = true;
-        if (spinButton != null) spinButton.interactable = false;
+    //        segments.Add((accAngle, sweep));
+    //        accAngle += sweep;
+    //    }
+    //}
 
-        // Pick reward using the same weighted logic (uses luckMultiplier)
-        float luck = GachaManager.instance.luckMultiplier;
-        float total = 0f;
-        foreach (var r in rewards) total += Mathf.Clamp(r.chance * luck, 0f, 100f);
-        float roll = Random.Range(0f, Mathf.Max(total, 100f));
-        int selectedIndex = -1;
-        float acc = 0f;
-        for (int i = 0; i < rewards.Count; i++)
-        {
-            acc += Mathf.Clamp(rewards[i].chance * luck, 0f, 100f);
-            if (roll <= acc)
-            {
-                selectedIndex = i;
-                break;
-            }
-        }
-        if (selectedIndex == -1) selectedIndex = Mathf.Clamp(Mathf.FloorToInt(Random.value * rewards.Count), 0, rewards.Count - 1);
+    //public void Spin()
+    //{
+    //    if (isSpinning) return;
+    //    if (rewards.Count == 0)
+    //    {
+    //        Debug.LogWarning("WheelOfFortune: No rewards found!");
+    //        return;
+    //    }
 
-        // compute target angle (choose a random angle inside the selected segment)
-        var seg = segments[selectedIndex];
-        float localTargetAngle = seg.startAngle + Random.Range(0f, seg.sweepAngle);
-        // Wheel rotation: we want the chosen wedge to align with pointer at 0 degrees.
-        // Because we rotated slices by -accAngle when building, rotating wheel by +angle will bring that slice to pointer.
-        float startAngle = NormalizeAngle(wheelContainer.localEulerAngles.z);
-        float endAngle = startAngle + extraSpins * 360f + localTargetAngle - startAngle; // rotate to localTargetAngle plus extra spins
-        endAngle = extraSpins * 360f + localTargetAngle; // simpler target
+    //    StartCoroutine(SpinRoutine());
+    //}
 
-        float t = 0f;
-        float dur = spinDuration;
-        while (t < dur)
-        {
-            t += Time.deltaTime;
-            float p = Mathf.Clamp01(t / dur);
-            float eased = spinEasing.Evaluate(p);
-            float angle = Mathf.LerpAngle(startAngle, endAngle, eased);
-            wheelContainer.localEulerAngles = new Vector3(0, 0, angle);
-            yield return null;
-        }
+    //private IEnumerator SpinRoutine()
+    //{
+    //    isSpinning = true;
+    //    if (spinButton != null) spinButton.interactable = false;
 
-        // snap to exact angle
-        wheelContainer.localEulerAngles = new Vector3(0, 0, endAngle);
+    //    // Weighted random selection
+    //    float luck = GachaManager.instance != null ? GachaManager.instance.luckMultiplier : 1f;
+    //    float total = 0f;
+    //    foreach (var r in rewards) total += Mathf.Max(0.01f, r.chance * luck);
+    //    float roll = Random.Range(0f, total);
+    //    float acc = 0f;
+    //    int selectedIndex = 0;
 
-        // Give the reward (duplicate of GachaManager.GrantReward logic because that method is private)
-        var reward = rewards[selectedIndex];
-        ApplyReward(reward);
+    //    for (int i = 0; i < rewards.Count; i++)
+    //    {
+    //        acc += Mathf.Max(0.01f, rewards[i].chance * luck);
+    //        if (roll <= acc)
+    //        {
+    //            selectedIndex = i;
+    //            break;
+    //        }
+    //    }
 
-        isSpinning = false;
-        if (spinButton != null) spinButton.interactable = true;
-    }
+    //    var seg = segments[selectedIndex];
+    //    float targetAngle = seg.startAngle + seg.sweepAngle * 0.5f;
+    //    float startAngle = NormalizeAngle(wheelContainer.localEulerAngles.z);
+    //    float endAngle = extraSpins * 360f + targetAngle;
 
-    private void ApplyReward(GachaManager.GachaReward reward)
-    {
-        if (reward == null)
-        {
-            Debug.Log("WheelOfFortune: No reward.");
-            return;
-        }
+    //    float t = 0f;
+    //    while (t < spinDuration)
+    //    {
+    //        t += Time.deltaTime;
+    //        float p = Mathf.Clamp01(t / spinDuration);
+    //        float eased = spinEasing.Evaluate(p);
+    //        float angle = Mathf.LerpAngle(startAngle, endAngle, eased);
+    //        wheelContainer.localEulerAngles = new Vector3(0, 0, angle);
+    //        yield return null;
+    //    }
 
-        SaveDataController.currentData.moneyCount += reward.goldAmount;
-        ClickerManager.instance?.MoneyEffect(reward.goldAmount);
+    //    wheelContainer.localEulerAngles = new Vector3(0, 0, endAngle);
+    //    ApplyReward(rewards[selectedIndex]);
 
-        if (reward.prefab != null)
-        {
-            Transform spawn = resultSpawnPoint != null ? resultSpawnPoint : (ClickerManager.instance != null ? ClickerManager.instance.transform : null);
-            if (spawn != null)
-                Instantiate(reward.prefab, spawn.position, Quaternion.identity);
-            else
-                Instantiate(reward.prefab, Vector3.zero, Quaternion.identity);
-        }
+    //    isSpinning = false;
+    //    if (spinButton != null) spinButton.interactable = true;
+    //}
 
-        if (SaveDataController.currentData.moneyCount <= 0)
-            SaveDataController.currentData.moneyCount = 0;
+    //private void ApplyReward(WheelReward reward)
+    //{
+    //    string msg = "";
 
-        Debug.Log($"🎉 WheelOfFortune: Won {reward.id}! +{reward.goldAmount}");
-    }
+    //    if (reward.isSkin)
+    //    {
+    //        if (!SaveDataController.currentData.unlockedSkins.Contains(reward.id))
+    //        {
+    //            SaveDataController.currentData.unlockedSkins.Add(reward.id);
+    //            msg = $"🎉 NEW SKIN UNLOCKED: {reward.id}";
+    //        }
+    //        else
+    //        {
+    //            msg = $"⭐ Duplicate skin: {reward.id}";
+    //        }
+    //    }
+    //    else
+    //    {
+    //        SaveDataController.currentData.moneyCount += reward.goldAmount;
+    //        ClickerManager.instance?.MoneyEffect(reward.goldAmount);
+    //        msg = $"💰 You won ${reward.goldAmount}!";
+    //    }
 
-    private float NormalizeAngle(float a)
-    {
-        a %= 360f;
-        if (a < 0) a += 360f;
-        return a;
-    }
+    //    if (rewardTextUI != null)
+    //        rewardTextUI.text = msg;
+
+    //    Debug.Log($"WheelOfFortune: {msg}");
+    //}
+
+    //private float NormalizeAngle(float a)
+    //{
+    //    a %= 360f;
+    //    if (a < 0) a += 360f;
+    //    return a;
+    //}
 }

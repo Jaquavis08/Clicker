@@ -172,9 +172,9 @@ public class ClickerManager : MonoBehaviour
         GameObject clickingParticleSystemInstance = Instantiate(clickerParticleSystem, worldPos, Quaternion.identity, moneyEffectContainer.transform);
 
         ParticleSystem ps = clickingParticleSystemInstance.GetComponent<ParticleSystem>();
-        if (ps != null && ps.GetComponent<Renderer>().material != clickerItem.ClciekrMaterial)
+        if (ps != null && ps.GetComponent<Renderer>().material != clickerItem.clickerSkin)
         {
-            ps.GetComponent<Renderer>().material = clickerItem.ClciekrMaterial;
+            ps.GetComponent<Renderer>().material = clickerItem.clickerMaterial;
         }
 
         clickingParticleSystemInstance.SetActive(true);

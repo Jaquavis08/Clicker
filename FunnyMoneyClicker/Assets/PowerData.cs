@@ -6,7 +6,7 @@ public class PowerData
 {
     [Header("Power Settings")]
     public string upgradeName; // The display name of the upgrade (e.g. "Auto Clicker", "Miner", "Factory")
-    public float baseCost = 10f; // Starting price for the first level of this upgrade
+    public double baseCost = 10f; // Starting price for the first level of this upgrade
     public float baseProduction = 1f; // How much money (or resources) this upgrade produces per cycle at level 1
 
     public float costIncreaseRate = 1.225f; // Multiplier for cost growth each level (e.g. cost *= 1.15)

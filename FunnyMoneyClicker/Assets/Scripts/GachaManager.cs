@@ -1,128 +1,211 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static GachaManager;
 
 public class GachaManager : MonoBehaviour
 {
     public static GachaManager instance;
 
+    [Header("General Gacha Settings")]
     public bool isGacha;
     public GameObject gacha;
     public GameObject effect;
     public GameObject uiEffectContainer;
-    public float luckMultiplier = 1f; // 1 = normal luck, 1.1 = +10% luck, etc.
+    public float luckMultiplier = 1f;
     public bool rolling = false;
     public float cooldownTime;
     public float maxtime = 2f;
     public AudioSource gachaSound;
+    public int pullsPerOpen = 1;
 
-    private void Update()
+    [Header("Databases & UI")]
+    public ClickerDatabase clickerDatabase; // your skin/clicker database
+    public TextMeshProUGUI rewardTextUI;    // optional reward text display
+
+    [Header("💰 Money Rewards")]
+    public List<MoneyReward> moneyRewards = new List<MoneyReward>();
+
+    [Header("🎨 Skin / Clicker Rewards")]
+    public List<SkinReward> skinRewards = new List<SkinReward>();
+
+    // ------------------ DATA CLASSES ------------------ //
+    [System.Serializable]
+    public class MoneyReward
     {
-        gacha.SetActive(isGacha);
-        cooldownTime += Time.deltaTime;
+        public string id = "Cash";
+        public int goldAmount = 100;
+        [Range(0f, 100f)] public float chance = 10f;
     }
 
     [System.Serializable]
-    public class GachaReward
+    public class SkinReward
     {
-        public string id;
-        public float amount;
-        public GameObject prefab;  // optional visual reward
-        public int goldAmount = 0; // optional currency reward
-        [Range(0f, 100f)] public float chance = 10f; // percent chance (0–100)
-        public TextMeshPro rewardTextPrefab;
+        public string id = "Random Skin";
+        [Range(0f, 100f)] public float chance = 10f;
     }
 
-    public List<GachaReward> rewards = new List<GachaReward>();
-    public int pullsPerOpen = 1;
-
+    // ------------------ UNITY METHODS ------------------ //
     private void Awake()
     {
         if (instance == null) instance = this;
         else Destroy(gameObject);
     }
 
-    public void TryOpenGacha()
+    private void Update()
     {
-        if (cooldownTime >= maxtime)
-        {
-            gachaSound.Play();
+        if (gacha != null)
+            gacha.SetActive(isGacha);
 
-            if (rolling) return;
-            rolling = true;
-
-            if (SaveDataController.currentData.moneyCount >= 1000)
-            {
-                SaveDataController.currentData.moneyCount -= 1000;
-                //int pulls = Mathf.Max(1, pullsPerOpen + (gachaLevel / 10));
-
-                for (int i = 0; i < pullsPerOpen; i++)
-                {
-                    var reward = PullReward();
-                    GrantReward(reward);
-
-                }
-            }
-        cooldownTime = 0f;
-        }
-
+        cooldownTime += Time.deltaTime;
     }
 
-
-
-    private GachaReward PullReward()
+    // ------------------ MAIN GACHA FLOW ------------------ //
+    public void TryOpenGacha()
     {
+        if (cooldownTime < maxtime || rolling) return;
 
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 1f));
+        if (SaveDataController.currentData.moneyCount < 1000)
+        {
+            Debug.Log("❌ Not enough money for gacha pull.");
+            return;
+        }
 
-        GameObject effectSystemInstance = Instantiate(effect, worldPos, Quaternion.identity, uiEffectContainer.transform);
-        ParticleSystem ps = effectSystemInstance.GetComponent<ParticleSystem>();
+        SaveDataController.currentData.moneyCount -= 1000;
+        gachaSound?.Play();
+        rolling = true;
 
-        if (rewards == null || rewards.Count == 0)
-            return null;
+        List<string> allMessages = new List<string>();
+
+        for (int i = 0; i < pullsPerOpen; i++)
+        {
+            // Decide randomly: money or skin reward (50/50 chance, adjust if needed)
+            bool getSkin = Random.value < 0.5f;
+
+            if (getSkin)
+            {
+                var skin = PullSkinReward();
+                allMessages.Add(GrantSkinReward(skin, false));
+            }
+            else
+            {
+                var money = PullMoneyReward();
+                allMessages.Add(GrantMoneyReward(money, false));
+            }
+        }
+
+        // Update UI once
+        if (rewardTextUI != null)
+            rewardTextUI.text = string.Join("\n", allMessages);
+
+        cooldownTime = 0f;
+        rolling = false;
+    }
+
+    // ------------------ MONEY REWARDS ------------------ //
+    private MoneyReward PullMoneyReward()
+    {
+        if (moneyRewards == null || moneyRewards.Count == 0) return null;
 
         float totalChance = 0f;
-        foreach (var r in rewards)
-            totalChance += Mathf.Clamp(r.chance, 0f, 100f);
+        foreach (var r in moneyRewards)
+            totalChance += r.chance * luckMultiplier;
 
-        float roll = Random.Range(0f, Mathf.Max(totalChance, 100f));
+        if (totalChance <= 0f)
+            return null; // nothing to pull
+
+        float roll = Random.Range(0f, totalChance);
         float acc = 0f;
 
-        effectSystemInstance.SetActive(true);
-        ps.Play();
-
-        foreach (var r in rewards)
+        foreach (var r in moneyRewards)
         {
-            acc += Mathf.Clamp(r.chance * luckMultiplier, 0f, 100f);
+            acc += r.chance * luckMultiplier;
             if (roll <= acc)
                 return r;
         }
 
-        return null;
+
+        // fallback in case of rounding errors
+        return moneyRewards[Random.Range(0, moneyRewards.Count)];
     }
 
-    private void GrantReward(GachaReward reward)
+    private string GrantMoneyReward(MoneyReward reward, bool playEffect = true)
     {
-        if (reward == null)
-        {
-            Debug.Log("🎲 Gacha: No reward this time.");
-            return;
-        }
+        if (reward == null) return "";
 
         SaveDataController.currentData.moneyCount += reward.goldAmount;
         ClickerManager.instance?.MoneyEffect(reward.goldAmount);
 
-        if (reward.prefab != null && ClickerManager.instance != null)
-        {
-            Instantiate(reward.prefab, ClickerManager.instance.transform.position, Quaternion.identity);
-        }
-        if (SaveDataController.currentData.moneyCount <= 0)
-        { SaveDataController.currentData.moneyCount = 0; }
-        Debug.Log($"🎉 Gacha: Won {reward.id}! +{reward.goldAmount}");
+        string message = $"💰 You won ${reward.goldAmount}!";
 
-        rolling = false;
-        reward.rewardTextPrefab.text = reward.id + ": " + reward.amount;
+        if (playEffect) DisplayEffect();
+
+        Debug.Log(message);
+        return message;
+    }
+
+    // ------------------ SKIN REWARDS ------------------ //
+    private SkinReward PullSkinReward()
+    {
+        if (skinRewards == null || skinRewards.Count == 0) return null;
+
+        // sum only items with chance > 0
+        float totalChance = 0f;
+        foreach (var r in skinRewards)
+            if (r.chance > 0f)
+                totalChance += r.chance * luckMultiplier;
+
+        if (totalChance <= 0f) return null;
+
+        float roll = Random.Range(0f, totalChance);
+        float acc = 0f;
+
+        foreach (var r in skinRewards)
+        {
+            if (r.chance <= 0f) continue; // skip 0% chance
+            acc += r.chance * luckMultiplier;
+            if (roll <= acc)
+                return r;
+        }
+
+        return skinRewards[Random.Range(0, skinRewards.Count)];
+    }
+
+    private string GrantSkinReward(SkinReward reward, bool playEffect = true)
+    {
+        if (reward == null) return "";
+
+        string message = "🎲 No skin selected.";
+
+        var allSkins = clickerDatabase?.allClickers;
+        if (allSkins != null && allSkins.Count > 0)
+        {
+            // Pick a random skin from the database (no chance on ClickerItem)
+            ClickerItem selectedSkin = allSkins[Random.Range(0, allSkins.Count)];
+
+            if (!SaveDataController.currentData.unlockedSkins.Contains(selectedSkin.skinId))
+            {
+                SaveDataController.currentData.unlockedSkins.Add(selectedSkin.skinId);
+                message = $"🎉 NEW SKIN UNLOCKED: {selectedSkin.skinName}!";
+            }
+            else
+            {
+                message = $"⭐ Duplicate skin: {selectedSkin.skinName}";
+            }
+        }
+
+        if (playEffect) DisplayEffect();
+        Debug.Log(message);
+        return message;
+    }
+
+    // ------------------ VISUAL EFFECT ------------------ //
+    private void DisplayEffect()
+    {
+        if (effect != null && uiEffectContainer != null)
+        {
+            var effectSystem = Instantiate(effect, uiEffectContainer.transform);
+            var ps = effectSystem.GetComponent<ParticleSystem>();
+            ps?.Play();
+        }
     }
 }

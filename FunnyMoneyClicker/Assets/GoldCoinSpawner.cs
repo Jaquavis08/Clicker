@@ -164,7 +164,7 @@ public class GoldCoinSpawner : MonoBehaviour
         if (!coinActive) return;
         coinActive = false;
 
-        bonusAmount = (float)SaveDataController.currentData.moneyCount * 0.3f; // 30%
+        bonusAmount = (float)SaveDataController.currentData.moneyCount * 0.075f; // 7.5%
         SaveDataController.currentData.moneyCount += bonusAmount;
 
         Debug.Log($"🪙 Golden Coin clicked! +${bonusAmount}");

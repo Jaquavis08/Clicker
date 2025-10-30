@@ -16,18 +16,24 @@ public static class NumberFormatter
 
     public static string Format(double value)
     {
-        if (value < 1d) return "0";
+        // 🧱 Handle all invalid or tiny values safely
+        if (double.IsNaN(value) || double.IsInfinity(value) || value <= 0)
+            return "0";
 
-        int n = (int)Math.Log(value, 1000);
+        // Calculate magnitude safely
+        int n = (int)Math.Floor(Math.Log(value, 1000));
+        if (n < 0) n = 0; // Prevent negative indexes
+
         double m = value / Math.Pow(1000, n);
 
         string unit;
-        if (n < units.Count)
+        if (units.ContainsKey(n))
         {
             unit = units[n];
         }
         else
         {
+            // Handle overflow beyond predefined units
             int unitInt = n - units.Count;
             int firstUnit = unitInt / 26;
             int secondUnit = unitInt % 26;

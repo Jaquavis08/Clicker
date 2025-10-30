@@ -123,7 +123,7 @@ public class Power1 : MonoBehaviour
 
     private float GetPowerCost(PowerData power, int level)
     {
-        return Mathf.Round(power.baseCost * Mathf.Pow(power.costIncreaseRate, level));
+        return Mathf.Round((float)power.baseCost * Mathf.Pow(power.costIncreaseRate, level));
     }
 
     private float GetProduction(PowerData power, int level)

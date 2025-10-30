@@ -97,7 +97,7 @@ public class UpgradeManager : MonoBehaviour
 
     private float GetUpgradeCost(UpgradeData upgrade, int level)
     {
-        return Mathf.Round(upgrade.baseCost * Mathf.Pow(upgrade.costIncreaseRate, level));
+        return Mathf.Round((float)upgrade.baseCost * Mathf.Pow(upgrade.costIncreaseRate, level));
     }
 
     private float GetProduction(UpgradeData upgrade, int level)

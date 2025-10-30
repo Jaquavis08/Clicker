@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d842e9da46a31fe41af3d3c0e7654d61
+guid: 6100393b0dc0a0d4fb1ac83d2aad8daa
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3098415006802565225
-    second: funny temple_0
+      213: -3124103638605437495
+    second: funny saul_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 75
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -139,13 +139,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: funny temple_0
+      name: funny saul_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 66
-        height: 75
+        width: 982
+        height: 454
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,8 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 968d4375808cffa20800000000000000
-      internalID: 3098415006802565225
+      spriteID: 9c5ea6bfa44f4a4d0800000000000000
+      internalID: -3124103638605437495
       vertices: []
       indices: 
       edges: []
@@ -174,7 +174,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      funny temple_0: 3098415006802565225
+      funny saul_0: -3124103638605437495
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
