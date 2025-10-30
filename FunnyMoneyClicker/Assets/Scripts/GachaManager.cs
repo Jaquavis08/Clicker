@@ -17,6 +17,8 @@ public class GachaManager : MonoBehaviour
     public float maxtime = 2f;
     public AudioSource gachaSound;
     public int pullsPerOpen = 1;
+    public GameObject tokyodrift;
+    public float value;
 
     [Header("Databases & UI")]
     public ClickerDatabase clickerDatabase; // your skin/clicker database
@@ -62,13 +64,21 @@ public class GachaManager : MonoBehaviour
     // ------------------ MAIN GACHA FLOW ------------------ //
     public void TryOpenGacha()
     {
-        if (cooldownTime < maxtime || rolling) return;
+        
+            if (cooldownTime < maxtime || rolling) return;
 
         if (SaveDataController.currentData.moneyCount < 1000)
         {
             Debug.Log("❌ Not enough money for gacha pull.");
             return;
         }
+        value = Mathf.Repeat(value + Time.deltaTime * 500f, 360f);
+        tokyodrift.transform.rotation = Quaternion.Euler(0, 0, value);
+
+        //if (value >= 359f)
+        //{
+        //    value = 0f;
+        //}
 
         SaveDataController.currentData.moneyCount -= 1000;
         gachaSound?.Play();
