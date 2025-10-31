@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -20,6 +21,9 @@ public class GachaManager : MonoBehaviour
     public GameObject tokyodrift;
     public float value;
     private float rotationSpeed = 2;
+
+    // coroutine handle to avoid overlapping rotations
+    private Coroutine tokyoRotateCoroutine;
 
     [Header("Databases & UI")]
     public ClickerDatabase clickerDatabase; // your skin/clicker database
@@ -72,9 +76,18 @@ public class GachaManager : MonoBehaviour
         {
             Debug.Log("❌ Not enough money for gacha pull.");
             return;
+                }
+  
+
+        // Start a 360° rotation over 2 seconds on the tokyodrift GameObject
+        if (tokyodrift != null)
+        {
+            // stop previous rotation if still running
+            if (tokyoRotateCoroutine != null)
+                StopCoroutine(tokyoRotateCoroutine);
+
+            tokyoRotateCoroutine = StartCoroutine(RotateTokyoDrift360(tokyodrift.transform, 2f));
         }
-        value = Mathf.Repeat(value + Time.deltaTime * 500f, 360f);
-        tokyodrift.transform.rotation = Quaternion.Euler(0, 0, rotationSpeed * Time.deltaTime);
 
         //if (value >= 359f)
         //{
@@ -218,5 +231,32 @@ public class GachaManager : MonoBehaviour
             var ps = effectSystem.GetComponent<ParticleSystem>();
             ps?.Play();
         }
+    }
+
+    // ------------------ ROTATION COROUTINE ------------------ //
+    private IEnumerator RotateTokyoDrift360(Transform target, float duration)
+    {
+        if (target == null || duration <= 0f)
+        {
+            tokyoRotateCoroutine = null;
+            yield break;
+        }
+
+        Quaternion startRotation = target.rotation;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float t = Mathf.Clamp01(elapsed / duration);
+            float angle = Mathf.Lerp(0f, 360f, t);
+            target.rotation = startRotation * Quaternion.Euler(0f, 0f, angle);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure exact final rotation (full 360° relative to start)
+        target.rotation = startRotation * Quaternion.Euler(0f, 0f, 360f);
+
+        tokyoRotateCoroutine = null;
     }
 }
