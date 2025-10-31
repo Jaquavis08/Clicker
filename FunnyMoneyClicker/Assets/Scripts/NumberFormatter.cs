@@ -16,7 +16,7 @@ public static class NumberFormatter
 
     public static string Format(double value)
     {
-        // 🧱 Handle all invalid or tiny values safely
+        //Handle all invalid or tiny values safely
         if (double.IsNaN(value) || double.IsInfinity(value) || value <= 0)
             return "0";
 

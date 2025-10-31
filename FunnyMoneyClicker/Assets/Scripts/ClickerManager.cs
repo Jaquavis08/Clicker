@@ -17,7 +17,12 @@ public class ClickerManager : MonoBehaviour
     public TMP_Text moneyEffectPrefab;
     public GameObject funnyMoney;
     public GameObject moneyEffectContainer;
+
     public List<TMP_Text> moneyEffects = new List<TMP_Text>();
+    private Queue<TMP_Text> moneyEffectPool = new Queue<TMP_Text>();
+    private Queue<GameObject> particlePool = new Queue<GameObject>();
+    private int moneyEffectPoolSize = 50;
+    private int particlePoolSize = 40;
 
     public Vector2 spawnMin = new Vector2(-155f, -37f);
     public Vector2 spawnMax = new Vector2(166f, 112f);
@@ -32,21 +37,55 @@ public class ClickerManager : MonoBehaviour
     private double displayedMoney = 0;
     private float moneyUpdateTimer;
 
+    // Debug variables for pool tracking
+    private int peakMoneyEffects = 0;
+    private int peakParticles = 0;
+    private float debugTimer = 0f;
+    public bool TESTING;
+
     public void Awake()
     {
         instance = this;
         mainCam = Camera.main;
+
+        // Prepopulate money effect pool
+        for (int i = 0; i < moneyEffectPoolSize; i++)
+        {
+            TMP_Text tmp = Instantiate(moneyEffectPrefab, moneyEffectContainer.transform);
+            tmp.gameObject.SetActive(false);
+            moneyEffectPool.Enqueue(tmp);
+        }
+
+        // Prepopulate particle pool
+        for (int i = 0; i < particlePoolSize; i++)
+        {
+            GameObject ps = Instantiate(clickerParticleSystem, moneyEffectContainer.transform);
+            ps.SetActive(false);
+            particlePool.Enqueue(ps);
+        }
     }
 
     private void Update()
     {
         moneyUpdateTimer += Time.deltaTime;
-        if (moneyUpdateTimer >= 0.1f) // update 10 times per second
+        if (moneyUpdateTimer >= 0.25f)
         {
             moneyUpdateTimer = 0f;
             displayedMoney += (SaveDataController.currentData.moneyCount - displayedMoney) * Time.deltaTime * 4.0;
             displayedMoney = SaveDataController.currentData.moneyCount;
             moneyText.text = "$" + NumberFormatter.Format(displayedMoney);
+        }
+
+        if (TESTING)
+        {
+            // Debug: every 5 seconds, log peak usage
+            debugTimer += Time.deltaTime;
+            if (debugTimer >= 5f)
+            {
+                debugTimer = 0f;
+                Debug.Log($"Peak Money Effects Needed: {peakMoneyEffects}");
+                Debug.Log($"Peak Particles Needed: {peakParticles}");
+            }
         }
     }
 
@@ -76,36 +115,36 @@ public class ClickerManager : MonoBehaviour
         if (moneyEffectPrefab == null)
             return;
 
-        float minX = Mathf.Min(spawnMin.x, spawnMax.x);
-        float maxX = Mathf.Max(spawnMin.x, spawnMax.x);
-        float minY = Mathf.Min(spawnMin.y, spawnMax.y);
-        float maxY = Mathf.Max(spawnMin.y, spawnMax.y);
+        TMP_Text moneyE;
 
-        float randX1 = Random.Range(minX, maxX);
-        float randY1 = Random.Range(minY, maxY);
-
-        Vector3 spawnPos = new Vector3(randX1, randY1, 0f);
-        TMP_Text moneyE = Instantiate(moneyEffectPrefab, spawnPos, Quaternion.identity, transform);
-        moneyE.transform.SetParent(moneyEffectContainer.transform, false);
-
-        if (isCrit)
+        if (moneyEffectPool.Count > 0)
         {
-            //moneyE.text = $"<b>CRIT! ${NumberFormatter.Format(moneyValue)}</b>";
-            moneyE.text = "$" + NumberFormatter.Format(moneyValue);
-            moneyE.color = critTextColor;
-            moneyE.fontSize *= 1.4f;
+            moneyE = moneyEffectPool.Dequeue();
+            moneyE.gameObject.SetActive(true);
         }
         else
         {
-            moneyE.text = "$" + NumberFormatter.Format(moneyValue);
+            moneyE = Instantiate(moneyEffectPrefab, moneyEffectContainer.transform);
         }
 
-        if (moneyEffects == null)
-            moneyEffects = new List<TMP_Text>();
+        // Random position inside bounds
+        float randX = Random.Range(spawnMin.x, spawnMax.x);
+        float randY = Random.Range(spawnMin.y, spawnMax.y);
+        moneyE.rectTransform.anchoredPosition = new Vector3(randX, randY, 0f);
+
+        // Set text & style
+        moneyE.color = isCrit ? critTextColor : Color.white;
+        moneyE.text = "$" + NumberFormatter.Format(moneyValue);
+        moneyE.fontSize = isCrit ? moneyEffectPrefab.fontSize * 1.4f : moneyEffectPrefab.fontSize;
 
         moneyEffects.Add(moneyE);
+
+        // Track peak money effects
+        if (moneyEffects.Count > peakMoneyEffects)
+            peakMoneyEffects = moneyEffects.Count;
+
         StartCoroutine(ShakeClicker());
-        StartCoroutine(FloatUpAndFade(moneyE, isCrit ? 500f : 400f, isCrit ? 2f : 2f));
+        StartCoroutine(FloatUpAndFadePooled(moneyE, isCrit ? 500f : 400f, isCrit ? 2f : 2f));
     }
 
     private IEnumerator ShakeClicker()
@@ -118,7 +157,6 @@ public class ClickerManager : MonoBehaviour
             randomZ = Mathf.Sign(randomZ) * 5f;
 
         target.rotation = Quaternion.Euler(0f, 0f, randomZ);
-
         yield return new WaitForSeconds(0.1f);
 
         float finalZ = Random.Range(-5f, 5f);
@@ -141,60 +179,72 @@ public class ClickerManager : MonoBehaviour
         target.rotation = endRot;
     }
 
-    private IEnumerator FloatUpAndFade(TMP_Text text, float floatDistance = 50f, float duration = 2f)
+    private IEnumerator FloatUpAndFadePooled(TMP_Text text, float floatDistance, float duration)
     {
-        RectTransform rect = text.GetComponent<RectTransform>();
+        RectTransform rect = text.rectTransform;
         Vector3 startPos = rect.anchoredPosition;
         Vector3 endPos = startPos + new Vector3(0, floatDistance, 0);
         Color originalColor = text.color;
-
         float elapsed = 0f;
 
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
-
             rect.anchoredPosition = Vector3.Lerp(startPos, endPos, t);
-
-            float alpha = Mathf.Lerp(1f, 0f, t);
-            text.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
-
+            text.color = new Color(originalColor.r, originalColor.g, originalColor.b, Mathf.Lerp(1f, 0f, t));
             yield return null;
         }
 
         moneyEffects.Remove(text);
-        Destroy(text.gameObject);
+        text.gameObject.SetActive(false);
+        moneyEffectPool.Enqueue(text);
     }
 
     private void ClickingParticle()
     {
-        Vector3 worldPos = mainCam.ScreenToWorldPoint(
-            new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 1f)
-        );
+        Vector3 worldPos = mainCam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 1f));
+        GameObject psInstance;
 
-        GameObject clickingParticleSystemInstance = Instantiate(clickerParticleSystem, worldPos, Quaternion.identity, moneyEffectContainer.transform);
-
-        ParticleSystem ps = clickingParticleSystemInstance.GetComponent<ParticleSystem>();
-        if (ps != null && ps.GetComponent<Renderer>().material != clickerItem.clickerSkin)
+        if (particlePool.Count > 0)
         {
-            ps.GetComponent<Renderer>().material = clickerItem.clickerMaterial;
+            psInstance = particlePool.Dequeue();
+            psInstance.transform.position = worldPos;
+            psInstance.SetActive(true);
+        }
+        else
+        {
+            psInstance = Instantiate(clickerParticleSystem, worldPos, Quaternion.identity, moneyEffectContainer.transform);
         }
 
-        clickingParticleSystemInstance.SetActive(true);
+        ParticleSystem ps = psInstance.GetComponent<ParticleSystem>();
+        if (ps != null && ps.GetComponent<Renderer>().material != clickerItem.clickerSkin)
+            ps.GetComponent<Renderer>().material = clickerItem.clickerMaterial;
+
         ps.Play();
-        //ps.Emit(1000);
+
+        // Track peak particles
+        int activeParticles = particlePoolSize - particlePool.Count;
+        if (activeParticles > peakParticles)
+            peakParticles = activeParticles;
+
+        StartCoroutine(ReturnParticleToPool(psInstance, ps.main.duration));
+    }
+
+    private IEnumerator ReturnParticleToPool(GameObject psInstance, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        psInstance.SetActive(false);
+        particlePool.Enqueue(psInstance);
     }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (funnyMoney == null)
-            return;
+        if (funnyMoney == null) return;
 
         RectTransform rect = funnyMoney.GetComponent<RectTransform>();
-        if (rect == null)
-            return;
+        if (rect == null) return;
 
         Vector2 spawnCenter = (spawnMin + spawnMax) * 0.5f;
         Vector2 spawnSize = new Vector2(Mathf.Abs(spawnMax.x - spawnMin.x), Mathf.Abs(spawnMax.y - spawnMin.y));

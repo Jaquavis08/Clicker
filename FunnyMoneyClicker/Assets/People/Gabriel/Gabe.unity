@@ -14873,6 +14873,7 @@ MonoBehaviour:
   critChance: 0.05
   critMultiplier: 2
   critTextColor: {r: 1, g: 0.60990745, b: 0, a: 1}
+  TESTING: 0
 --- !u!4 &957291751
 Transform:
   m_ObjectHideFlags: 0
@@ -21935,8 +21936,8 @@ RectTransform:
   - {fileID: 1386833846}
   - {fileID: 64592986}
   - {fileID: 1435445529}
-  - {fileID: 1761491112}
   - {fileID: 1819531331}
+  - {fileID: 1761491112}
   m_Father: {fileID: 1960445480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
