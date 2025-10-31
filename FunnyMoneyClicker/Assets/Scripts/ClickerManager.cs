@@ -22,28 +22,32 @@ public class ClickerManager : MonoBehaviour
     public Vector2 spawnMin = new Vector2(-155f, -37f);
     public Vector2 spawnMax = new Vector2(166f, 112f);
 
+    private Camera mainCam;
+
     [Header("Critical Click Settings")]
     [Range(0f, 1f)] public float critChance = 0.05f; // 5% chance
     public float critMultiplier = 2f;
     public Color critTextColor = Color.red;
 
     private double displayedMoney = 0;
+    private float moneyUpdateTimer;
 
     public void Awake()
     {
         instance = this;
+        mainCam = Camera.main;
     }
 
     private void Update()
     {
-
-        displayedMoney += (SaveDataController.currentData.moneyCount - displayedMoney) * Time.deltaTime * 4.0;
-
-        //if (Mathf.Abs((int)(SaveDataController.currentData.moneyCount - displayedMoney)) < 0.01f)
-        //}
+        moneyUpdateTimer += Time.deltaTime;
+        if (moneyUpdateTimer >= 0.1f) // update 10 times per second
+        {
+            moneyUpdateTimer = 0f;
+            displayedMoney += (SaveDataController.currentData.moneyCount - displayedMoney) * Time.deltaTime * 4.0;
             displayedMoney = SaveDataController.currentData.moneyCount;
-        //}
-        moneyText.text = "$" + NumberFormatter.Format(displayedMoney);
+            moneyText.text = "$" + NumberFormatter.Format(displayedMoney);
+        }
     }
 
     public void Click()
@@ -101,7 +105,7 @@ public class ClickerManager : MonoBehaviour
 
         moneyEffects.Add(moneyE);
         StartCoroutine(ShakeClicker());
-        StartCoroutine(FloatUpAndFade(moneyE, isCrit ? 500f : 400f, isCrit ? 2f : 1.5f));
+        StartCoroutine(FloatUpAndFade(moneyE, isCrit ? 500f : 400f, isCrit ? 2f : 2f));
     }
 
     private IEnumerator ShakeClicker()
@@ -137,7 +141,7 @@ public class ClickerManager : MonoBehaviour
         target.rotation = endRot;
     }
 
-    private IEnumerator FloatUpAndFade(TMP_Text text, float floatDistance = 50f, float duration = 1.5f)
+    private IEnumerator FloatUpAndFade(TMP_Text text, float floatDistance = 50f, float duration = 2f)
     {
         RectTransform rect = text.GetComponent<RectTransform>();
         Vector3 startPos = rect.anchoredPosition;
@@ -165,7 +169,7 @@ public class ClickerManager : MonoBehaviour
 
     private void ClickingParticle()
     {
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(
+        Vector3 worldPos = mainCam.ScreenToWorldPoint(
             new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 1f)
         );
 
