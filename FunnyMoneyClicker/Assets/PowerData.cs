@@ -11,6 +11,7 @@ public class PowerData
 
     public float costIncreaseRate = 1.225f; // Multiplier for cost growth each level (e.g. cost *= 1.15)
     public float productionIncreaseRate = 1.175f; // Multiplier for production increase each level (e.g. production *= 1.05)
+    public int maxLevel;
     [HideInInspector] public float baseInterval = 0.1f; // Time in seconds between each automatic production tick
 
     [Header("UI")]

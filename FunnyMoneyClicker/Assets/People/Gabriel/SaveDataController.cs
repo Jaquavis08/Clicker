@@ -1,44 +1,8 @@
-﻿//using Newtonsoft.Json;
-//using System.IO;
-//using UnityEngine;
-
-//public class SaveDataController : MonoBehaviour
-//{
-//    [SerializeField] private string filePath;
-//    [SerializeField] private string fileName;
-
-//    public SaveDataObject defaultData;
-//    public static SaveData currentData;
-
-//    public void Load()
-//    {
-//        SaveData loadedData = Serializer.Load(defaultData.defaultData, Path.Combine(Application.persistentDataPath, filePath), fileName);
-
-//        currentData = JsonConvert.DeserializeObject<SaveData>(JsonConvert.SerializeObject(loadedData));
-//    }
-
-//    public void Save()
-//    {
-//        Serializer.Save(currentData, Path.Combine(Application.persistentDataPath, filePath), fileName);
-//    }
-
-//    private void Awake()
-//    {
-//        Load();
-//    }
-
-//    private void OnDestroy()
-//    {
-//        Save();
-//    }
-//}
-
-
-
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SaveDataController : MonoBehaviour
 {
@@ -94,6 +58,38 @@ public class SaveDataController : MonoBehaviour
         Serializer.Save(currentData, Path.Combine(Application.persistentDataPath, filePath), fileName);
     }
 
+
+    public void DeleteData()
+    {
+        string fullPath = Path.Combine(Application.persistentDataPath, filePath, fileName);
+
+        try
+        {
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+                Debug.Log($"Save file deleted: {fullPath}");
+            }
+            else
+            {
+                Debug.LogWarning("No save file found to delete.");
+            }
+
+            currentData = JsonConvert.DeserializeObject<SaveData>(
+                JsonConvert.SerializeObject(defaultData.defaultData)
+            );
+
+            Save();
+
+            Debug.Log("Save data reset to defaults.");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Failed to delete save data: {ex.Message}");
+        }
+    }
+
     private void HandleOfflineEarnings()
     {
         if (currentData.lastSaveTime == 0)
@@ -111,7 +107,7 @@ public class SaveDataController : MonoBehaviour
 
         double earnings = moneyPerSecond * secondsAway * multiplier;
 
-        double maxEarnings = moneyPerSecond * 3600 * 12; // 12 = max hours
+        double maxEarnings = (moneyPerSecond * 5) * (3600 * 24); // 12 = max hours
         earnings = Math.Min(earnings, maxEarnings);
 
         Debug.Log($"Last Save: {lastSave}");

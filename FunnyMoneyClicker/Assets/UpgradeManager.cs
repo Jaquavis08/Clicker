@@ -12,10 +12,10 @@ public class UpgradeManager : MonoBehaviour
     public TMP_Text totalRateText;
     public double moneyPerSecond;
 
-    private const float costIncreaseRate = 1.145f;
-    private const float productionIncreaseRate = 1.07f;
+    private const double costIncreaseRate = 1.145;
+    private const double productionIncreaseRate = 1.07;
 
-    public float baseInterval = 1;
+    public float baseInterval = 1f;
 
     public void Awake()
     {
@@ -24,7 +24,7 @@ public class UpgradeManager : MonoBehaviour
 
     private void Update()
     {
-        float totalRate = 0f;
+        double totalRate = 0f;
 
         for (int i = 0; i < upgrades.Count; i++)
         {
@@ -34,21 +34,23 @@ public class UpgradeManager : MonoBehaviour
         if (totalRateText != null)
         {
             moneyPerSecond = totalRate;
-            totalRateText.text = $"+${NumberFormatter.Format(moneyPerSecond)} / " + baseInterval + "s";
+            totalRateText.text = $"+${NumberFormatter.Format(moneyPerSecond)} / {NumberFormatter.Format(baseInterval)}s";
         }
     }
 
-    private float HandleUpgrade(UpgradeData upgrade, int index)
+    private double HandleUpgrade(UpgradeData upgrade, int index)
     {
-        if (upgrade.costIncreaseRate != costIncreaseRate) upgrade.costIncreaseRate = costIncreaseRate;
-        if (upgrade.productionIncreaseRate != productionIncreaseRate) upgrade.productionIncreaseRate = productionIncreaseRate;
+        // Sync constants
+        if (upgrade.costIncreaseRate != costIncreaseRate) upgrade.costIncreaseRate = (float)costIncreaseRate;
+        if (upgrade.productionIncreaseRate != productionIncreaseRate) upgrade.productionIncreaseRate = (float)productionIncreaseRate;
         if (upgrade.baseInterval != baseInterval) upgrade.baseInterval = baseInterval;
 
         int level = SaveDataController.currentData.upgradeLevels[index];
 
-        float cost = GetUpgradeCost(upgrade, level);
-        float production = GetProduction(upgrade, level);
+        double cost = GetUpgradeCost(upgrade, level);
+        double production = GetProduction(upgrade, level);
 
+        // Passive income tick
         if (level > 0)
         {
             upgrade.currentTime += Time.deltaTime;
@@ -59,6 +61,7 @@ public class UpgradeManager : MonoBehaviour
             }
         }
 
+        // UI Updates
         if (upgrade.levelText != null)
             upgrade.levelText.text = $"Level {level}";
 
@@ -68,9 +71,7 @@ public class UpgradeManager : MonoBehaviour
         if (upgrade.rateText != null)
         {
             if (level > 0)
-            {
-                upgrade.rateText.text = $"Rate: ${NumberFormatter.Format(production)} per {upgrade.baseInterval}s";
-            }
+                upgrade.rateText.text = $"Rate: ${NumberFormatter.Format(production)} per {NumberFormatter.Format(upgrade.baseInterval)}s";
             else
                 upgrade.rateText.text = "";
         }
@@ -81,12 +82,11 @@ public class UpgradeManager : MonoBehaviour
     public void BuyUpgrade(int index)
     {
         index -= 1;
-
         if (index < 0 || index >= upgrades.Count) return;
 
         var upgrade = upgrades[index];
         int level = SaveDataController.currentData.upgradeLevels[index];
-        float cost = GetUpgradeCost(upgrade, level);
+        double cost = GetUpgradeCost(upgrade, level);
 
         if (SaveDataController.currentData.moneyCount >= cost)
         {
@@ -95,16 +95,28 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    private float GetUpgradeCost(UpgradeData upgrade, int level)
+    private double GetUpgradeCost(UpgradeData upgrade, int level)
     {
-        return Mathf.Round((float)upgrade.baseCost * Mathf.Pow(upgrade.costIncreaseRate, level));
+        // Use double math for large numbers
+        double cost = upgrade.baseCost * System.Math.Pow(upgrade.costIncreaseRate, level);
+
+        // Protect from overflow
+        if (double.IsInfinity(cost) || double.IsNaN(cost))
+            cost = double.MaxValue;
+
+        return System.Math.Round(cost, 2);
     }
 
-    private float GetProduction(UpgradeData upgrade, int level)
+    private double GetProduction(UpgradeData upgrade, int level)
     {
-        float production = upgrade.baseProduction * Mathf.Pow(upgrade.productionIncreaseRate, level);
+        double production = upgrade.baseProduction * System.Math.Pow(upgrade.productionIncreaseRate, level);
         int milestoneBonus = level / 25;
-        production *= Mathf.Pow(2f, milestoneBonus);
-        return production;
+        production *= System.Math.Pow(2.0, milestoneBonus);
+
+        // Prevent overflow
+        if (double.IsInfinity(production) || double.IsNaN(production))
+            production = double.MaxValue;
+
+        return System.Math.Round(production, 2);
     }
 }

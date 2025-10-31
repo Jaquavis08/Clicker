@@ -1,16 +1,11 @@
 ﻿using System.Collections.Generic;
-using Unity.Services.Economy.Model;
 using UnityEngine;
-
 
 public class Power1 : MonoBehaviour
 {
     public List<PowerData> Powers = new List<PowerData>();
 
-    //private const float costIncreaseRate = 1.225f;
-    //private const float productionIncreaseRate = 1.175f;
     private const float baseInterval = 0.1f;
-
 
     private void Update()
     {
@@ -22,14 +17,13 @@ public class Power1 : MonoBehaviour
 
     private void HandlePowers(PowerData power, int index)
     {
-        //if (power.costIncreaseRate != costIncreaseRate) power.costIncreaseRate = costIncreaseRate;
-        //if (power.productionIncreaseRate != productionIncreaseRate) power.productionIncreaseRate = productionIncreaseRate;
-        if (power.baseInterval != baseInterval) power.baseInterval = baseInterval;
+        if (power.baseInterval != baseInterval)
+            power.baseInterval = baseInterval;
 
         int level = SaveDataController.currentData.powerLevels[index];
-        
-        float cost = GetPowerCost(power, level);
-        float production = GetProduction(power, level);
+
+        double cost = GetPowerCost(power, level);
+        double production = GetProduction(power, level);
 
         if (level > 0)
         {
@@ -38,35 +32,34 @@ public class Power1 : MonoBehaviour
             {
                 switch (index)
                 {
-                    case 0: // Upgrade 1
-                        ClickerManager.instance.moneyValue = production;
+                    case 0: // Power 1
+                        ClickerManager.instance.moneyValue = (float)production;
                         break;
-                    case 1: // Upgrade 2
+                    case 1: // Power 2
                         GoldCoinSpawner.instance.EnableSpawner(true);
-                        float goldCoinChance = power.baseProduction + (level * power.productionIncreaseRate);
-                        GoldCoinSpawner.instance.spawnChance = goldCoinChance;
+                        double goldCoinChance = power.baseProduction + (level * power.productionIncreaseRate);
+                        GoldCoinSpawner.instance.spawnChance = (float)goldCoinChance;
                         break;
-                    case 2: // Upgrade 3
+                    case 2: // Power 3
                         if (GachaManager.instance != null)
                             GachaManager.instance.isGacha = true;
-                        float luckBoost = power.baseProduction + (level * power.productionIncreaseRate);
-                        GachaManager.instance.luckMultiplier = luckBoost;
+                        double luckBoost = power.baseProduction + (level * power.productionIncreaseRate);
+                        GachaManager.instance.luckMultiplier = (float)luckBoost;
                         break;
-                    case 3: // Upgrade 4
-                        float critChance = power.baseProduction + (level * power.productionIncreaseRate);
-                        ClickerManager.instance.critChance = critChance;
+                    case 3: // Power 4
+                        double critChance = power.baseProduction + (level * power.productionIncreaseRate);
+                        ClickerManager.instance.critChance = (float)critChance;
                         break;
-                    case 4: // Upgrade 5
-                        float newTime = power.baseProduction - (level * power.productionIncreaseRate);
-                        UpgradeManager.instance.baseInterval = newTime;
-                        print(newTime);
+                    case 4: // Power 5
+                        double newTime = power.baseProduction - (level * power.productionIncreaseRate);
+                        UpgradeManager.instance.baseInterval = (float)newTime;
                         break;
-                    case 5: // Upgrade 6
-                        float offlineIncome = power.baseProduction + (level * power.productionIncreaseRate);
-                        SaveDataController.currentData.offlineEarningsMultiplier = offlineIncome;
+                    case 5: // Power 6
+                        double offlineIncome = power.baseProduction + (level * power.productionIncreaseRate);
+                        SaveDataController.currentData.offlineEarningsMultiplier = (float)offlineIncome;
                         break;
-                    case 6: // Upgrade 7
-
+                    case 6: // Power 7
+                        // Add custom power logic here
                         break;
                 }
 
@@ -74,6 +67,7 @@ public class Power1 : MonoBehaviour
             }
         }
 
+        // Update UI
         if (power.levelText != null)
             power.levelText.text = $"Level {level}";
 
@@ -87,9 +81,17 @@ public class Power1 : MonoBehaviour
             else
                 power.rateText.text = "";
         }
+
+        // Handle max level
+        if (power.levelText != null && power.maxLevel > 0 && level >= power.maxLevel)
+        {
+            power.levelText.text = "MAX LEVEL";
+            if (power.costText != null)
+                power.costText.text = "";
+        }
     }
 
-    private string GetPowerDescription(int index, float production)
+    private string GetPowerDescription(int index, double production)
     {
         switch (index)
         {
@@ -98,8 +100,7 @@ public class Power1 : MonoBehaviour
             case 2: return $"Luck Boost: {(GachaManager.instance.luckMultiplier - 1f) * 100f:F1}%";
             case 3: return $"Crit chance: {ClickerManager.instance.critChance * 100:F1}%";
             case 4: return $"Upgrade Rate: {UpgradeManager.instance.baseInterval:F2}/s";
-            case 5: return $"Offline Income: {SaveDataController.currentData.offlineEarningsMultiplier * 100:F1}%"; ;
-            case 6: return null;
+            case 5: return $"Offline Income: {SaveDataController.currentData.offlineEarningsMultiplier * 100:F1}%";
             default: return "";
         }
     }
@@ -107,30 +108,51 @@ public class Power1 : MonoBehaviour
     public void BuyUpgrade(int index)
     {
         index -= 1;
-
         if (index < 0 || index >= Powers.Count) return;
 
         var power = Powers[index];
         int level = SaveDataController.currentData.powerLevels[index];
-        float cost = GetPowerCost(power, level);
+
+        if (power.maxLevel > 0 && level >= power.maxLevel)
+        {
+            Debug.Log($"{power.upgradeName} is already at max level!");
+            return;
+        }
+
+        double cost = GetPowerCost(power, level);
 
         if (SaveDataController.currentData.moneyCount >= cost)
         {
             SaveDataController.currentData.moneyCount -= cost;
             SaveDataController.currentData.powerLevels[index]++;
+
+            if (power.maxLevel > 0 && SaveDataController.currentData.powerLevels[index] > power.maxLevel)
+            {
+                SaveDataController.currentData.powerLevels[index] = power.maxLevel;
+            }
         }
     }
 
-    private float GetPowerCost(PowerData power, int level)
+    private double GetPowerCost(PowerData power, int level)
     {
-        return Mathf.Round((float)power.baseCost * Mathf.Pow(power.costIncreaseRate, level));
+        double cost = power.baseCost * System.Math.Pow(power.costIncreaseRate, level);
+
+        // Prevent overflow / NaN
+        if (double.IsInfinity(cost) || double.IsNaN(cost))
+            cost = double.MaxValue;
+
+        return System.Math.Round(cost, 2);
     }
 
-    private float GetProduction(PowerData power, int level)
+    private double GetProduction(PowerData power, int level)
     {
-        float production = power.baseProduction * Mathf.Pow(power.productionIncreaseRate, level);
+        double production = power.baseProduction * System.Math.Pow(power.productionIncreaseRate, level);
         int milestoneBonus = level / 25;
-        production *= Mathf.Pow(2f, milestoneBonus);
-        return production;
+        production *= System.Math.Pow(2.0, milestoneBonus);
+
+        if (double.IsInfinity(production) || double.IsNaN(production))
+            production = double.MaxValue;
+
+        return System.Math.Round(production, 2);
     }
 }
