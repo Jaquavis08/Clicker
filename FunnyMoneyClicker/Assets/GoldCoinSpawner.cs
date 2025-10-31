@@ -23,6 +23,7 @@ public class GoldCoinSpawner : MonoBehaviour
     private Coroutine spawnRoutine;
     private Coroutine moveRoutine;
     private Coroutine lifetimeRoutine;
+    public AudioSource audio;
 
     private void Awake()
     {
@@ -163,16 +164,19 @@ public class GoldCoinSpawner : MonoBehaviour
     {
         if (!coinActive) return;
         coinActive = false;
+        audio.Play();
 
-        bonusAmount = (float)SaveDataController.currentData.moneyCount * 0.05f; // 5%
-
-        int randomBonus = Random.Range(500, 1000);
+        double bonusAmount = SaveDataController.currentData.moneyCount * 0.05; // 5% of total money
+        double randomBonus = Random.Range(700, 1000);
         double totalBonus = bonusAmount + randomBonus;
 
+        // Add to player money
         SaveDataController.currentData.moneyCount += totalBonus;
-        ClickerManager.instance?.MoneyEffect((float)totalBonus);
 
-        Debug.Log($"Golden Coin clicked! +${bonusAmount}");
+        // Show effect without losing precision
+        ClickerManager.instance?.MoneyEffect(totalBonus);
+
+        Debug.Log($"Golden Coin clicked! +${NumberFormatter.Format(totalBonus)}");
 
         if (coin != null)
         {
@@ -181,4 +185,5 @@ public class GoldCoinSpawner : MonoBehaviour
 
         currentCoin = null;
     }
+
 }

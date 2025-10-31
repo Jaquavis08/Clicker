@@ -70,14 +70,21 @@ public class GachaManager : MonoBehaviour
     public void TryOpenGacha()
     {
         
-            if (cooldownTime < maxtime || rolling) return;
+        if (cooldownTime < maxtime || rolling) return;
+
+        List<string> allMessages = new List<string>();
 
         if (SaveDataController.currentData.moneyCount < 1000)
         {
-            Debug.Log("❌ Not enough money for gacha pull.");
+            Debug.Log("Not enough money for gacha pull.");
+            allMessages.Add($"Need $1k!");
+            if (rewardTextUI != null)
+            {
+                rewardTextUI.color = Color.red;
+                rewardTextUI.text = string.Join("\n", allMessages);
+            }
             return;
-                }
-  
+        }
 
         // Start a 360° rotation over 2 seconds on the tokyodrift GameObject
         if (tokyodrift != null)
@@ -98,7 +105,7 @@ public class GachaManager : MonoBehaviour
         gachaSound?.Play();
         rolling = true;
 
-        List<string> allMessages = new List<string>();
+       
 
         for (int i = 0; i < pullsPerOpen; i++)
         {
@@ -119,7 +126,10 @@ public class GachaManager : MonoBehaviour
 
         // Update UI once
         if (rewardTextUI != null)
+        {
+            rewardTextUI.color = Color.black;
             rewardTextUI.text = string.Join("\n", allMessages);
+        }
 
         cooldownTime = 0f;
         rolling = false;
@@ -159,7 +169,7 @@ public class GachaManager : MonoBehaviour
         SaveDataController.currentData.moneyCount += reward.goldAmount;
         ClickerManager.instance?.MoneyEffect(reward.goldAmount);
 
-        string message = $"💰 You won ${reward.goldAmount}!";
+        string message = $"You won ${reward.goldAmount}!";
 
         if (playEffect) DisplayEffect();
 
@@ -198,7 +208,7 @@ public class GachaManager : MonoBehaviour
     {
         if (reward == null) return "";
 
-        string message = "🎲 No skin selected.";
+        string message = "No skin selected.";
 
         var allSkins = clickerDatabase?.allClickers;
         if (allSkins != null && allSkins.Count > 0)
@@ -209,11 +219,11 @@ public class GachaManager : MonoBehaviour
             if (!SaveDataController.currentData.unlockedSkins.Contains(selectedSkin.skinId))
             {
                 SaveDataController.currentData.unlockedSkins.Add(selectedSkin.skinId);
-                message = $"🎉 NEW SKIN UNLOCKED: {selectedSkin.skinName}!";
+                message = $"SKIN UNLOCKED: {selectedSkin.skinName}!";
             }
             else
             {
-                message = $"⭐ Duplicate skin: {selectedSkin.skinName}";
+                message = $"*Duplicate skin: {selectedSkin.skinName}";
             }
         }
 

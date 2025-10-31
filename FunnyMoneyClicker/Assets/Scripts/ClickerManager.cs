@@ -6,7 +6,7 @@ using UnityEngine;
 public class ClickerManager : MonoBehaviour
 {
     public static ClickerManager instance;
-    public float moneyValue = 1;
+    public double moneyValue = 1;
     public ClickerItem clickerItem;
     public GameObject clickerParticleSystem;
     public GameObject canvas;
@@ -52,7 +52,7 @@ public class ClickerManager : MonoBehaviour
 
     public void Click()
     {
-        float finalValue = moneyValue;
+        double finalValue = moneyValue;
         bool isCrit = Random.value < critChance;
         clicksound.Play();
 
@@ -71,7 +71,7 @@ public class ClickerManager : MonoBehaviour
         ClickingParticle();
     }
 
-    public void MoneyEffect(float moneyValue, bool isCrit = false)
+    public void MoneyEffect(double moneyValue, bool isCrit = false)
     {
         if (moneyEffectPrefab == null)
             return;
