@@ -5987,6 +5987,7 @@ MonoBehaviour:
   skinDatabase: {fileID: 11400000, guid: 6ff670e48bc9f2345a84de08028464a1, type: 2}
   contentParent: {fileID: 2029122216}
   skinButtonPrefab: {fileID: 5869217355387297476, guid: 256db712281f12a44875aa600013cdea, type: 3}
+  updateInterval: 1
 --- !u!1 &454217632
 GameObject:
   m_ObjectHideFlags: 0
@@ -12804,13 +12805,13 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: f06fb528e8736814b854ed78ebc6138d, type: 3}
   m_Resource: {fileID: 8300000, guid: f06fb528e8736814b854ed78ebc6138d, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.168
-  m_Pitch: -0.64
+  m_Volume: 0.14
+  m_Pitch: 3
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 14
+  Priority: 74
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -21573,9 +21574,9 @@ RectTransform:
   - {fileID: 2007217632}
   - {fileID: 517234957}
   - {fileID: 815706716}
+  - {fileID: 1231213183}
   - {fileID: 906086561}
   - {fileID: 122713849}
-  - {fileID: 1231213183}
   - {fileID: 1452932146}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -25795,6 +25796,8 @@ MonoBehaviour:
     chance: 0.1
   skinRewards:
   - id: 1
+    chance: 50
+  - id: 2
     chance: 50
 --- !u!82 &1828983549
 AudioSource:

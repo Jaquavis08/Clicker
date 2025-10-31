@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allClickers:
   - {fileID: 11400000, guid: a5aa0072ea722f1448cdb81cde9b2045, type: 2}
+  - {fileID: 11400000, guid: a805d824563fd0c45abd669bbf2c7493, type: 2}

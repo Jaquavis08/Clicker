@@ -19,6 +19,7 @@ public class GachaManager : MonoBehaviour
     public int pullsPerOpen = 1;
     public GameObject tokyodrift;
     public float value;
+    private float rotationSpeed = 2;
 
     [Header("Databases & UI")]
     public ClickerDatabase clickerDatabase; // your skin/clicker database
@@ -73,7 +74,7 @@ public class GachaManager : MonoBehaviour
             return;
         }
         value = Mathf.Repeat(value + Time.deltaTime * 500f, 360f);
-        tokyodrift.transform.rotation = Quaternion.Euler(0, 0, value);
+        tokyodrift.transform.rotation = Quaternion.Euler(0, 0, rotationSpeed * Time.deltaTime);
 
         //if (value >= 359f)
         //{
