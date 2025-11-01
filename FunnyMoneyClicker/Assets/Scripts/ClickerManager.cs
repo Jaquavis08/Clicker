@@ -71,9 +71,18 @@ public class ClickerManager : MonoBehaviour
         if (moneyUpdateTimer >= 0.25f)
         {
             moneyUpdateTimer = 0f;
-            displayedMoney += (SaveDataController.currentData.moneyCount - displayedMoney) * Time.deltaTime * 4.0;
-            displayedMoney = SaveDataController.currentData.moneyCount;
-            moneyText.text = "$" + NumberFormatter.Format(displayedMoney);
+            double targetMoney = SaveDataController.currentData.moneyCount;
+
+            if (double.IsNaN(targetMoney) || double.IsInfinity(targetMoney) || targetMoney < 0)
+            {
+                targetMoney = 0;
+                SaveDataController.currentData.moneyCount = 0;
+            }
+
+            // Smooth but stable interpolation
+            //displayedMoney = Mathf.Lerp((float)displayedMoney, (float)targetMoney, 0.25f);
+            //moneyText.text = "$" + NumberFormatter.Format(targetMoney);
+            moneyText.text = "$" + NumberFormatter.Format(SaveDataController.currentData.moneyCount);
         }
 
         if (TESTING)

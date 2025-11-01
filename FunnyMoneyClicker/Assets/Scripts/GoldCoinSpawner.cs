@@ -166,8 +166,14 @@ public class GoldCoinSpawner : MonoBehaviour
         coinActive = false;
         audio.Play();
 
-        double bonusAmount = SaveDataController.currentData.moneyCount * 0.05; // 5% of total money
-        double randomBonus = Random.Range(700, 1000);
+        double baseMoney = SaveDataController.currentData.moneyCount;
+        if (double.IsInfinity(baseMoney) || double.IsNaN(baseMoney) || baseMoney < 0)
+            baseMoney = 0;
+
+        double bonusAmount = baseMoney * 0.05;
+        bonusAmount = System.Math.Min(bonusAmount, 1e300); // clamp to safe max
+
+        double randomBonus = (double)Random.Range(700, 1000);
         double totalBonus = bonusAmount + randomBonus;
 
         // Add to player money
