@@ -61,7 +61,13 @@ public class HoldButtonHandler : MonoBehaviour,
             // If hold never activated and not cancelled by a drag, this was a simple tap.
             // (If you want a single-tap buy behavior, trigger it here.)
             // Example: one-tap buys once (uncomment if desired):
-            // if (!cancelledByDrag) UpgradeManager.instance.BuyUpgrade(index);
+             if (!cancelledByDrag)
+            {
+                if (type == "Upgrade")
+                    UpgradeManager.instance.OnUpgradeButtonDown(index);
+                else if (type == "Power")
+                    Power1.instance.OnPowerButtonDown(index);
+            }
         }
 
         isPointerDown = false;
