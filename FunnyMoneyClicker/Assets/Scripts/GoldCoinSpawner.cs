@@ -171,15 +171,13 @@ public class GoldCoinSpawner : MonoBehaviour
             baseMoney = 0;
 
         double bonusAmount = baseMoney * 0.05;
-        bonusAmount = System.Math.Min(bonusAmount, 1e300); // clamp to safe max
+        bonusAmount = System.Math.Min(bonusAmount, 1e300);
 
         double randomBonus = (double)Random.Range(700, 1000);
         double totalBonus = bonusAmount + randomBonus;
 
-        // Add to player money
         SaveDataController.currentData.moneyCount += totalBonus;
 
-        // Show effect without losing precision
         ClickerManager.instance?.MoneyEffect(totalBonus);
 
         Debug.Log($"Golden Coin clicked! +${NumberFormatter.Format(totalBonus)}");

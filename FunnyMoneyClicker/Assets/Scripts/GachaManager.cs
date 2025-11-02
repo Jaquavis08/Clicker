@@ -29,10 +29,10 @@ public class GachaManager : MonoBehaviour
     public ClickerDatabase clickerDatabase; // your skin/clicker database
     public TextMeshProUGUI rewardTextUI;    // optional reward text display
 
-    [Header("💰 Money Rewards")]
+    [Header("Money Rewards")]
     public List<MoneyReward> moneyRewards = new List<MoneyReward>();
 
-    [Header("🎨 Skin / Clicker Rewards")]
+    [Header("Skin / Clicker Rewards")]
     public List<SkinReward> skinRewards = new List<SkinReward>();
 
     // ------------------ DATA CLASSES ------------------ //

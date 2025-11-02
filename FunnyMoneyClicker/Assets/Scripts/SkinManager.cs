@@ -6,7 +6,7 @@ public class SkinManager : MonoBehaviour
 {
     public static SkinManager instance;
     public ClickerDatabase clickerDatabase;
-    public Transform skinParent; // where the skin prefab will spawn
+    public Transform skinParent;
 
     private ClickerItem currentSkinObject;
 

@@ -17,7 +17,7 @@ public class UpgradeManager : MonoBehaviour
 
     public float baseInterval = 1f;
 
-    // --- Hold to Buy Settings ---
+    [Header("Hold To Buy Settings")]
     private bool isHolding = false;
     private int heldUpgradeIndex = -1;
     private float holdTimer = 0f;
@@ -59,13 +59,12 @@ public class UpgradeManager : MonoBehaviour
 
                 if (SaveDataController.currentData.moneyCount >= cost)
                 {
-                    BuyUpgrade(heldUpgradeIndex + 1); // +1 because BuyUpgrade subtracts 1 internally
-                    holdTimer = currentDelay; // Wait before next buy
+                    BuyUpgrade(heldUpgradeIndex + 1);
+                    holdTimer = currentDelay;
                     currentDelay = Mathf.Max(minRepeatDelay, currentDelay * accelerationRate);
                 }
                 else
                 {
-                    // Not enough money — stop auto-buy
                     isHolding = false;
                     heldUpgradeIndex = -1;
                 }
@@ -73,14 +72,13 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    // --- Called from button events ---
     public void OnUpgradeButtonDown(int index)
     {
         heldUpgradeIndex = index - 1;
         isHolding = true;
         currentDelay = baseRepeatDelay;
-        holdTimer = baseRepeatDelay; // start countdown, prevents instant 2nd buy
-        BuyUpgrade(index); // Single instant click
+        holdTimer = baseRepeatDelay;
+        BuyUpgrade(index);
     }
 
     public void OnUpgradeButtonUp()
@@ -91,7 +89,6 @@ public class UpgradeManager : MonoBehaviour
 
     private double HandleUpgrade(UpgradeData upgrade, int index)
     {
-        // Sync constants
         if (upgrade.costIncreaseRate != costIncreaseRate) upgrade.costIncreaseRate = (float)costIncreaseRate;
         if (upgrade.productionIncreaseRate != productionIncreaseRate) upgrade.productionIncreaseRate = (float)productionIncreaseRate;
         if (upgrade.baseInterval != baseInterval) upgrade.baseInterval = baseInterval;
@@ -100,7 +97,6 @@ public class UpgradeManager : MonoBehaviour
         double cost = GetUpgradeCost(upgrade, level);
         double production = GetProduction(upgrade, level);
 
-        // Passive income tick
         if (level > 0)
         {
             upgrade.currentTime += Time.deltaTime;
@@ -147,10 +143,9 @@ public class UpgradeManager : MonoBehaviour
 
     private double GetUpgradeCost(UpgradeData upgrade, int level)
     {
-        // Use double math for large numbers
         double cost = upgrade.baseCost * System.Math.Pow(upgrade.costIncreaseRate, level);
 
-        // Protect from overflow
+
         if (double.IsInfinity(cost) || double.IsNaN(cost))
             cost = double.MaxValue;
 
@@ -163,7 +158,7 @@ public class UpgradeManager : MonoBehaviour
         int milestoneBonus = level / 25;
         production *= System.Math.Pow(2.0, milestoneBonus);
 
-        // Prevent overflow
+
         if (double.IsInfinity(production) || double.IsNaN(production))
             production = double.MaxValue;
 

@@ -13,6 +13,6 @@ public class SaveData
     public List<string> unlockedSkins = new List<string>();
     public string equippedSkinId = "default";
 
-    public int[] upgradeLevels = new int[10]; // Supports up to 10 upgrades
-    public int[] powerLevels = new int[10]; // Supports up to 10 upgrades
+    public int[] upgradeLevels = new int[10];
+    public int[] powerLevels = new int[10];
 }

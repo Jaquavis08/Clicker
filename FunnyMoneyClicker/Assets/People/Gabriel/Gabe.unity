@@ -7409,8 +7409,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 83dab73957b45e2479dbe80704d42784, type: 3}
   shuffle: 1
   loopAll: 1
-  volume: 0.425
-  fadeDuration: 0.25
+  volume: 0.55
+  fadeDuration: 0.05
 --- !u!82 &445244821
 AudioSource:
   m_ObjectHideFlags: 0

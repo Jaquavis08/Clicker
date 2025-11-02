@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,7 +15,7 @@ public class SaveDataController : MonoBehaviour
 
     private void Awake()
     {
-        Load();
+        StartCoroutine(DelayedLoad());
     }
 
     public void Start()
@@ -27,16 +28,22 @@ public class SaveDataController : MonoBehaviour
         Save();
     }
 
+    private IEnumerator DelayedLoad()
+    {
+        yield return new WaitForSeconds(0.3f);
+        Load();
+    }
+
+
     private void OnApplicationPause(bool pause)
     {
         if (pause)
         {
-            Save(); // save when leaving
+            Save();
         }
         else
         {
-            // load and calculate offline earnings when returning
-            Load();
+            StartCoroutine(DelayedLoad());
             HandleOfflineEarnings();
         }
     }
@@ -123,7 +130,7 @@ public class SaveDataController : MonoBehaviour
             if (OfflineEarningsUI.instance != null)
                 OfflineEarningsUI.instance.Show(earnings, multiplier, timeAway.TotalMinutes);
             else
-                Debug.Log($"💰 You earned ${NumberFormatter.Format(earnings)} while offline for {timeAway.TotalMinutes:F1} minutes!");
+                Debug.Log($"You earned ${NumberFormatter.Format(earnings)} while offline for {timeAway.TotalMinutes:F1} minutes!");
         }
         else
         {
