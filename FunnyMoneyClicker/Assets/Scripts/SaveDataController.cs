@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,10 @@ public class SaveDataController : MonoBehaviour
 
     public SaveDataObject defaultData;
     public static SaveData currentData;
+
+    public TMP_InputField resetField;
+    private string resetKey = "RESET";
+    private string currentResetKey = "";
 
     private void Awake()
     {
@@ -65,9 +70,16 @@ public class SaveDataController : MonoBehaviour
         Serializer.Save(currentData, Path.Combine(Application.persistentDataPath, filePath), fileName);
     }
 
+    public void OnResetValueChange()
+    {
+        currentResetKey = resetField.text.Trim().ToUpper();
+    }
 
     public void DeleteData()
     {
+        OnResetValueChange();
+        if (currentResetKey != resetKey) return;
+
         string fullPath = Path.Combine(Application.persistentDataPath, filePath, fileName);
 
         try
