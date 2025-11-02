@@ -3,9 +3,26 @@ using UnityEngine;
 
 public class Power1 : MonoBehaviour
 {
+    public static Power1 instance;
+
     public List<PowerData> Powers = new List<PowerData>();
 
     private const float baseInterval = 0.1f;
+
+    // --- Hold to Buy Settings ---
+    private bool isHolding = false;
+    private int heldPowerIndex = -1;
+    private float holdTimer = 0f;
+    [SerializeField] private float baseRepeatDelay = 0.25f;
+    [SerializeField] private float minRepeatDelay = 0.05f;
+    [SerializeField] private float accelerationRate = 0.925f;
+
+    private float currentDelay;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Update()
     {
@@ -13,6 +30,56 @@ public class Power1 : MonoBehaviour
         {
             HandlePowers(Powers[i], i);
         }
+
+        // --- Hold-to-buy logic ---
+        if (isHolding && heldPowerIndex >= 0)
+        {
+            holdTimer -= Time.deltaTime;
+            if (holdTimer <= 0f)
+            {
+                var upgrade = Powers[heldPowerIndex];
+                int level = SaveDataController.currentData.powerLevels[heldPowerIndex];
+                double cost = GetPowerCost(upgrade, level);
+
+                if (SaveDataController.currentData.moneyCount >= cost)
+                {
+                    BuyUpgrade(heldPowerIndex + 1); // +1 because BuyUpgrade subtracts 1 internally
+                    holdTimer = currentDelay; // Wait before next buy
+                    currentDelay = Mathf.Max(minRepeatDelay, currentDelay * accelerationRate);
+                }
+                else
+                {
+                    // Not enough money — stop auto-buy
+                    isHolding = false;
+                    heldPowerIndex = -1;
+                }
+            }
+        }
+    }
+
+    // --- Called from button events ---
+    public void OnPowerButtonDown(int index)
+    {
+        print(index);
+        // Safety checks before using index
+        if (index <= 0 || index > Powers.Count)
+        {
+            Debug.LogWarning($"Invalid power index: {index}");
+            return;
+        }
+        print(index);
+
+        heldPowerIndex = index - 1;
+        isHolding = true;
+        currentDelay = baseRepeatDelay;
+        holdTimer = baseRepeatDelay; // start countdown, prevents instant 2nd buy
+        BuyUpgrade(index); // Single instant click
+    }
+
+    public void OnPowerButtonUp()
+    {
+        isHolding = false;
+        heldPowerIndex = -1;
     }
 
     private void HandlePowers(PowerData power, int index)
@@ -156,3 +223,5 @@ public class Power1 : MonoBehaviour
         return System.Math.Round(production, 2);
     }
 }
+
+

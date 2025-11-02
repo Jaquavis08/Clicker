@@ -17,6 +17,16 @@ public class UpgradeManager : MonoBehaviour
 
     public float baseInterval = 1f;
 
+    // --- Hold to Buy Settings ---
+    private bool isHolding = false;
+    private int heldUpgradeIndex = -1;
+    private float holdTimer = 0f;
+    [SerializeField] private float baseRepeatDelay = 0.25f;
+    [SerializeField] private float minRepeatDelay = 0.05f;
+    [SerializeField] private float accelerationRate = 0.925f;
+
+    private float currentDelay;
+
     public void Awake()
     {
         instance = this;
@@ -36,6 +46,47 @@ public class UpgradeManager : MonoBehaviour
             moneyPerSecond = totalRate;
             totalRateText.text = $"+${NumberFormatter.Format(moneyPerSecond)} / {NumberFormatter.Format(baseInterval)}s";
         }
+
+        // --- Hold-to-buy logic ---
+        if (isHolding && heldUpgradeIndex >= 0)
+        {
+            holdTimer -= Time.deltaTime;
+            if (holdTimer <= 0f)
+            {
+                var upgrade = upgrades[heldUpgradeIndex];
+                int level = SaveDataController.currentData.upgradeLevels[heldUpgradeIndex];
+                double cost = GetUpgradeCost(upgrade, level);
+
+                if (SaveDataController.currentData.moneyCount >= cost)
+                {
+                    BuyUpgrade(heldUpgradeIndex + 1); // +1 because BuyUpgrade subtracts 1 internally
+                    holdTimer = currentDelay; // Wait before next buy
+                    currentDelay = Mathf.Max(minRepeatDelay, currentDelay * accelerationRate);
+                }
+                else
+                {
+                    // Not enough money — stop auto-buy
+                    isHolding = false;
+                    heldUpgradeIndex = -1;
+                }
+            }
+        }
+    }
+
+    // --- Called from button events ---
+    public void OnUpgradeButtonDown(int index)
+    {
+        heldUpgradeIndex = index - 1;
+        isHolding = true;
+        currentDelay = baseRepeatDelay;
+        holdTimer = baseRepeatDelay; // start countdown, prevents instant 2nd buy
+        BuyUpgrade(index); // Single instant click
+    }
+
+    public void OnUpgradeButtonUp()
+    {
+        isHolding = false;
+        heldUpgradeIndex = -1;
     }
 
     private double HandleUpgrade(UpgradeData upgrade, int index)
@@ -46,7 +97,6 @@ public class UpgradeManager : MonoBehaviour
         if (upgrade.baseInterval != baseInterval) upgrade.baseInterval = baseInterval;
 
         int level = SaveDataController.currentData.upgradeLevels[index];
-
         double cost = GetUpgradeCost(upgrade, level);
         double production = GetProduction(upgrade, level);
 

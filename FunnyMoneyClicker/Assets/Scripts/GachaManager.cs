@@ -20,7 +20,7 @@ public class GachaManager : MonoBehaviour
     public int pullsPerOpen = 1;
     public GameObject tokyodrift;
     public float value;
-    private float rotationSpeed = 2;
+    //private float rotationSpeed = 2;
 
     // coroutine handle to avoid overlapping rotations
     private Coroutine tokyoRotateCoroutine;

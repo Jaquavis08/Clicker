@@ -34,7 +34,7 @@ public class ClickerManager : MonoBehaviour
     public float critMultiplier = 2f;
     public Color critTextColor = Color.red;
 
-    private double displayedMoney = 0;
+    //private double displayedMoney = 0;
     private float moneyUpdateTimer;
 
     // Debug variables for pool tracking

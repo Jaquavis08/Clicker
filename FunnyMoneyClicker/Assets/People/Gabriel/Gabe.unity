@@ -635,6 +635,7 @@ GameObject:
   - component: {fileID: 31513472}
   - component: {fileID: 31513471}
   - component: {fileID: 31513470}
+  - component: {fileID: 31513473}
   m_Layer: 5
   m_Name: Upgrade5
   m_TagString: Untagged
@@ -710,19 +711,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 31513471}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 639309401}
-        m_TargetAssemblyTypeName: Power1, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &31513471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -761,6 +750,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 31513468}
   m_CullTransparentMesh: 1
+--- !u!114 &31513473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 31513468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 5
+  type: Power
 --- !u!1 &51764966
 GameObject:
   m_ObjectHideFlags: 0
@@ -2342,6 +2345,7 @@ GameObject:
   - component: {fileID: 176048558}
   - component: {fileID: 176048557}
   - component: {fileID: 176048556}
+  - component: {fileID: 176048559}
   m_Layer: 5
   m_Name: Upgrade6
   m_TagString: Untagged
@@ -2417,19 +2421,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 176048557}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 913486902}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 6
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &176048557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2468,6 +2460,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 176048554}
   m_CullTransparentMesh: 1
+--- !u!114 &176048559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176048554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 6
+  type: Upgrade
 --- !u!1 &176615059
 GameObject:
   m_ObjectHideFlags: 0
@@ -8479,6 +8485,7 @@ GameObject:
   - component: {fileID: 494255110}
   - component: {fileID: 494255109}
   - component: {fileID: 494255108}
+  - component: {fileID: 494255111}
   m_Layer: 5
   m_Name: Upgrade3
   m_TagString: Untagged
@@ -8554,19 +8561,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 494255109}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 913486902}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &494255109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8605,6 +8600,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 494255106}
   m_CullTransparentMesh: 1
+--- !u!114 &494255111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494255106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 3
+  type: Upgrade
 --- !u!1 &499360258
 GameObject:
   m_ObjectHideFlags: 0
@@ -11432,6 +11441,7 @@ GameObject:
   - component: {fileID: 624722933}
   - component: {fileID: 624722932}
   - component: {fileID: 624722931}
+  - component: {fileID: 624722934}
   m_Layer: 5
   m_Name: Upgrade5
   m_TagString: Untagged
@@ -11507,19 +11517,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 624722932}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 913486902}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 5
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &624722932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11558,6 +11556,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 624722929}
   m_CullTransparentMesh: 1
+--- !u!114 &624722934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624722929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 5
+  type: Upgrade
 --- !u!1 &626126242
 GameObject:
   m_ObjectHideFlags: 0
@@ -12015,7 +12027,7 @@ MonoBehaviour:
     baseCost: 250
     baseProduction: 2
     costIncreaseRate: 1.3
-    productionIncreaseRate: 1.1
+    productionIncreaseRate: 1.2
     maxLevel: 0
     baseInterval: 1
     levelText: {fileID: 239633130}
@@ -12077,6 +12089,9 @@ MonoBehaviour:
     costText: {fileID: 107226620}
     rateText: {fileID: 1565910254}
     currentTime: 0
+  baseRepeatDelay: 0.25
+  minRepeatDelay: 0.05
+  accelerationRate: 0.925
 --- !u!1 &655019669
 GameObject:
   m_ObjectHideFlags: 0
@@ -15794,6 +15809,9 @@ MonoBehaviour:
   totalRateText: {fileID: 363227666}
   moneyPerSecond: 0
   baseInterval: 1
+  baseRepeatDelay: 0.25
+  minRepeatDelay: 0.05
+  accelerationRate: 0.925
 --- !u!1 &920711318
 GameObject:
   m_ObjectHideFlags: 0
@@ -17781,6 +17799,7 @@ GameObject:
   - component: {fileID: 1030617459}
   - component: {fileID: 1030617458}
   - component: {fileID: 1030617460}
+  - component: {fileID: 1030617461}
   m_Layer: 5
   m_Name: Upgrade1
   m_TagString: Untagged
@@ -17894,19 +17913,21 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1030617458}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 913486902}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!114 &1030617461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030617456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 1
+  type: Upgrade
 --- !u!1 &1035019925
 GameObject:
   m_ObjectHideFlags: 0
@@ -20041,6 +20062,7 @@ GameObject:
   - component: {fileID: 1155711710}
   - component: {fileID: 1155711709}
   - component: {fileID: 1155711708}
+  - component: {fileID: 1155711711}
   m_Layer: 5
   m_Name: Upgrade3
   m_TagString: Untagged
@@ -20116,19 +20138,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1155711709}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 639309401}
-        m_TargetAssemblyTypeName: Power1, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1155711709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20167,6 +20177,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1155711706}
   m_CullTransparentMesh: 1
+--- !u!114 &1155711711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155711706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 3
+  type: Power
 --- !u!1 &1161071837
 GameObject:
   m_ObjectHideFlags: 0
@@ -20179,6 +20203,7 @@ GameObject:
   - component: {fileID: 1161071841}
   - component: {fileID: 1161071840}
   - component: {fileID: 1161071839}
+  - component: {fileID: 1161071842}
   m_Layer: 5
   m_Name: Upgrade1
   m_TagString: Untagged
@@ -20254,19 +20279,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1161071840}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 639309401}
-        m_TargetAssemblyTypeName: Power1, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1161071840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20305,6 +20318,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1161071837}
   m_CullTransparentMesh: 1
+--- !u!114 &1161071842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161071837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 1
+  type: Power
 --- !u!1 &1162039444
 GameObject:
   m_ObjectHideFlags: 0
@@ -25753,6 +25780,7 @@ GameObject:
   - component: {fileID: 1519440570}
   - component: {fileID: 1519440569}
   - component: {fileID: 1519440568}
+  - component: {fileID: 1519440571}
   m_Layer: 5
   m_Name: Upgrade4
   m_TagString: Untagged
@@ -25828,19 +25856,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1519440569}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 639309401}
-        m_TargetAssemblyTypeName: Power1, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1519440569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25879,6 +25895,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519440566}
   m_CullTransparentMesh: 1
+--- !u!114 &1519440571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519440566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 4
+  type: Power
 --- !u!1 &1523905834
 GameObject:
   m_ObjectHideFlags: 0
@@ -25978,6 +26008,7 @@ GameObject:
   - component: {fileID: 1524554864}
   - component: {fileID: 1524554863}
   - component: {fileID: 1524554862}
+  - component: {fileID: 1524554865}
   m_Layer: 5
   m_Name: Upgrade4
   m_TagString: Untagged
@@ -26053,19 +26084,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1524554863}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 913486902}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1524554863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26104,6 +26123,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1524554860}
   m_CullTransparentMesh: 1
+--- !u!114 &1524554865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524554860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 4
+  type: Upgrade
 --- !u!1 &1524987682
 GameObject:
   m_ObjectHideFlags: 0
@@ -26586,6 +26619,7 @@ GameObject:
   - component: {fileID: 1572169013}
   - component: {fileID: 1572169012}
   - component: {fileID: 1572169011}
+  - component: {fileID: 1572169014}
   m_Layer: 5
   m_Name: Upgrade2
   m_TagString: Untagged
@@ -26661,19 +26695,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1572169012}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 639309401}
-        m_TargetAssemblyTypeName: Power1, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1572169012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26712,6 +26734,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1572169009}
   m_CullTransparentMesh: 1
+--- !u!114 &1572169014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572169009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 2
+  type: Power
 --- !u!1 &1575033486
 GameObject:
   m_ObjectHideFlags: 0
@@ -27132,6 +27168,7 @@ GameObject:
   - component: {fileID: 1585282862}
   - component: {fileID: 1585282861}
   - component: {fileID: 1585282860}
+  - component: {fileID: 1585282863}
   m_Layer: 5
   m_Name: Upgrade8
   m_TagString: Untagged
@@ -27207,19 +27244,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1585282861}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 913486902}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 8
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1585282861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27258,6 +27283,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1585282858}
   m_CullTransparentMesh: 1
+--- !u!114 &1585282863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585282858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 8
+  type: Upgrade
 --- !u!1 &1585540785
 GameObject:
   m_ObjectHideFlags: 0
@@ -27634,6 +27673,7 @@ GameObject:
   - component: {fileID: 1596149095}
   - component: {fileID: 1596149094}
   - component: {fileID: 1596149093}
+  - component: {fileID: 1596149096}
   m_Layer: 5
   m_Name: Upgrade2
   m_TagString: Untagged
@@ -27709,19 +27749,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1596149094}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 913486902}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1596149094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27760,6 +27788,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596149091}
   m_CullTransparentMesh: 1
+--- !u!114 &1596149096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1596149091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 2
+  type: Upgrade
 --- !u!1 &1610797412
 GameObject:
   m_ObjectHideFlags: 0
@@ -29251,6 +29293,7 @@ GameObject:
   - component: {fileID: 1712538707}
   - component: {fileID: 1712538706}
   - component: {fileID: 1712538705}
+  - component: {fileID: 1712538708}
   m_Layer: 5
   m_Name: Upgrade7
   m_TagString: Untagged
@@ -29326,19 +29369,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1712538706}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 913486902}
-        m_TargetAssemblyTypeName: UpgradeManager, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 7
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1712538706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29377,6 +29408,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1712538703}
   m_CullTransparentMesh: 1
+--- !u!114 &1712538708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712538703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 7
+  type: Upgrade
 --- !u!1 &1714715220
 GameObject:
   m_ObjectHideFlags: 0
@@ -38695,6 +38740,7 @@ GameObject:
   - component: {fileID: 2121442500}
   - component: {fileID: 2121442499}
   - component: {fileID: 2121442498}
+  - component: {fileID: 2121442501}
   m_Layer: 5
   m_Name: Upgrade6
   m_TagString: Untagged
@@ -38770,19 +38816,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2121442499}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 639309401}
-        m_TargetAssemblyTypeName: Power1, Assembly-CSharp
-        m_MethodName: BuyUpgrade
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 6
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2121442499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38821,6 +38855,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121442496}
   m_CullTransparentMesh: 1
+--- !u!114 &2121442501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2121442496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae2714e87f312f54fa4c23f0b79951e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 6
+  type: Power
 --- !u!1 &2126511825
 GameObject:
   m_ObjectHideFlags: 0
