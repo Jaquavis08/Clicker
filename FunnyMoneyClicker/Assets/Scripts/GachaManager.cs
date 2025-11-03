@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -17,15 +18,21 @@ public class GachaManager : MonoBehaviour
     public float maxtime = 2f;
     public AudioSource gachaSound;
     public int pullsPerOpen = 1;
+    public GameObject tokyodrift;
+    public float value;
+    //private float rotationSpeed = 2;
+
+    // coroutine handle to avoid overlapping rotations
+    private Coroutine tokyoRotateCoroutine;
 
     [Header("Databases & UI")]
     public ClickerDatabase clickerDatabase; // your skin/clicker database
     public TextMeshProUGUI rewardTextUI;    // optional reward text display
 
-    [Header("💰 Money Rewards")]
+    [Header("Money Rewards")]
     public List<MoneyReward> moneyRewards = new List<MoneyReward>();
 
-    [Header("🎨 Skin / Clicker Rewards")]
+    [Header("Skin / Clicker Rewards")]
     public List<SkinReward> skinRewards = new List<SkinReward>();
 
     // ------------------ DATA CLASSES ------------------ //
@@ -62,19 +69,43 @@ public class GachaManager : MonoBehaviour
     // ------------------ MAIN GACHA FLOW ------------------ //
     public void TryOpenGacha()
     {
+        
         if (cooldownTime < maxtime || rolling) return;
+
+        List<string> allMessages = new List<string>();
 
         if (SaveDataController.currentData.moneyCount < 1000)
         {
-            Debug.Log("❌ Not enough money for gacha pull.");
+            Debug.Log("Not enough money for gacha pull.");
+            allMessages.Add($"Need $1k!");
+            if (rewardTextUI != null)
+            {
+                rewardTextUI.color = Color.red;
+                rewardTextUI.text = string.Join("\n", allMessages);
+            }
             return;
         }
+
+        // Start a 360° rotation over 2 seconds on the tokyodrift GameObject
+        if (tokyodrift != null)
+        {
+            // stop previous rotation if still running
+            if (tokyoRotateCoroutine != null)
+                StopCoroutine(tokyoRotateCoroutine);
+
+            tokyoRotateCoroutine = StartCoroutine(RotateTokyoDrift360(tokyodrift.transform, 2f));
+        }
+
+        //if (value >= 359f)
+        //{
+        //    value = 0f;
+        //}
 
         SaveDataController.currentData.moneyCount -= 1000;
         gachaSound?.Play();
         rolling = true;
 
-        List<string> allMessages = new List<string>();
+       
 
         for (int i = 0; i < pullsPerOpen; i++)
         {
@@ -95,7 +126,10 @@ public class GachaManager : MonoBehaviour
 
         // Update UI once
         if (rewardTextUI != null)
+        {
+            rewardTextUI.color = Color.black;
             rewardTextUI.text = string.Join("\n", allMessages);
+        }
 
         cooldownTime = 0f;
         rolling = false;
@@ -135,7 +169,7 @@ public class GachaManager : MonoBehaviour
         SaveDataController.currentData.moneyCount += reward.goldAmount;
         ClickerManager.instance?.MoneyEffect(reward.goldAmount);
 
-        string message = $"💰 You won ${reward.goldAmount}!";
+        string message = $"You won ${reward.goldAmount}!";
 
         if (playEffect) DisplayEffect();
 
@@ -174,7 +208,7 @@ public class GachaManager : MonoBehaviour
     {
         if (reward == null) return "";
 
-        string message = "🎲 No skin selected.";
+        string message = "No skin selected.";
 
         var allSkins = clickerDatabase?.allClickers;
         if (allSkins != null && allSkins.Count > 0)
@@ -185,11 +219,11 @@ public class GachaManager : MonoBehaviour
             if (!SaveDataController.currentData.unlockedSkins.Contains(selectedSkin.skinId))
             {
                 SaveDataController.currentData.unlockedSkins.Add(selectedSkin.skinId);
-                message = $"🎉 NEW SKIN UNLOCKED: {selectedSkin.skinName}!";
+                message = $"SKIN UNLOCKED: {selectedSkin.skinName}!";
             }
             else
             {
-                message = $"⭐ Duplicate skin: {selectedSkin.skinName}";
+                message = $"*Duplicate skin: {selectedSkin.skinName}";
             }
         }
 
@@ -207,5 +241,32 @@ public class GachaManager : MonoBehaviour
             var ps = effectSystem.GetComponent<ParticleSystem>();
             ps?.Play();
         }
+    }
+
+    // ------------------ ROTATION COROUTINE ------------------ //
+    private IEnumerator RotateTokyoDrift360(Transform target, float duration)
+    {
+        if (target == null || duration <= 0f)
+        {
+            tokyoRotateCoroutine = null;
+            yield break;
+        }
+
+        Quaternion startRotation = target.rotation;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float t = Mathf.Clamp01(elapsed / duration);
+            float angle = Mathf.Lerp(0f, 360f, t);
+            target.rotation = startRotation * Quaternion.Euler(0f, 0f, angle);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure exact final rotation (full 360° relative to start)
+        target.rotation = startRotation * Quaternion.Euler(0f, 0f, 360f);
+
+        tokyoRotateCoroutine = null;
     }
 }
