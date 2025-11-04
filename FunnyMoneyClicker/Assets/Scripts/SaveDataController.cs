@@ -20,7 +20,7 @@ public class SaveDataController : MonoBehaviour
 
     private void Awake()
     {
-        StartCoroutine(DelayedLoad());
+        Load();
     }
 
     public void Start()
@@ -33,12 +33,6 @@ public class SaveDataController : MonoBehaviour
         Save();
     }
 
-    private IEnumerator DelayedLoad()
-    {
-        yield return new WaitForSeconds(0.3f);
-        Load();
-    }
-
 
     private void OnApplicationPause(bool pause)
     {
@@ -48,7 +42,7 @@ public class SaveDataController : MonoBehaviour
         }
         else
         {
-            StartCoroutine(DelayedLoad());
+            Load();
             HandleOfflineEarnings();
         }
     }
@@ -111,6 +105,11 @@ public class SaveDataController : MonoBehaviour
 
     private void HandleOfflineEarnings()
     {
+        if (SaveDataController.currentData == null)
+        {
+            Load();
+        }
+
         if (currentData.lastSaveTime == 0)
         {
             Debug.Log("No previous save time found — skipping offline earnings.");

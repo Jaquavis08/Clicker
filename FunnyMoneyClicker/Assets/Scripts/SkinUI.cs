@@ -1,6 +1,4 @@
 ﻿using TMPro;
-using Unity.Android.Gradle.Manifest;
-using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.UI;
 
