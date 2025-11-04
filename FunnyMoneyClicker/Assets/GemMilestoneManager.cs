@@ -39,15 +39,15 @@ public class GemMilestoneManager : MonoBehaviour
 
     private int GetTierIndex(double number)
     {
-        if (number < 1000d) return 0;
+        if (number < 100d) return 0;
 
         int tier = 0;
-        double threshold = 1000d;
+        double threshold = 100d;
 
         while (number >= threshold)
         {
             tier++;
-            threshold *= 1000d;
+            threshold *= 100d;
         }
 
         return Math.Min(tier, NumberFormatterSuffixCount() - 1);
