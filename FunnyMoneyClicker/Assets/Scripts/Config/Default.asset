@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultData:
     moneyCount: 0
+    gems: 0
+    lastTierIndex: 0
     lastSaveTime: 0
     offlineEarningsMultiplier: 0
     unlockedSkins:
