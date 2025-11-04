@@ -16802,7 +16802,7 @@ MonoBehaviour:
   moveSpeed: 250
   coinLifetime: 15
   bonusAmount: 1000
-  audioB: {fileID: 0}
+  audioB: {fileID: 664576914}
 --- !u!82 &664576914
 AudioSource:
   m_ObjectHideFlags: 0

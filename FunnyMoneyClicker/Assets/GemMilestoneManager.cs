@@ -1,13 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class GemMilestoneManager : MonoBehaviour
 {
     public static GemMilestoneManager instance;
 
     [Header("Gem Reward Settings")]
-    public int gemsPerTier = 1; // how many gems per new suffix tier
+    public int gemsPerTier = 1;
 
-    private int lastTierIndex = 0; // tracks the previous suffix tier index
+    private int lastTierIndex = 0;
 
     private void Awake()
     {
@@ -17,44 +18,43 @@ public class GemMilestoneManager : MonoBehaviour
 
     private void Start()
     {
-        // Load saved tier progress if it exists
-        lastTierIndex = SaveDataController.currentData.lastTierIndex;
+        if (SaveDataController.currentData != null)
+            lastTierIndex = SaveDataController.currentData.lastTierIndex;
     }
 
     public void CheckGemReward(double moneyCount)
     {
-        lastTierIndex = SaveDataController.currentData.lastTierIndex;
-
         int currentTier = GetTierIndex(moneyCount);
 
-        // only reward if the player reached a new, higher tier
-        if (currentTier > lastTierIndex)
+        // Force at least one gem per new suffix reached
+        while (currentTier > lastTierIndex)
         {
-            int gainedTiers = currentTier - lastTierIndex;
-            int totalGems = gainedTiers * gemsPerTier;
+            lastTierIndex++;
+            SaveDataController.currentData.gems += gemsPerTier;
+            SaveDataController.currentData.lastTierIndex = lastTierIndex;
 
-            SaveDataController.currentData.gems += totalGems;
-            lastTierIndex = currentTier;
-            SaveDataController.currentData.lastTierIndex = currentTier;
-
-            // save changes immediately
-            //SaveDataController.Save(); // <-- make sure your SaveDataController has a Save() method
-
-            Debug.Log($"💜 Reached new money tier ({NumberFormatterSuffix(currentTier)})! +{totalGems} 💎 Gems");
+            Debug.Log(NumberFormatterSuffix(lastTierIndex) + gemsPerTier);
         }
     }
 
     private int GetTierIndex(double number)
     {
-        if (number < 1000) return 0;
-        double log10 = Mathf.Log10((float)number);
-        int magnitude = Mathf.FloorToInt((float)(log10 / 3.0));
-        return Mathf.Clamp(magnitude, 0, NumberFormatterSuffixCount() - 1);
+        if (number < 1000d) return 0;
+
+        int tier = 0;
+        double threshold = 1000d;
+
+        while (number >= threshold)
+        {
+            tier++;
+            threshold *= 1000d;
+        }
+
+        return Math.Min(tier, NumberFormatterSuffixCount() - 1);
     }
 
     private string NumberFormatterSuffix(int index)
     {
-        // Access the suffix array from your NumberFormatter
         var field = typeof(NumberFormatter).GetField("suffixes", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
         string[] suffixes = (string[])field.GetValue(null);
         return index < suffixes.Length ? suffixes[index] : "??";

@@ -29,8 +29,20 @@ public class SkinUI : MonoBehaviour
 
     private void PopulateSkins()
     {
-        foreach (Transform child in contentParent)
-            Destroy(child.gameObject);
+        if (contentParent == null)
+            return;
+
+        for (int i = contentParent.childCount - 1; i >= 0; i--)
+        {
+            Transform child = contentParent.GetChild(i);
+            if (child != null)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        if (skinDatabase == null || skinDatabase.allClickers == null)
+            return;
 
         int totalSkins = skinDatabase.allClickers.Count;
         int ownedSkins = 0;

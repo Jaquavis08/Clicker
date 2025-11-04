@@ -26,7 +26,7 @@ public class BackgroundMusicManager : MonoBehaviour
             return;
         }
         instance = this;
-        DontDestroyOnLoad(gameObject.transform.parent);
+        //DontDestroyOnLoad(gameObject.transform.parent);
 
         audioSource = GetComponent<AudioSource>();
         audioSource.loop = false;
