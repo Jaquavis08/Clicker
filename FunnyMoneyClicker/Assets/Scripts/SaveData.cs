@@ -6,6 +6,8 @@ using UnityEngine;
 public class SaveData
 {
     public double moneyCount;
+    public int gems;
+    public int lastTierIndex;
 
     public long lastSaveTime;
     public float offlineEarningsMultiplier = 0f; // 10% per hour by default = 0.1

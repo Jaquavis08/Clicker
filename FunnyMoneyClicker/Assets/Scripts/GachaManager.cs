@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -7,51 +8,35 @@ public class GachaManager : MonoBehaviour
 {
     public static GachaManager instance;
 
+    public TMP_Text gemText;
+
     [Header("General Gacha Settings")]
     public bool isGacha;
     public GameObject gacha;
     public GameObject effect;
     public GameObject uiEffectContainer;
-    public float luckMultiplier = 1f;
-    public bool rolling = false;
-    public float cooldownTime;
-    public float maxtime = 2f;
     public AudioSource gachaSound;
     public int pullsPerOpen = 1;
     public GameObject tokyodrift;
-    public float value;
-    //private float rotationSpeed = 2;
 
-    // coroutine handle to avoid overlapping rotations
+    public float cooldownTime;
+    public float maxtime = 2f;
+    private bool rolling = false;
     private Coroutine tokyoRotateCoroutine;
 
     [Header("Databases & UI")]
-    public ClickerDatabase clickerDatabase; // your skin/clicker database
-    public TextMeshProUGUI rewardTextUI;    // optional reward text display
+    public ClickerDatabase clickerDatabase;
+    public TextMeshProUGUI rewardTextUI;
 
-    [Header("Money Rewards")]
-    public List<MoneyReward> moneyRewards = new List<MoneyReward>();
+    public float luckBonus;
 
-    [Header("Skin / Clicker Rewards")]
-    public List<SkinReward> skinRewards = new List<SkinReward>();
+    [Header("Rarity Chances (weights)")]
+    [Range(0f, 100f)] public float commonChance = 50f;
+    [Range(0f, 100f)] public float uncommonChance = 25f;
+    [Range(0f, 100f)] public float rareChance = 15f;
+    [Range(0f, 100f)] public float epicChance = 8f;
+    [Range(0f, 100f)] public float legendaryChance = 2f;
 
-    // ------------------ DATA CLASSES ------------------ //
-    [System.Serializable]
-    public class MoneyReward
-    {
-        public string id = "Cash";
-        public int goldAmount = 100;
-        [Range(0f, 100f)] public float chance = 10f;
-    }
-
-    [System.Serializable]
-    public class SkinReward
-    {
-        public string id = "Random Skin";
-        [Range(0f, 100f)] public float chance = 10f;
-    }
-
-    // ------------------ UNITY METHODS ------------------ //
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -63,173 +48,113 @@ public class GachaManager : MonoBehaviour
         if (gacha != null)
             gacha.SetActive(isGacha);
 
+        if (cooldownTime >= 1)
+        {
+            gemText.text = "Gems: " + NumberFormatter.Format(SaveDataController.currentData.gems);
+        }
+
         cooldownTime += Time.deltaTime;
     }
 
-    // ------------------ MAIN GACHA FLOW ------------------ //
     public void TryOpenGacha()
     {
-        
         if (cooldownTime < maxtime || rolling) return;
 
         List<string> allMessages = new List<string>();
 
-        if (SaveDataController.currentData.moneyCount < 1000)
+        if (SaveDataController.currentData.gems < 1)
         {
-            Debug.Log("Not enough money for gacha pull.");
-            allMessages.Add($"Need $1k!");
-            if (rewardTextUI != null)
-            {
-                rewardTextUI.color = Color.red;
-                rewardTextUI.text = string.Join("\n", allMessages);
-            }
+            allMessages.Add("Cost: 1 Gem!");
+            rewardTextUI.color = Color.red;
+            rewardTextUI.text = string.Join("\n", allMessages);
             return;
         }
 
-        // Start a 360° rotation over 2 seconds on the tokyodrift GameObject
+        SaveDataController.currentData.gems -= 1;
+        gachaSound?.Play();
+        rolling = true;
+
         if (tokyodrift != null)
         {
-            // stop previous rotation if still running
             if (tokyoRotateCoroutine != null)
                 StopCoroutine(tokyoRotateCoroutine);
 
             tokyoRotateCoroutine = StartCoroutine(RotateTokyoDrift360(tokyodrift.transform, 2f));
         }
 
-        //if (value >= 359f)
-        //{
-        //    value = 0f;
-        //}
-
-        SaveDataController.currentData.moneyCount -= 1000;
-        gachaSound?.Play();
-        rolling = true;
-
-       
-
         for (int i = 0; i < pullsPerOpen; i++)
         {
-            // Decide randomly: money or skin reward (50/50 chance, adjust if needed)
-            bool getSkin = Random.value < 0.5f;
-
-            if (getSkin)
-            {
-                var skin = PullSkinReward();
-                allMessages.Add(GrantSkinReward(skin, false));
-            }
-            else
-            {
-                var money = PullMoneyReward();
-                allMessages.Add(GrantMoneyReward(money, false));
-            }
+            string rarity = RollRarity();
+            string message = GrantRandomSkin(rarity);
+            allMessages.Add($"{rarity}: {message}");
         }
 
-        // Update UI once
-        if (rewardTextUI != null)
-        {
-            rewardTextUI.color = Color.black;
-            rewardTextUI.text = string.Join("\n", allMessages);
-        }
+        rewardTextUI.color = Color.black;
+        rewardTextUI.text = string.Join("\n", allMessages);
 
         cooldownTime = 0f;
         rolling = false;
     }
 
-    // ------------------ MONEY REWARDS ------------------ //
-    private MoneyReward PullMoneyReward()
+    // ------------------ RARITY LOGIC ------------------ //
+    private string RollRarity()
     {
-        if (moneyRewards == null || moneyRewards.Count == 0) return null;
+        // Convert luckBonus (0–100) into a multiplier (1.0–2.0)
+        float luckFactor = 1f + (luckBonus / 100f);
 
-        float totalChance = 0f;
-        foreach (var r in moneyRewards)
-            totalChance += r.chance * luckMultiplier;
+        // Boost rarer chances proportionally and reduce common
+        float adjustedCommon = commonChance / luckFactor;
+        float adjustedUncommon = uncommonChance;
+        float adjustedRare = rareChance * luckFactor;
+        float adjustedEpic = epicChance * luckFactor * 1.2f;
+        float adjustedLegendary = legendaryChance * luckFactor * 1.5f;
 
-        if (totalChance <= 0f)
-            return null; // nothing to pull
-
-        float roll = Random.Range(0f, totalChance);
+        // Normalize total
+        float total = adjustedCommon + adjustedUncommon + adjustedRare + adjustedEpic + adjustedLegendary;
+        float roll = Random.Range(0f, total);
         float acc = 0f;
 
-        foreach (var r in moneyRewards)
-        {
-            acc += r.chance * luckMultiplier;
-            if (roll <= acc)
-                return r;
-        }
+        print(total);
+        print(roll);
+        print(luckBonus);
+        print(luckFactor);
 
-
-        // fallback in case of rounding errors
-        return moneyRewards[Random.Range(0, moneyRewards.Count)];
+        if ((acc += adjustedCommon) >= roll) return "Common";
+        if ((acc += adjustedUncommon) >= roll) return "Uncommon";
+        if ((acc += adjustedRare) >= roll) return "Rare";
+        if ((acc += adjustedEpic) >= roll) return "Epic";
+        return "Legendary";
     }
 
-    private string GrantMoneyReward(MoneyReward reward, bool playEffect = true)
+    // ------------------ SKIN REWARD LOGIC ------------------ //
+    private string GrantRandomSkin(string rarity)
     {
-        if (reward == null) return "";
+        if (clickerDatabase == null || clickerDatabase.allClickers.Count == 0)
+            return "No skins in database!";
 
-        SaveDataController.currentData.moneyCount += reward.goldAmount;
-        ClickerManager.instance?.MoneyEffect(reward.goldAmount);
+        var raritySkins = clickerDatabase.allClickers
+            .Where(s => s.rarity.ToString() == rarity)
+            .ToList();
 
-        string message = $"You won ${reward.goldAmount}!";
+        if (raritySkins.Count == 0)
+            return $"No {rarity} skins available!";
 
-        if (playEffect) DisplayEffect();
+        var selected = raritySkins[Random.Range(0, raritySkins.Count)];
+        string skinId = selected.skinId;
 
-        Debug.Log(message);
-        return message;
-    }
-
-    // ------------------ SKIN REWARDS ------------------ //
-    private SkinReward PullSkinReward()
-    {
-        if (skinRewards == null || skinRewards.Count == 0) return null;
-
-        // sum only items with chance > 0
-        float totalChance = 0f;
-        foreach (var r in skinRewards)
-            if (r.chance > 0f)
-                totalChance += r.chance * luckMultiplier;
-
-        if (totalChance <= 0f) return null;
-
-        float roll = Random.Range(0f, totalChance);
-        float acc = 0f;
-
-        foreach (var r in skinRewards)
+        bool isNew = !SaveDataController.currentData.unlockedSkins.Contains(skinId);
+        if (isNew)
         {
-            if (r.chance <= 0f) continue; // skip 0% chance
-            acc += r.chance * luckMultiplier;
-            if (roll <= acc)
-                return r;
+            SaveDataController.currentData.unlockedSkins.Add(skinId);
+            DisplayEffect();
+            Debug.Log($"Unlocked {rarity} skin: {selected.skinName}");
+            return $"Unlocked {selected.skinName}!";
         }
-
-        return skinRewards[Random.Range(0, skinRewards.Count)];
-    }
-
-    private string GrantSkinReward(SkinReward reward, bool playEffect = true)
-    {
-        if (reward == null) return "";
-
-        string message = "No skin selected.";
-
-        var allSkins = clickerDatabase?.allClickers;
-        if (allSkins != null && allSkins.Count > 0)
+        else
         {
-            // Pick a random skin from the database (no chance on ClickerItem)
-            ClickerItem selectedSkin = allSkins[Random.Range(0, allSkins.Count)];
-
-            if (!SaveDataController.currentData.unlockedSkins.Contains(selectedSkin.skinId))
-            {
-                SaveDataController.currentData.unlockedSkins.Add(selectedSkin.skinId);
-                message = $"SKIN UNLOCKED: {selectedSkin.skinName}!";
-            }
-            else
-            {
-                message = $"*Duplicate skin: {selectedSkin.skinName}";
-            }
+            Debug.Log($"Duplicate {rarity} skin: {selected.skinName}");
+            return $"Duplicate: {selected.skinName}";
         }
-
-        if (playEffect) DisplayEffect();
-        Debug.Log(message);
-        return message;
     }
 
     // ------------------ VISUAL EFFECT ------------------ //
@@ -243,15 +168,9 @@ public class GachaManager : MonoBehaviour
         }
     }
 
-    // ------------------ ROTATION COROUTINE ------------------ //
+    // ------------------ ROTATION ------------------ //
     private IEnumerator RotateTokyoDrift360(Transform target, float duration)
     {
-        if (target == null || duration <= 0f)
-        {
-            tokyoRotateCoroutine = null;
-            yield break;
-        }
-
         Quaternion startRotation = target.rotation;
         float elapsed = 0f;
 
@@ -264,9 +183,7 @@ public class GachaManager : MonoBehaviour
             yield return null;
         }
 
-        // Ensure exact final rotation (full 360° relative to start)
         target.rotation = startRotation * Quaternion.Euler(0f, 0f, 360f);
-
         tokyoRotateCoroutine = null;
     }
 }

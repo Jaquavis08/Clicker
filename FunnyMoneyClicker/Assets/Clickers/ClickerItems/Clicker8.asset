@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f532e66815783d14893cb3867d98a7d1, type: 3}
-  m_Name: Clicker2
+  m_Name: Clicker8
   m_EditorClassIdentifier: 
-  clickerMaterial: {fileID: 2100000, guid: 40d6495e2ea2dd14b9dc04e7cbc451e6, type: 2}
-  clickerSkin: {fileID: 875346418093169333, guid: 4548ba1af5e53f147ac8a205bd5ff5bb, type: 3}
-  skinId: 2
-  skinName: Downsized Tenna
-  rarity: 0
+  clickerMaterial: {fileID: 2100000, guid: 859b53cb3ff5f7e4ea8a9f9790031684, type: 2}
+  clickerSkin: {fileID: 2510087106986391618, guid: e6d9bc7bed4cb2040baeb9ea1d766ab2, type: 3}
+  skinId: 8
+  skinName: Mlp Money
+  rarity: 2

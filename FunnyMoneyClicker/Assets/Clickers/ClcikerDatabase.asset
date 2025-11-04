@@ -15,3 +15,13 @@ MonoBehaviour:
   allClickers:
   - {fileID: 11400000, guid: a5aa0072ea722f1448cdb81cde9b2045, type: 2}
   - {fileID: 11400000, guid: a805d824563fd0c45abd669bbf2c7493, type: 2}
+  - {fileID: 11400000, guid: c831d2800f964e141a2e7ec9650be5d4, type: 2}
+  - {fileID: 11400000, guid: 946fb50f1a24e1943aa84425fafe0764, type: 2}
+  - {fileID: 11400000, guid: 9bce46312384c444486e8b20389a6518, type: 2}
+  - {fileID: 11400000, guid: 5faaded14b587fe4286dada4b85ee280, type: 2}
+  - {fileID: 11400000, guid: 33ad00b0c429059439c63f4a71b834be, type: 2}
+  - {fileID: 11400000, guid: e154d2471a9ccad4ba1395c66827e32e, type: 2}
+  - {fileID: 11400000, guid: f4a384c5ddbc8d54983545c75ea65247, type: 2}
+  - {fileID: 11400000, guid: 9235a260b5f8ece40a719b7bc4e41695, type: 2}
+  - {fileID: 11400000, guid: a6ce4eb79e067504cae47316b0c1280a, type: 2}
+  - {fileID: 11400000, guid: 1ac1a13afb3194146b5fd619c6eece34, type: 2}
