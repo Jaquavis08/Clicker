@@ -28,9 +28,12 @@ public class LeaderboardManager : MonoBehaviour
 
     private async Task InitializeServices()
     {
+
         try
         {
             await UnityServices.InitializeAsync();
+
+
             if (!AuthenticationService.Instance.IsSignedIn)
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
