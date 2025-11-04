@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,12 @@ public class SkinManager : MonoBehaviour
 
     private void Start()
     {
+        StartCoroutine(DelayedApplySkin());
+    }
+
+    private IEnumerator DelayedApplySkin()
+    {
+        yield return new WaitForSeconds(0.3f);
         ApplyEquippedSkin();
     }
 
@@ -39,6 +46,7 @@ public class SkinManager : MonoBehaviour
 
         string id = SaveDataController.currentData.equippedSkinId;
         var clickerData = clickerDatabase.allClickers.FirstOrDefault(s => s.skinId == id);
+
         if (clickerData != null && clickerData.clickerSkin != null)
         {
             currentSkinObject = clickerData;

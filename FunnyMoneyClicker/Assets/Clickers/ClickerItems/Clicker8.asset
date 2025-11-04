@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f532e66815783d14893cb3867d98a7d1, type: 3}
+  m_Name: Clicker8
+  m_EditorClassIdentifier: 
+  clickerMaterial: {fileID: 2100000, guid: 859b53cb3ff5f7e4ea8a9f9790031684, type: 2}
+  clickerSkin: {fileID: 2510087106986391618, guid: e6d9bc7bed4cb2040baeb9ea1d766ab2, type: 3}
+  skinId: 8
+  skinName: Mlp Money
+  rarity: 2

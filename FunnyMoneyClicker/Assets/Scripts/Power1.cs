@@ -111,7 +111,7 @@ public class Power1 : MonoBehaviour
                         if (GachaManager.instance != null)
                             GachaManager.instance.isGacha = true;
                         double luckBoost = power.baseProduction + (level * power.productionIncreaseRate);
-                        GachaManager.instance.luckMultiplier = (float)luckBoost;
+                        GachaManager.instance.luckBonus = (float)luckBoost;
                         break;
                     case 3: // Power 4
                         double critChance = power.baseProduction + (level * power.productionIncreaseRate);
@@ -164,7 +164,7 @@ public class Power1 : MonoBehaviour
         {
             case 0: return $"${NumberFormatter.Format(production)} Per click";
             case 1: return $"Spawn chance: {GoldCoinSpawner.instance.spawnChance * 100:F1}%";
-            case 2: return $"Luck Boost: {(GachaManager.instance.luckMultiplier - 1f) * 100f:F1}%";
+            case 2: return $"Luck Boost: {(GachaManager.instance.luckBonus - 1f) * 100f:F1}%";
             case 3: return $"Crit chance: {ClickerManager.instance.critChance * 100:F1}%";
             case 4: return $"Upgrade Rate: {UpgradeManager.instance.baseInterval:F2}/s";
             case 5: return $"Offline Income: {SaveDataController.currentData.offlineEarningsMultiplier * 100:F1}%";
