@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Clicker2
   m_EditorClassIdentifier: 
   clickerMaterial: {fileID: 2100000, guid: 40d6495e2ea2dd14b9dc04e7cbc451e6, type: 2}
-  clickerSkin: {fileID: 21300000, guid: 4548ba1af5e53f147ac8a205bd5ff5bb, type: 3}
+  clickerSkin: {fileID: 875346418093169333, guid: 4548ba1af5e53f147ac8a205bd5ff5bb, type: 3}
   skinId: 2
-  skinName: Clicker2
+  skinName: Downsized Tenna
   rarity: 0

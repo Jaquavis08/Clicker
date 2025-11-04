@@ -83,6 +83,8 @@ public class ClickerManager : MonoBehaviour
             //displayedMoney = Mathf.Lerp((float)displayedMoney, (float)targetMoney, 0.25f);
             //moneyText.text = "$" + NumberFormatter.Format(targetMoney);
             moneyText.text = "$" + NumberFormatter.Format(SaveDataController.currentData.moneyCount);
+
+            GemMilestoneManager.instance?.CheckGemReward(SaveDataController.currentData.moneyCount);
         }
 
         if (TESTING)

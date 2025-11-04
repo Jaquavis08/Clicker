@@ -23,7 +23,7 @@ public class GoldCoinSpawner : MonoBehaviour
     private Coroutine spawnRoutine;
     private Coroutine moveRoutine;
     private Coroutine lifetimeRoutine;
-    public AudioSource audio;
+    public AudioSource audioB;
 
     private void Awake()
     {
@@ -164,7 +164,7 @@ public class GoldCoinSpawner : MonoBehaviour
     {
         if (!coinActive) return;
         coinActive = false;
-        audio.Play();
+        audioB.Play();
 
         double baseMoney = SaveDataController.currentData.moneyCount;
         if (double.IsInfinity(baseMoney) || double.IsNaN(baseMoney) || baseMoney < 0)
