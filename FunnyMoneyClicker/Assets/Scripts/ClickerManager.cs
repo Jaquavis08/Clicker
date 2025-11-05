@@ -12,6 +12,14 @@ public class ClickerManager : MonoBehaviour
     public GameObject canvas;
     public AudioSource clicksound;
 
+    // Shrink effect variables
+    private bool isShrinking = false;
+    private float shrinkTimer = 0f;
+    private float shrinkDuration = 0.1f;
+    private Vector3 originalScale;
+    private Vector3 targetScale;
+
+
     public TMP_Text moneyText;
 
     public TMP_Text moneyEffectPrefab;
@@ -45,6 +53,8 @@ public class ClickerManager : MonoBehaviour
 
     public void Awake()
     {
+        originalScale = funnyMoney.transform.localScale;
+
         instance = this;
         mainCam = Camera.main;
 
@@ -67,6 +77,34 @@ public class ClickerManager : MonoBehaviour
 
     private void Update()
     {
+        if (isShrinking)
+        {
+            shrinkTimer += Time.deltaTime;
+            float halfDuration = shrinkDuration * 0.5f;
+
+            if (shrinkTimer <= halfDuration)
+            {
+                // Shrink down
+                float t = shrinkTimer / halfDuration;
+                funnyMoney.transform.localScale = Vector3.Lerp(originalScale, targetScale, t);
+            }
+            else if (shrinkTimer <= shrinkDuration)
+            {
+                // Grow back up
+                float t = (shrinkTimer - halfDuration) / halfDuration;
+                funnyMoney.transform.localScale = Vector3.Lerp(targetScale, originalScale, t);
+            }
+            else
+            {
+                // Done
+                funnyMoney.transform.localScale = originalScale;
+                isShrinking = false;
+            }
+        }
+
+
+
+
         moneyUpdateTimer += Time.deltaTime;
         if (moneyUpdateTimer >= 0.25f)
         {
@@ -104,6 +142,8 @@ public class ClickerManager : MonoBehaviour
     {
         double finalValue = moneyValue;
         bool isCrit = Random.value < critChance;
+        StartShrinkEffect();
+
         clicksound.Play();
 
         if (isCrit)
@@ -157,6 +197,16 @@ public class ClickerManager : MonoBehaviour
         StartCoroutine(ShakeClicker());
         StartCoroutine(FloatUpAndFadePooled(moneyE, isCrit ? 500f : 400f, isCrit ? 2f : 2f));
     }
+
+    private void StartShrinkEffect()
+    {
+        isShrinking = true;
+        shrinkTimer = 0f;
+        targetScale = originalScale * 0.8f; // shrink to 80%
+    }
+
+
+
 
     private IEnumerator ShakeClicker()
     {
