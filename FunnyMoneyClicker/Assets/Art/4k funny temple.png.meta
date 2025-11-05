@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6100393b0dc0a0d4fb1ac83d2aad8daa
+guid: f60ac6fe848bd9349adf0049ecaf503c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3124103638605437495
-    second: funny saul_0
+      213: 2059375595700614824
+    second: 4k funny temple_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: funny saul_0
+      name: 4k funny temple_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 982
-        height: 454
+        width: 586
+        height: 675
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9c5ea6bfa44f4a4d0800000000000000
-      internalID: -3124103638605437495
+      spriteID: 8a6f7d8713f549c10800000000000000
+      internalID: 2059375595700614824
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      funny saul_0: -3124103638605437495
+      4k funny temple_0: 2059375595700614824
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
