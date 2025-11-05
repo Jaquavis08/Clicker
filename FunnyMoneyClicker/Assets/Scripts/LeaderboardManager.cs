@@ -21,6 +21,37 @@ public class LeaderboardManager : MonoBehaviour
     private double lastSubmittedScore = 0;
     private bool isInitialized = false;
 
+    // Nickname support
+    private const string NicknamePrefKeyPrefix = "LB_NICK_"; // usage: LB_NICK_<playerId> or LB_NICK_local
+    public string LocalNickname
+    {
+        get
+        {
+            if (isInitialized && AuthenticationService.Instance != null)
+            {
+                string pidKey = NicknamePrefKeyPrefix + AuthenticationService.Instance.PlayerId;
+                return PlayerPrefs.GetString(pidKey, PlayerPrefs.GetString(NicknamePrefKeyPrefix + "local", "Player"));
+            }
+            return PlayerPrefs.GetString(NicknamePrefKeyPrefix + "local", "Player");
+        }
+        set
+        {
+            if (isInitialized && AuthenticationService.Instance != null)
+                PlayerPrefs.SetString(NicknamePrefKeyPrefix + AuthenticationService.Instance.PlayerId, value ?? "");
+            else
+                PlayerPrefs.SetString(NicknamePrefKeyPrefix + "local", value ?? "");
+            PlayerPrefs.Save();
+        }
+    }
+
+    public void SetNickname(string nickname) => LocalNickname = nickname;
+
+    public string GetNicknameForPlayer(string playerId)
+    {
+        if (string.IsNullOrEmpty(playerId)) return "Player";
+        return PlayerPrefs.GetString(NicknamePrefKeyPrefix + playerId, playerId);
+    }
+
     async void Start()
     {
         await InitializeServices();
@@ -38,6 +69,17 @@ public class LeaderboardManager : MonoBehaviour
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
             isInitialized = true;
+
+            // migrate any locally stored nickname into a player-scoped key after we know PlayerId
+            var pid = AuthenticationService.Instance.PlayerId;
+            var localKey = NicknamePrefKeyPrefix + "local";
+            var pidKey = NicknamePrefKeyPrefix + pid;
+            if (PlayerPrefs.HasKey(localKey) && !PlayerPrefs.HasKey(pidKey))
+            {
+                PlayerPrefs.SetString(pidKey, PlayerPrefs.GetString(localKey));
+                PlayerPrefs.Save();
+            }
+
             Debug.Log($"[LB] Initialized. PlayerId={AuthenticationService.Instance.PlayerId}");
             _ = RefreshLeaderboard();
         }
@@ -80,6 +122,9 @@ public class LeaderboardManager : MonoBehaviour
 
         try
         {
+            // Note: Unity Leaderboards server-side does not automatically store arbitrary client nicknames.
+            // We still submit the score normally. Local nickname is stored in PlayerPrefs so the UI can
+            // display it for the local player.
             await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, totalMoney);
             Debug.Log($"[LB] Submitted: {totalMoney} (${NumberFormatter.Format(totalMoney)})");
             _ = RefreshLeaderboard();

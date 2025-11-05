@@ -1,10 +1,37 @@
 fileFormatVersion: 2
-guid: 6100393b0dc0a0d4fb1ac83d2aad8daa
+guid: ba90531782815414496493d700274002
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3124103638605437495
-    second: funny saul_0
+      213: -1858359774449552485
+    second: lottery_0
+  - first:
+      213: 6541958282824815070
+    second: lottery_1
+  - first:
+      213: -8011230447772507168
+    second: lottery_2
+  - first:
+      213: -6895970847609386851
+    second: lottery_3
+  - first:
+      213: -1203053502282769779
+    second: lottery_4
+  - first:
+      213: 6104100818725437971
+    second: lottery_5
+  - first:
+      213: 5871950776509812064
+    second: lottery_6
+  - first:
+      213: 8884289131183127040
+    second: lottery_7
+  - first:
+      213: 1143265807628635331
+    second: lottery_8
+  - first:
+      213: 6544663790805112468
+    second: lottery_9
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +78,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -72,7 +99,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -110,7 +137,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: WebGL
+    buildTarget: iOS
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -126,23 +153,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: funny saul_0
+      name: lottery_6
       rect:
         serializedVersion: 2
-        x: 0
+        x: 11
         y: 0
-        width: 982
-        height: 454
+        width: 235
+        height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9c5ea6bfa44f4a4d0800000000000000
-      internalID: -3124103638605437495
+      spriteID: 06d427cce1c5d7150800000000000000
+      internalID: 5871950776509812064
       vertices: []
       indices: 
       edges: []
@@ -151,7 +178,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 498bae08b44a56e42b51d35386559009
     internalID: 0
     vertices: []
     indices: 
@@ -160,7 +187,17 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      lottery_0: -1858359774449552485
+      lottery_1: 6541958282824815070
+      lottery_2: -8011230447772507168
+      lottery_3: -6895970847609386851
+      lottery_4: -1203053502282769779
+      lottery_5: 6104100818725437971
+      lottery_6: 5871950776509812064
+      lottery_7: 8884289131183127040
+      lottery_8: 1143265807628635331
+      lottery_9: 6544663790805112468
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

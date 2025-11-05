@@ -16,4 +16,4 @@ MonoBehaviour:
   clickerSkin: {fileID: 1861778244092751849, guid: f6e27f47ec71bdb49a416a57b9981923, type: 3}
   skinId: 6
   skinName: Fisch
-  rarity: 1
+  rarity: 0

@@ -16,4 +16,4 @@ MonoBehaviour:
   clickerSkin: {fileID: -986503958287952604, guid: fcb5048127aef34488c4d3c68ca0c0e9, type: 3}
   skinId: 3
   skinName: Adventure Time
-  rarity: 0
+  rarity: 1
