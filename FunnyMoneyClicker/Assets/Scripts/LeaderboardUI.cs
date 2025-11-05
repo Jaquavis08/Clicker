@@ -34,7 +34,12 @@ public class LeaderboardUI : MonoBehaviour
 
         // Clear previous entries
         foreach (Transform child in contentParent)
-            Destroy(child.gameObject);
+        {
+            if (child)
+            {
+                Destroy(child.gameObject);
+            }
+        }
 
         if (entries == null || entries.Count == 0)
         {
