@@ -32651,12 +32651,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1580486004}
+  m_Father: {fileID: 693939860}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 120, y: 1000}
+  m_AnchoredPosition: {x: 0, y: 768.00006}
+  m_SizeDelta: {x: 86.2, y: 253.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &540737874
 MonoBehaviour:
@@ -32678,7 +32678,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8610407187852768488, guid: 150c9c28d12fd1a40984ffc89ab6d824, type: 3}
+  m_Sprite: {fileID: -765150924802650856, guid: cb2206cb15d7f4e4ba46d3dde024b8ff, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -42420,11 +42420,12 @@ Transform:
   m_GameObject: {fileID: 693939859}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -681, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -808, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1580486004}
+  - {fileID: 540737873}
   - {fileID: 1368720497}
   - {fileID: 1584516226}
   m_Father: {fileID: 1231213183}
@@ -100430,8 +100431,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 540737873}
+  m_Children: []
   m_Father: {fileID: 693939860}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -100459,7 +100459,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 877715124647447700, guid: 3e411ce213baa314bbc0eacb4ca597f7, type: 3}
+  m_Sprite: {fileID: -2785366349977813741, guid: cf99a4f7dbf136241a0effc1689d2c41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -100623,8 +100623,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -55.3}
-  m_SizeDelta: {x: 663.6, y: 278}
+  m_AnchoredPosition: {x: -0, y: 995}
+  m_SizeDelta: {x: 1115.2, y: 435.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1584516227
 MonoBehaviour:
@@ -100673,10 +100673,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 40
   m_fontStyle: 0
@@ -114664,7 +114664,7 @@ MonoBehaviour:
   uiEffectContainer: {fileID: 122713848}
   gachaSound: {fileID: 1828983549}
   pullsPerOpen: 1
-  tokyodrift: {fileID: 540737872}
+  tokyodrift: {fileID: 1580486003}
   cooldownTime: 2
   maxtime: 2
   clickerDatabase: {fileID: 11400000, guid: 6ff670e48bc9f2345a84de08028464a1, type: 2}

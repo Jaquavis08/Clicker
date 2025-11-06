@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      workers popup bg text_0: -6945150298841932353
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

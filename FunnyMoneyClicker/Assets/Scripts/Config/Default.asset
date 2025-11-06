@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultData:
     moneyCount:
-      mantissa: 100000
+      mantissa: 0
       exponent: 0
-    gems: 100
+    gems: 0
     lastTierIndex: 0
-    lastSaveTime: -8584391596070568337
+    lastSaveTime: -8584391620720831823
     offlineEarningsMultiplier: 0
     unlockedSkins:
     - 1
