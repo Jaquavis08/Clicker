@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using BreakInfinity;
 
 public class ClickerManager : MonoBehaviour
 {
     public static ClickerManager instance;
-    public double moneyValue = 1;
+    public BigDouble moneyValue = 1;
     public ClickerItem clickerItem;
     public GameObject clickerParticleSystem;
     public GameObject canvas;
@@ -109,9 +110,9 @@ public class ClickerManager : MonoBehaviour
         if (moneyUpdateTimer >= 0.25f)
         {
             moneyUpdateTimer = 0f;
-            double targetMoney = SaveDataController.currentData.moneyCount;
+            BigDouble targetMoney = SaveDataController.currentData.moneyCount;
 
-            if (double.IsNaN(targetMoney) || double.IsInfinity(targetMoney) || targetMoney < 0)
+            if (BigDouble.IsNaN(targetMoney) || BigDouble.IsInfinity(targetMoney) || targetMoney < 0)
             {
                 targetMoney = 0;
                 SaveDataController.currentData.moneyCount = 0;
@@ -140,7 +141,7 @@ public class ClickerManager : MonoBehaviour
 
     public void Click()
     {
-        double finalValue = moneyValue;
+        BigDouble finalValue = moneyValue;
         bool isCrit = Random.value < critChance;
         StartShrinkEffect();
 
@@ -161,7 +162,7 @@ public class ClickerManager : MonoBehaviour
         ClickingParticle();
     }
 
-    public void MoneyEffect(double moneyValue, bool isCrit = false)
+    public void MoneyEffect(BigDouble moneyValue, bool isCrit = false)
     {
         if (moneyEffectPrefab == null)
             return;

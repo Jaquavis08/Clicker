@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using BreakInfinity;
 
 public class GoldCoinSpawner : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class GoldCoinSpawner : MonoBehaviour
     public float checkInterval = 1f;
     public float moveSpeed = 250f;
     public float coinLifetime = 6f;
-    public float bonusAmount = 1000f;
+    public BigDouble bonusAmount = 1000f;
 
     private bool canSpawn = false;
     private bool coinActive = false;
@@ -166,15 +167,13 @@ public class GoldCoinSpawner : MonoBehaviour
         coinActive = false;
         audioB.Play();
 
-        double baseMoney = SaveDataController.currentData.moneyCount;
-        if (double.IsInfinity(baseMoney) || double.IsNaN(baseMoney) || baseMoney < 0)
+        BigDouble baseMoney = SaveDataController.currentData.moneyCount;
+        if (BigDouble.IsInfinity(baseMoney) || BigDouble.IsNaN(baseMoney) || baseMoney < 0)
             baseMoney = 0;
 
-        double bonusAmount = baseMoney * 0.05;
-        bonusAmount = System.Math.Min(bonusAmount, 1e300);
-
-        double randomBonus = (double)Random.Range(700, 1000);
-        double totalBonus = bonusAmount + randomBonus;
+        BigDouble bonusPercent = baseMoney * 0.05;
+        BigDouble randomBonus = new BigDouble(Random.Range(700f, 1000f));
+        BigDouble totalBonus = bonusPercent + randomBonus;
 
         SaveDataController.currentData.moneyCount += totalBonus;
 

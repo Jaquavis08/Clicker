@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BreakInfinity;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Power1 : MonoBehaviour
@@ -39,7 +40,7 @@ public class Power1 : MonoBehaviour
             {
                 var upgrade = Powers[heldPowerIndex];
                 int level = SaveDataController.currentData.powerLevels[heldPowerIndex];
-                double cost = GetPowerCost(upgrade, level);
+                BigDouble cost = GetPowerCost(upgrade, level);
 
                 if (SaveDataController.currentData.moneyCount >= cost)
                 {
@@ -60,14 +61,12 @@ public class Power1 : MonoBehaviour
     // --- Called from button events ---
     public void OnPowerButtonDown(int index)
     {
-        print(index);
         // Safety checks before using index
         if (index <= 0 || index > Powers.Count)
         {
             Debug.LogWarning($"Invalid power index: {index}");
             return;
         }
-        print(index);
 
         heldPowerIndex = index - 1;
         isHolding = true;
@@ -89,8 +88,8 @@ public class Power1 : MonoBehaviour
 
         int level = SaveDataController.currentData.powerLevels[index];
 
-        double cost = GetPowerCost(power, level);
-        double production = GetProduction(power, level);
+        BigDouble cost = GetPowerCost(power, level);
+        BigDouble production = GetProduction(power, level);
 
         if (level > 0)
         {
@@ -100,7 +99,7 @@ public class Power1 : MonoBehaviour
                 switch (index)
                 {
                     case 0: // Power 1
-                        ClickerManager.instance.moneyValue = (float)production;
+                        ClickerManager.instance.moneyValue = production.ToDouble();
                         break;
                     case 1: // Power 2
                         GoldCoinSpawner.instance.EnableSpawner(true);
@@ -158,7 +157,7 @@ public class Power1 : MonoBehaviour
         }
     }
 
-    private string GetPowerDescription(int index, double production)
+    private string GetPowerDescription(int index, BigDouble production)
     {
         switch (index)
         {
@@ -186,7 +185,7 @@ public class Power1 : MonoBehaviour
             return;
         }
 
-        double cost = GetPowerCost(power, level);
+        BigDouble cost = GetPowerCost(power, level);
 
         if (SaveDataController.currentData.moneyCount >= cost)
         {
@@ -200,27 +199,27 @@ public class Power1 : MonoBehaviour
         }
     }
 
-    private double GetPowerCost(PowerData power, int level)
+    private BigDouble GetPowerCost(PowerData power, int level)
     {
-        double cost = power.baseCost * System.Math.Pow(power.costIncreaseRate, level);
+        BigDouble cost = power.baseCost * BigDouble.Pow(power.costIncreaseRate, level);
 
         // Prevent overflow / NaN
-        if (double.IsInfinity(cost) || double.IsNaN(cost))
+        if (BigDouble.IsInfinity(cost) || BigDouble.IsNaN(cost))
             cost = double.MaxValue;
 
-        return System.Math.Round(cost, 2);
+        return cost;
     }
 
-    private double GetProduction(PowerData power, int level)
+    private BigDouble GetProduction(PowerData power, int level)
     {
-        double production = power.baseProduction * System.Math.Pow(power.productionIncreaseRate, level);
+        BigDouble production = power.baseProduction * BigDouble.Pow(power.productionIncreaseRate, level);
         int milestoneBonus = level / 25;
-        production *= System.Math.Pow(2.0, milestoneBonus);
+        production *= BigDouble.Pow(2.0, milestoneBonus);
 
-        if (double.IsInfinity(production) || double.IsNaN(production))
+        if (BigDouble.IsInfinity(production) || BigDouble.IsNaN(production))
             production = double.MaxValue;
 
-        return System.Math.Round(production, 2);
+        return production;
     }
 }
 
