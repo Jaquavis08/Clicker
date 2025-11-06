@@ -38,13 +38,13 @@ public class GachaManager : MonoBehaviour
     [Range(0f, 100f)] public float legendaryChance = 2f;
 
     private Dictionary<string, Color> rarityColors = new Dictionary<string, Color>
-{
-    { "Common", Color.white },
-    { "Uncommon", Color.green },
-    { "Rare", Color.blue },
-    { "Epic", new Color(0.64f, 0.21f, 0.93f) }, // purple
-    { "Legendary", new Color(1f, 0.65f, 0f) }   // orange/gold
-};
+    {
+        { "Common", Color.white },
+        { "Uncommon", Color.green },
+        { "Rare", Color.blue },
+        { "Epic", new Color(0.64f, 0.21f, 0.93f) }, // purple
+        { "Legendary", new Color(1f, 0.65f, 0f) }   // orange/gold
+    };
 
     private void Awake()
     {
@@ -69,6 +69,15 @@ public class GachaManager : MonoBehaviour
     {
         if (cooldownTime < maxtime || rolling) return;
 
+        // perform the gacha opening as a coroutine so we can animate and stop on specific rarities
+        StartCoroutine(HandleGachaOpen());
+    }
+
+    // New coroutine to handle the visual rotation + reward granting per pull.
+    private IEnumerator HandleGachaOpen()
+    {
+        rolling = true;
+
         List<string> allMessages = new List<string>();
 
         if (SaveDataController.currentData.gems < 1)
@@ -76,24 +85,34 @@ public class GachaManager : MonoBehaviour
             allMessages.Add("Cost: 1 Gem!");
             rewardTextUI.color = Color.red;
             rewardTextUI.text = string.Join("\n", allMessages);
-            return;
+            rolling = false;
+            yield break;
         }
 
         SaveDataController.currentData.gems -= 1;
         gachaSound?.Play();
-        rolling = true;
-
-        if (tokyodrift != null)
-        {
-            if (tokyoRotateCoroutine != null)
-                StopCoroutine(tokyoRotateCoroutine);
-
-            tokyoRotateCoroutine = StartCoroutine(RotateTokyoDrift360(tokyodrift.transform, 2f));
-        }
 
         for (int i = 0; i < pullsPerOpen; i++)
         {
+            // Determine rarity first so we can stop the wheel on that sector
             string rarity = RollRarity();
+
+            // Compute target sector angle for this rarity
+            float sectorAngle = GetAngleForRarity(rarity);
+
+            // If a wheel exists, rotate and wait until rotation completes
+            if (tokyodrift != null)
+            {
+                // stop any existing rotation coroutine
+                if (tokyoRotateCoroutine != null)
+                    StopCoroutine(tokyoRotateCoroutine);
+
+                // Start rotation that ends on the sectorAngle and wait for it to finish
+                tokyoRotateCoroutine = StartCoroutine(RotateTokyoDrift360(tokyodrift.transform, 2f, sectorAngle));
+                yield return tokyoRotateCoroutine;
+            }
+
+            // Grant reward after the wheel stops (or immediately if no wheel)
             string message = GrantRandomSkin(rarity);
 
             Color color;
@@ -181,22 +200,76 @@ public class GachaManager : MonoBehaviour
         }
     }
 
-    // ------------------ ROTATION ------------------ //
-    private IEnumerator RotateTokyoDrift360(Transform target, float duration)
+    // Helper: map rarity name to a wheel sector angle (0-360).
+    // Adjust these angles to match your wheel art. This example assumes five equal sectors:
+    // Common=0, Uncommon=72, Rare=144, Epic=216, Legendary=288.
+    private float GetAngleForRarity(string rarity)
     {
-        Quaternion startRotation = target.rotation;
-        float elapsed = 0f;
-
-        while (elapsed < duration)
+        switch (rarity)
         {
-            float t = Mathf.Clamp01(elapsed / duration);
-            float angle = Mathf.Lerp(0f, 360f, t);
-            target.rotation = startRotation * Quaternion.Euler(0f, 0f, angle);
-            elapsed += Time.deltaTime;
-            yield return null;
+            case "Common": return 0f;
+            case "Uncommon": return 70.921f;
+            case "Rare": return 202.044f;
+            case "Epic": return 236.079f;
+            case "Legendary": return 281.903f;
+            default: return Random.Range(0f, 360f);
+        }
+    }
+
+    // ------------------ ROTATION ------------------ //
+    // Modified to accept a target sector angle (0-360). The coroutine will spin multiple full turns
+    // then land exactly on the sectorAngle.
+    private IEnumerator RotateTokyoDrift360(Transform target, float duration, float targetSectorAngle, Vector3 axis = default, AnimationCurve ease = null)
+    {
+        if (target == null)
+            yield break;
+
+        if (axis == default)
+            axis = Vector3.forward; // rotate around Z by default
+
+        if (duration <= 0f)
+        {
+            // instant single rotation fallback; rotate and then align to target sector if provided
+            Vector3 e = target.rotation.eulerAngles;
+            float finalZz = (e.z + targetSectorAngle) % 360f;
+            target.rotation = Quaternion.Euler(e.x, e.y, finalZz);
+            tokyoRotateCoroutine = null;
+            yield break;
         }
 
-        target.rotation = startRotation * Quaternion.Euler(0f, 0f, 360f);
-        tokyoRotateCoroutine = null;
+        Quaternion startRotation = target.rotation;
+        float startZ = startRotation.eulerAngles.z;
+        float startX = startRotation.eulerAngles.x;
+        float startY = startRotation.eulerAngles.y;
+
+        // compute positive delta from current Z to desired sector angle (0..360)
+        float currentModulo = startZ % 360f;
+        if (currentModulo < 0) currentModulo += 360f;
+        float deltaToTarget = (targetSectorAngle - currentModulo + 360f) % 360f;
+
+        // add two full spins (720 deg) so the wheel visibly spins before landing
+        float finalZ = startZ + 720f + deltaToTarget;
+
+        float elapsed = 0f;
+
+        try
+        {
+            while (elapsed < duration)
+            {
+                float t = Mathf.Clamp01(elapsed / duration);
+                float easedT = (ease != null) ? ease.Evaluate(t) : Mathf.SmoothStep(0f, 1f, t);
+                float z = Mathf.Lerp(startZ, finalZ, easedT);
+                target.rotation = Quaternion.Euler(startX, startY, z);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            // ensure exact final rotation
+            target.rotation = Quaternion.Euler(startX, startY, finalZ);
+        }
+        finally
+        {
+            tokyoRotateCoroutine = null;
+        }
     }
 }
