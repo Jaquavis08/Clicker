@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using BreakInfinity;
+using JetBrains.Annotations;
 
 public class ClickerManager : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class ClickerManager : MonoBehaviour
     private Queue<GameObject> particlePool = new Queue<GameObject>();
     private int moneyEffectPoolSize = 50;
     private int particlePoolSize = 40;
+    public bool isCrit;
 
     public Vector2 spawnMin = new Vector2(-155f, -37f);
     public Vector2 spawnMax = new Vector2(166f, 112f);
@@ -142,7 +144,7 @@ public class ClickerManager : MonoBehaviour
     public void Click()
     {
         BigDouble finalValue = moneyValue;
-        bool isCrit = Random.value < critChance;
+        isCrit = Random.value < critChance;
         StartShrinkEffect();
 
         clicksound.Play();
