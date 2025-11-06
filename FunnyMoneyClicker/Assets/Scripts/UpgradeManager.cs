@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using BreakInfinity;
 
 public class UpgradeManager : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class UpgradeManager : MonoBehaviour
 
     [Header("UI")]
     public TMP_Text totalRateText;
-    public double moneyPerSecond;
+    public BigDouble moneyPerSecond;
 
     private const double costIncreaseRate = 1.145;
     private const double productionIncreaseRate = 1.07;
@@ -34,7 +35,7 @@ public class UpgradeManager : MonoBehaviour
 
     private void Update()
     {
-        double totalRate = 0f;
+        BigDouble totalRate = 0f;
 
         for (int i = 0; i < upgrades.Count; i++)
         {
@@ -55,7 +56,7 @@ public class UpgradeManager : MonoBehaviour
             {
                 var upgrade = upgrades[heldUpgradeIndex];
                 int level = SaveDataController.currentData.upgradeLevels[heldUpgradeIndex];
-                double cost = GetUpgradeCost(upgrade, level);
+                BigDouble cost = GetUpgradeCost(upgrade, level);
 
                 if (SaveDataController.currentData.moneyCount >= cost)
                 {
@@ -87,15 +88,15 @@ public class UpgradeManager : MonoBehaviour
         heldUpgradeIndex = -1;
     }
 
-    private double HandleUpgrade(UpgradeData upgrade, int index)
+    private BigDouble HandleUpgrade(UpgradeData upgrade, int index)
     {
         if (upgrade.costIncreaseRate != costIncreaseRate) upgrade.costIncreaseRate = (float)costIncreaseRate;
         if (upgrade.productionIncreaseRate != productionIncreaseRate) upgrade.productionIncreaseRate = (float)productionIncreaseRate;
         if (upgrade.baseInterval != baseInterval) upgrade.baseInterval = baseInterval;
 
         int level = SaveDataController.currentData.upgradeLevels[index];
-        double cost = GetUpgradeCost(upgrade, level);
-        double production = GetProduction(upgrade, level);
+        BigDouble cost = GetUpgradeCost(upgrade, level);
+        BigDouble production = GetProduction(upgrade, level);
 
         if (level > 0)
         {
@@ -132,7 +133,7 @@ public class UpgradeManager : MonoBehaviour
 
         var upgrade = upgrades[index];
         int level = SaveDataController.currentData.upgradeLevels[index];
-        double cost = GetUpgradeCost(upgrade, level);
+        BigDouble cost = GetUpgradeCost(upgrade, level);
 
         if (SaveDataController.currentData.moneyCount >= cost)
         {
@@ -141,27 +142,27 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    private double GetUpgradeCost(UpgradeData upgrade, int level)
+    private BigDouble GetUpgradeCost(UpgradeData upgrade, int level)
     {
-        double cost = upgrade.baseCost * System.Math.Pow(upgrade.costIncreaseRate, level);
+        BigDouble cost = upgrade.baseCost * System.Math.Pow(upgrade.costIncreaseRate, level);
 
 
-        if (double.IsInfinity(cost) || double.IsNaN(cost))
+        if (BigDouble.IsInfinity(cost) || BigDouble.IsNaN(cost))
             cost = double.MaxValue;
 
-        return System.Math.Round(cost, 2);
+        return cost;
     }
 
-    private double GetProduction(UpgradeData upgrade, int level)
+    private BigDouble GetProduction(UpgradeData upgrade, int level)
     {
-        double production = upgrade.baseProduction * System.Math.Pow(upgrade.productionIncreaseRate, level);
+        BigDouble production = upgrade.baseProduction * System.Math.Pow(upgrade.productionIncreaseRate, level);
         int milestoneBonus = level / 25;
         production *= System.Math.Pow(2.0, milestoneBonus);
 
 
-        if (double.IsInfinity(production) || double.IsNaN(production))
+        if (BigDouble.IsInfinity(production) || BigDouble.IsNaN(production))
             production = double.MaxValue;
 
-        return System.Math.Round(production, 2);
+        return production;
     }
 }

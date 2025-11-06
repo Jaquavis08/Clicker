@@ -6,6 +6,7 @@ using Unity.Services.Leaderboards.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BreakInfinity;
 
 public class LeaderboardManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class LeaderboardManager : MonoBehaviour
 
     private float curTime = 0f;
     private const string leaderboardId = "Top_Funny_Money";
-    private double lastSubmittedScore = 0;
+    private BigDouble lastSubmittedScore = 0;
     private bool isInitialized = false;
 
     // Nickname support
@@ -106,7 +107,7 @@ public class LeaderboardManager : MonoBehaviour
     {
         if (SaveDataController.currentData == null) return;
 
-        double currentMoney = SaveDataController.currentData.moneyCount;
+        BigDouble currentMoney = SaveDataController.currentData.moneyCount;
 
         if (currentMoney > lastSubmittedScore)
         {
@@ -115,17 +116,20 @@ public class LeaderboardManager : MonoBehaviour
         }
     }
 
-    public async Task SubmitScore(double totalMoney)
+    public async Task SubmitScore(BigDouble totalMoney)
     {
         if (!isInitialized) return;
-        if (double.IsNaN(totalMoney) || totalMoney <= 0) totalMoney = 1;
+        if (BigDouble.IsNaN(totalMoney) || totalMoney <= 0) totalMoney = 1;
 
         try
         {
             // Note: Unity Leaderboards server-side does not automatically store arbitrary client nicknames.
             // We still submit the score normally. Local nickname is stored in PlayerPrefs so the UI can
             // display it for the local player.
-            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, totalMoney);
+            // Unity Leaderboards only supports double, so convert safely
+            double submitValue = (double)Math.Min(totalMoney.ToDouble(), double.MaxValue);
+
+            await LeaderboardsService.Instance.AddPlayerScoreAsync(leaderboardId, submitValue);
             Debug.Log($"[LB] Submitted: {totalMoney} (${NumberFormatter.Format(totalMoney)})");
             _ = RefreshLeaderboard();
         }

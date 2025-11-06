@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using BreakInfinity;
+using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.IO;
 using TMPro;
 using UnityEngine;
@@ -18,28 +18,16 @@ public class SaveDataController : MonoBehaviour
     private string resetKey = "RESET";
     private string currentResetKey = "";
 
-    private void Awake()
-    {
-        Load();
-    }
+    private void Awake() => Load();
 
-    public void Start()
-    {
-        Invoke(nameof(HandleOfflineEarnings), 0.5f);
-    }
+    private void Start() => Invoke(nameof(HandleOfflineEarnings), 0.5f);
 
-    private void OnDestroy()
-    {
-        Save();
-    }
-
+    private void OnDestroy() => Save();
+    private void OnApplicationQuit() => Save();
 
     private void OnApplicationPause(bool pause)
     {
-        if (pause)
-        {
-            Save();
-        }
+        if (pause) Save();
         else
         {
             Load();
@@ -47,27 +35,62 @@ public class SaveDataController : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
-    {
-        Save();
-    }
-
     public void Load()
     {
-        SaveData loadedData = Serializer.Load(defaultData.defaultData, Path.Combine(Application.persistentDataPath, filePath), fileName);
-        currentData = JsonConvert.DeserializeObject<SaveData>(JsonConvert.SerializeObject(loadedData));
+        string fullPath = Path.Combine(Application.persistentDataPath, filePath, fileName);
+
+        if (!File.Exists(fullPath))
+        {
+            currentData = defaultData.defaultData;
+            Save();
+            return;
+        }
+
+        try
+        {
+            string json = File.ReadAllText(fullPath);
+
+            // Unwrap old-style JSON if needed
+            if (json.StartsWith("\"") && json.EndsWith("\""))
+            {
+                json = json.Substring(1, json.Length - 2);
+                json = json.Replace("\\\"", "\"");
+                json = json.Replace("\\r\\n", "\n");
+            }
+
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Converters.Add(new BigDoubleConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (StringReader sr = new StringReader(json))
+            using (JsonTextReader reader = new JsonTextReader(sr))
+            {
+                currentData = serializer.Deserialize<SaveData>(reader);
+            }
+
+            if (currentData == null)
+            {
+                Debug.LogWarning("SaveData deserialized as null. Using default.");
+                currentData = defaultData.defaultData;
+                Save();
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to read main save, restoring default: {e.Message}");
+            currentData = defaultData.defaultData;
+            Save();
+        }
     }
 
     public void Save()
     {
+        if (currentData == null) return;
         currentData.lastSaveTime = DateTime.Now.ToBinary();
         Serializer.Save(currentData, Path.Combine(Application.persistentDataPath, filePath), fileName);
     }
 
-    public void OnResetValueChange()
-    {
-        currentResetKey = resetField.text.Trim().ToUpper();
-    }
+    public void OnResetValueChange() => currentResetKey = resetField.text.Trim().ToUpper();
 
     public void DeleteData()
     {
@@ -79,22 +102,10 @@ public class SaveDataController : MonoBehaviour
         try
         {
             if (File.Exists(fullPath))
-            {
                 File.Delete(fullPath);
-                Debug.Log($"Save file deleted: {fullPath}");
-            }
-            else
-            {
-                Debug.LogWarning("No save file found to delete.");
-            }
 
-            currentData = JsonConvert.DeserializeObject<SaveData>(
-                JsonConvert.SerializeObject(defaultData.defaultData)
-            );
-
+            currentData = defaultData.defaultData;
             Save();
-
-            Debug.Log("Save data reset to defaults.");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         catch (Exception ex)
@@ -105,34 +116,18 @@ public class SaveDataController : MonoBehaviour
 
     private void HandleOfflineEarnings()
     {
-        if (SaveDataController.currentData == null)
-        {
-            Load();
-        }
-
-        if (currentData.lastSaveTime == 0)
-        {
-            Debug.Log("No previous save time found — skipping offline earnings.");
-            return;
-        }
+        if (currentData == null) Load();
+        if (currentData.lastSaveTime == 0) return;
 
         DateTime lastSave = DateTime.FromBinary(currentData.lastSaveTime);
         TimeSpan timeAway = DateTime.Now - lastSave;
-        double secondsAway = timeAway.TotalSeconds;
 
-        double moneyPerSecond = UpgradeManager.instance != null ? UpgradeManager.instance.moneyPerSecond : 0;
+        BigDouble moneyPerSecond = UpgradeManager.instance?.moneyPerSecond ?? 0;
         float multiplier = currentData.offlineEarningsMultiplier;
 
-        double earnings = moneyPerSecond * secondsAway * multiplier;
-
-        double maxEarnings = (moneyPerSecond * 5) * (3600 * 24); // 12 = max hours
-        earnings = Math.Min(earnings, maxEarnings);
-
-        Debug.Log($"Last Save: {lastSave}");
-        Debug.Log($"Time Away: {timeAway.TotalMinutes:F2} minutes ({secondsAway:F0} seconds)");
-        Debug.Log($"Money Per Second: {moneyPerSecond}");
-        Debug.Log($"Offline Multiplier: {multiplier}");
-        Debug.Log($"Calculated Earnings: {earnings}");
+        BigDouble earnings = moneyPerSecond * timeAway.TotalSeconds * multiplier;
+        BigDouble maxEarnings = (moneyPerSecond * 5) * (3600 * 24); // 24-hour cap
+        earnings = BigDouble.Min(earnings, maxEarnings);
 
         if (earnings > 0)
         {
@@ -141,12 +136,7 @@ public class SaveDataController : MonoBehaviour
             if (OfflineEarningsUI.instance != null)
                 OfflineEarningsUI.instance.Show(earnings, multiplier, timeAway.TotalMinutes);
             else
-                Debug.Log($"You earned ${NumberFormatter.Format(earnings)} while offline for {timeAway.TotalMinutes:F1} minutes!");
-        }
-        else
-        {
-            Debug.Log("No earnings — maybe moneyPerSecond is 0 or timeAway too short.");
+                Debug.Log($"You earned {earnings} while offline for {timeAway.TotalMinutes:F1} minutes!");
         }
     }
-
 }

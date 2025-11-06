@@ -37,6 +37,15 @@ public class GachaManager : MonoBehaviour
     [Range(0f, 100f)] public float epicChance = 8f;
     [Range(0f, 100f)] public float legendaryChance = 2f;
 
+    private Dictionary<string, Color> rarityColors = new Dictionary<string, Color>
+{
+    { "Common", Color.white },
+    { "Uncommon", Color.green },
+    { "Rare", Color.blue },
+    { "Epic", new Color(0.64f, 0.21f, 0.93f) }, // purple
+    { "Legendary", new Color(1f, 0.65f, 0f) }   // orange/gold
+};
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -86,10 +95,14 @@ public class GachaManager : MonoBehaviour
         {
             string rarity = RollRarity();
             string message = GrantRandomSkin(rarity);
-            allMessages.Add($"{rarity}: {message}");
+
+            Color color;
+            if (!rarityColors.TryGetValue(rarity, out color)) color = Color.black;
+
+            string hexColor = ColorUtility.ToHtmlStringRGB(color);
+            allMessages.Add($"<color=#{hexColor}>{rarity}: {message}</color>");
         }
 
-        rewardTextUI.color = Color.black;
         rewardTextUI.text = string.Join("\n", allMessages);
 
         cooldownTime = 0f;

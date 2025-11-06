@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BreakInfinity;
+using System;
 using UnityEngine;
 
 public class GemMilestoneManager : MonoBehaviour
@@ -22,7 +23,7 @@ public class GemMilestoneManager : MonoBehaviour
             lastTierIndex = SaveDataController.currentData.lastTierIndex;
     }
 
-    public void CheckGemReward(double moneyCount)
+    public void CheckGemReward(BigDouble moneyCount)
     {
         int currentTier = GetTierIndex(moneyCount);
 
@@ -37,7 +38,7 @@ public class GemMilestoneManager : MonoBehaviour
         }
     }
 
-    private int GetTierIndex(double number)
+    private int GetTierIndex(BigDouble number)
     {
         if (number < 100d) return 0;
 

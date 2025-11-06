@@ -1,3 +1,5 @@
+using BreakInfinity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +7,9 @@ using UnityEngine;
 [Serializable]
 public class SaveData
 {
-    public double moneyCount;
+    [JsonConverter(typeof(BigDoubleConverter))]
+    public BigDouble moneyCount;
+
     public int gems;
     public int lastTierIndex;
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BreakInfinity;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,18 +38,18 @@ public static class NumberFormatter
 
     public static FormatMode GetFormatMode() => currentMode;
 
-    public static string Format(double number)
+    public static string Format(BigDouble number)
     {
-        if (double.IsNaN(number) || double.IsInfinity(number))
+        if (BigDouble.IsNaN(number) || BigDouble.IsInfinity(number))
             return "∞";
 
         switch (currentMode)
         {
             case FormatMode.Scientific:
-                return FormatScientific(number);
+                return FormatScientific(number.ToDouble());
             case FormatMode.Suffix:
             default:
-                return FormatSuffix(number);
+                return FormatSuffix(number.ToDouble());
         }
     }
 

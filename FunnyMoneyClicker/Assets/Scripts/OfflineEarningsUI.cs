@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using BreakInfinity;
 
 public class OfflineEarningsUI : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class OfflineEarningsUI : MonoBehaviour
         instance = this;
     }
 
-    public void Show(double earnings, double multiplier, double minutes)
+    public void Show(BigDouble earnings, double multiplier, double minutes)
     {
         panel.SetActive(true);
 
