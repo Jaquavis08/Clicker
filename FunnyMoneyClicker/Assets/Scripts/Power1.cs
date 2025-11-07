@@ -1,5 +1,6 @@
 ﻿using BreakInfinity;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Power1 : MonoBehaviour
@@ -230,6 +231,9 @@ public class Power1 : MonoBehaviour
                 SaveDataController.currentData.powerLevels[index] = power.maxLevel;
             }
         }
+
+        foreach (var (p, i) in Powers.Select((p, i) => (p, i)))
+            HandlePowers(p, i);
     }
 
     private BigDouble GetPowerCost(PowerData power, int level)
