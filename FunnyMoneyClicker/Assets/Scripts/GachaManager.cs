@@ -18,6 +18,7 @@ public class GachaManager : MonoBehaviour
     public AudioSource gachaSound;
     public int pullsPerOpen = 1;
     public GameObject tokyodrift;
+    public GameObject GachaObject;
 
     public float cooldownTime;
     public float maxtime = 2f;
@@ -56,6 +57,11 @@ public class GachaManager : MonoBehaviour
     {
         if (gacha != null)
             gacha.SetActive(isGacha);
+
+        if (isGacha == false)
+        {
+            GachaObject.SetActive(false);
+        }
 
         if (cooldownTime >= 1)
         {
@@ -207,11 +213,11 @@ public class GachaManager : MonoBehaviour
     {
         switch (rarity)
         {
-            case "Common": return 0f;
-            case "Uncommon": return 70.921f;
-            case "Rare": return 202.044f;
-            case "Epic": return 236.079f;
-            case "Legendary": return 281.903f;
+            case "Common": return Random.Range(287.262f, 418.683f);
+            case "Uncommon": return Random.Range(60.673f, 162.559f);
+            case "Rare": return Random.Range(165.253f, 219.135f);
+            case "Epic": return Random.Range(221.662f, 269.402f);
+            case "Legendary": return Random.Range(271.293f, 285.111f);
             default: return Random.Range(0f, 360f);
         }
     }

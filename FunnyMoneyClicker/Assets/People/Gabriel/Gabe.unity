@@ -32655,7 +32655,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 768.00006}
+  m_AnchoredPosition: {x: 0, y: 1221}
   m_SizeDelta: {x: 86.2, y: 253.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &540737874
@@ -39847,6 +39847,20 @@ MonoBehaviour:
   baseRepeatDelay: 0.25
   minRepeatDelay: 0.05
   accelerationRate: 0.925
+  ParticleSystem: {fileID: 0}
+  ParticleSystem2: {fileID: 0}
+  ParticleSystem3: {fileID: 0}
+  ParticleSystem4: {fileID: 0}
+  ParticleSystem5: {fileID: 0}
+  ParticleSystem6: {fileID: 0}
+  ParticleSystem7: {fileID: 0}
+  ParticleSystem8: {fileID: 0}
+  ParticleSystem9: {fileID: 0}
+  ParticleSystem10: {fileID: 0}
+  ParticleSystem11: {fileID: 0}
+  ParticleSystem12: {fileID: 0}
+  ParticleSystem13: {fileID: 0}
+  clickerManager: {fileID: 0}
 --- !u!1 &640075437
 GameObject:
   m_ObjectHideFlags: 0
@@ -51563,12 +51577,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 125
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 10
-  m_fontSizeMax: 72
+  m_fontSizeMax: 125
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -59559,6 +59573,7 @@ MonoBehaviour:
   funnyMoney: {fileID: 83986741}
   moneyEffectContainer: {fileID: 122713848}
   moneyEffects: []
+  isCrit: 0
   spawnMin: {x: -225, y: -60}
   spawnMax: {x: 225, y: 200}
   critChance: 0.05
@@ -86355,8 +86370,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 160}
-  m_SizeDelta: {x: 334.6, y: 89.8}
+  m_AnchoredPosition: {x: 0, y: 450}
+  m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1368720498
 MonoBehaviour:
@@ -86434,8 +86449,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -100436,8 +100451,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 206}
-  m_SizeDelta: {x: 1000, y: 1000}
+  m_AnchoredPosition: {x: 0, y: 425}
+  m_SizeDelta: {x: 1500, y: 1500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1580486005
 MonoBehaviour:
@@ -100623,7 +100638,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 995}
+  m_AnchoredPosition: {x: -0, y: 2606}
   m_SizeDelta: {x: 1115.2, y: 435.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1584516227
@@ -100679,7 +100694,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 40
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -114665,8 +114680,9 @@ MonoBehaviour:
   gachaSound: {fileID: 1828983549}
   pullsPerOpen: 1
   tokyodrift: {fileID: 1580486003}
-  cooldownTime: 2
-  maxtime: 2
+  GachaObject: {fileID: 693939859}
+  cooldownTime: 0.25
+  maxtime: 0.25
   clickerDatabase: {fileID: 11400000, guid: 6ff670e48bc9f2345a84de08028464a1, type: 2}
   rewardTextUI: {fileID: 1584516227}
   luckBonus: 0
@@ -132881,7 +132897,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 46.95
+  m_fontSize: 37.9
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

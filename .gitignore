@@ -98,3 +98,24 @@ InitTestScene*.unity*
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 FunnyMoneyClicker/Mobile_Builds/Mobile_Test_1/Funny Money Clicker_mapping.txt
+*.exe
+*.zip
+*.dll
+*.txt
+*.info
+*.config
+*.assets
+*.resS
+*.json
+*.resource
+*.ini
+*.aspx
+*.map
+*.browser
+*.xml
+FunnyMoneyClicker/Mobile_Builds/New folder/Funny Money Clicker_Data/globalgamemanagers
+FunnyMoneyClicker/Mobile_Builds/New folder/Funny Money Clicker_Data/level0
+FunnyMoneyClicker/Mobile_Builds/New folder/Funny Money Clicker_Data/level1
+FunnyMoneyClicker/Mobile_Builds/New folder/Funny Money Clicker_Data/Resources/unity default resources
+FunnyMoneyClicker/Mobile_Builds/New folder/Funny Money Clicker_Data/Resources/unity_builtin_extra
+FunnyMoneyClicker/Mobile_Builds/New folder/MonoBleedingEdge/etc/mono/config
