@@ -54,6 +54,22 @@ public class ClickerManager : MonoBehaviour
     private float debugTimer = 0f;
     public bool TESTING;
 
+    public ParticleSystem ParticleSystem1;
+    public ParticleSystem ParticleSystem2;
+    public ParticleSystem ParticleSystem3;
+    public ParticleSystem ParticleSystem4;
+    public ParticleSystem ParticleSystem5;
+    public ParticleSystem ParticleSystem6;
+    public ParticleSystem ParticleSystem7;
+    public ParticleSystem ParticleSystem8;
+    public ParticleSystem ParticleSystem9;
+    public ParticleSystem ParticleSystem10;
+    public ParticleSystem ParticleSystem11;
+    public ParticleSystem ParticleSystem12;
+    public ParticleSystem ParticleSystem13;
+
+
+
     public void Awake()
     {
         originalScale = funnyMoney.transform.localScale;
@@ -153,6 +169,21 @@ public class ClickerManager : MonoBehaviour
         {
             finalValue *= critMultiplier;
             MoneyEffect(finalValue, true);
+
+                ParticleSystem1.Play();
+                ParticleSystem2.Play();
+                ParticleSystem3.Play();
+                ParticleSystem4.Play();
+                ParticleSystem5.Play();
+                ParticleSystem6.Play();
+                ParticleSystem7.Play();
+                ParticleSystem8.Play();
+                ParticleSystem9.Play();
+                ParticleSystem10.Play();
+                ParticleSystem11.Play();
+                ParticleSystem12.Play();
+                ParticleSystem13.Play();
+            
         }
         else
         {

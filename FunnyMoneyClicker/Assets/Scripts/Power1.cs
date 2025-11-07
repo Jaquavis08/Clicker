@@ -19,21 +19,8 @@ public class Power1 : MonoBehaviour
     [SerializeField] private float minRepeatDelay = 0.05f;
     [SerializeField] private float accelerationRate = 0.925f;
 
-    public ParticleSystem ParticleSystem;
-    public ParticleSystem ParticleSystem2;
-    public ParticleSystem ParticleSystem3;
-    public ParticleSystem ParticleSystem4;
-    public ParticleSystem ParticleSystem5;
-    public ParticleSystem ParticleSystem6;
-    public ParticleSystem ParticleSystem7;
-    public ParticleSystem ParticleSystem8;
-    public ParticleSystem ParticleSystem9;
-    public ParticleSystem ParticleSystem10;
-    public ParticleSystem ParticleSystem11;
-    public ParticleSystem ParticleSystem12;
-    public ParticleSystem ParticleSystem13;
 
-    public  ClickerManager clickerManager;
+
 
     private float currentDelay;
 
@@ -132,22 +119,6 @@ public class Power1 : MonoBehaviour
                     case 3: // Power 4
                         double critChance = power.baseProduction + (level * power.productionIncreaseRate);
                         ClickerManager.instance.critChance = (float)critChance;
-                        if (clickerManager.isCrit)
-                        {
-                            ParticleSystem.Play();
-                            ParticleSystem2.Play();
-                            ParticleSystem3.Play();
-                            ParticleSystem4.Play();
-                            ParticleSystem5.Play();
-                            ParticleSystem6.Play();
-                            ParticleSystem7.Play();
-                            ParticleSystem8.Play();
-                            ParticleSystem9.Play();
-                            ParticleSystem10.Play();
-                            ParticleSystem11.Play();
-                            ParticleSystem12.Play();
-                            ParticleSystem13.Play();
-                        }
 
                         break;
                     case 4: // Power 5
