@@ -13,8 +13,8 @@ public class UpgradeManager : MonoBehaviour
     public TMP_Text totalRateText;
     public BigDouble moneyPerSecond;
 
-    private const double costIncreaseRate = 1.415;
-    private const double productionIncreaseRate = 1.37;
+    private const double costIncreaseRate = 1.15; // 1.45f
+    private const double productionIncreaseRate = 1.1325; // 1.07f
 
     public float baseInterval = 1f;
 
