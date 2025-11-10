@@ -21,4 +21,21 @@ public class SaveData
 
     public int[] upgradeLevels = new int[10];
     public int[] powerLevels = new int[10];
+
+
+    public List<ItemSaveData> gridItems = new List<ItemSaveData>();
+    public InventorySaveData inventoryData = new InventorySaveData();
+}
+
+[System.Serializable]
+public class ItemSaveData
+{
+    public int itemId;
+    public int slotIndex; // which slot on the grid (0-based)
+}
+
+[System.Serializable]
+public class InventorySaveData
+{
+    public List<int> itemIds = new List<int>(); // all items currently in inventory
 }

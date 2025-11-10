@@ -40,7 +40,7 @@ public class GachaManager : MonoBehaviour
 
     private Dictionary<string, Color> rarityColors = new Dictionary<string, Color>
     {
-        { "Common", Color.white },
+        { "Common", Color.gray },
         { "Uncommon", Color.green },
         { "Rare", Color.blue },
         { "Epic", new Color(0.64f, 0.21f, 0.93f) }, // purple
