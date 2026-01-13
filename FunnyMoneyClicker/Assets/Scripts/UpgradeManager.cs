@@ -13,8 +13,9 @@ public class UpgradeManager : MonoBehaviour
     public TMP_Text totalRateText;
     public BigDouble moneyPerSecond;
 
-    private const double costIncreaseRate = 1.2; // 1.45f
-    private const double productionIncreaseRate = 1.175; // 1.07f
+    private const double costIncreaseRate = 2.22; // 1.45f
+    private const double productionIncreaseRate = 2.199; // 1.07f
+    private const double value = 0.6f;
 
     public float baseInterval = 1f;
 
@@ -144,7 +145,7 @@ public class UpgradeManager : MonoBehaviour
 
     private BigDouble GetUpgradeCost(UpgradeData upgrade, int level)
     {
-        BigDouble cost = upgrade.baseCost * System.Math.Pow(upgrade.costIncreaseRate, level);
+        BigDouble cost = upgrade.baseCost * System.Math.Pow(upgrade.costIncreaseRate, level* value);
 
 
         if (BigDouble.IsInfinity(cost) || BigDouble.IsNaN(cost))
@@ -155,7 +156,7 @@ public class UpgradeManager : MonoBehaviour
 
     private BigDouble GetProduction(UpgradeData upgrade, int level)
     {
-        BigDouble production = upgrade.baseProduction * System.Math.Pow(upgrade.productionIncreaseRate, level);
+        BigDouble production = upgrade.baseProduction * System.Math.Pow(upgrade.productionIncreaseRate, level* value);
         int milestoneBonus = level / 25;
         production *= System.Math.Pow(2.0, milestoneBonus);
 
