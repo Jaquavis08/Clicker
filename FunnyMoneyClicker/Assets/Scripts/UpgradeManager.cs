@@ -189,58 +189,94 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    // Cost to buy the next level given the current level value passed in (level 0 => first buy = baseCost)
+    //// Cost to buy the next level given the current level value passed in (level 0 => first buy = baseCost)
+    //private BigDouble GetUpgradeCost(UpgradeData upgrade, int level)
+    //{
+    //    BigDouble baseCost = (BigDouble)upgrade.baseCost;
+    //    BigDouble rate = (BigDouble)upgrade.costIncreaseRate;
+
+    //    // Use level as exponent for consistent, predictable progression.
+    //    BigDouble cost = baseCost * BigDouble.Pow(rate, level);
+
+    //    if (BigDouble.IsInfinity(cost) || BigDouble.IsNaN(cost))
+    //        cost = double.MaxValue;
+
+    //    return cost;
+    //}
+
+
     private BigDouble GetUpgradeCost(UpgradeData upgrade, int level)
     {
-        BigDouble baseCost = (BigDouble)upgrade.baseCost;
-        BigDouble rate = (BigDouble)upgrade.costIncreaseRate;
+        double baseCost = upgrade.baseCost; // 15
+        double step = 2.5;
 
-        // Use level as exponent for consistent, predictable progression.
-        BigDouble cost = baseCost * BigDouble.Pow(rate, level);
-
-        if (BigDouble.IsInfinity(cost) || BigDouble.IsNaN(cost))
-            cost = double.MaxValue;
-
-        return cost;
+        double cost = baseCost + level * step;
+        return new BigDouble(System.Math.Ceiling(cost));
     }
+
+
+
+
+
 
     // Production at current level — balanced smoothing applied:
     // - exponential base growth using productionIncreaseRate
     // - mild polynomial smoothing on level (reduces sharp jumps at high levels)
     // - small negative bias vs baseCost to reduce the advantage of extremely expensive upgrades
+    //private BigDouble GetProduction(UpgradeData upgrade, int level)
+    //{
+    //    if (level <= 0) return BigDouble.Zero;
+
+    //    BigDouble baseProd = (BigDouble)upgrade.baseProduction;
+    //    BigDouble rate = (BigDouble)upgrade.productionIncreaseRate;
+
+    //    // core exponential growth
+    //    BigDouble production = baseProd * BigDouble.Pow(rate, level);
+
+    //    // mild polynomial smoothing based on level (makes increases feel more fluid)
+    //    production *= BigDouble.Pow((BigDouble)(1.0 + (double)level), productionLevelExponent);
+
+    //    // slight negative bias relative to baseCost so expensive upgrades don't automatically dominate.
+    //    if (upgrade.baseCost > 0.0)
+    //    {
+    //        production *= BigDouble.Pow((BigDouble)upgrade.baseCost, productionCostBias);
+    //    }
+
+    //    // existing milestone bonus (double every 25 levels)
+    //    int milestoneBonus = level / 25;
+    //    if (milestoneBonus > 0)
+    //        production *= BigDouble.Pow(2.0, milestoneBonus);
+
+    //    // apply achievement multiplier (>= 1.0)
+    //    double achMultiplier = GetAchievementMultiplier();
+    //    production *= (BigDouble)achMultiplier;
+
+    //    if (BigDouble.IsInfinity(production) || BigDouble.IsNaN(production))
+    //        production = double.MaxValue;
+
+    //    return production;
+    //}
+
+
     private BigDouble GetProduction(UpgradeData upgrade, int level)
     {
         if (level <= 0) return BigDouble.Zero;
 
-        BigDouble baseProd = (BigDouble)upgrade.baseProduction;
-        BigDouble rate = (BigDouble)upgrade.productionIncreaseRate;
+        BigDouble production = (BigDouble)upgrade.baseProduction * level;
 
-        // core exponential growth
-        BigDouble production = baseProd * BigDouble.Pow(rate, level);
-
-        // mild polynomial smoothing based on level (makes increases feel more fluid)
-        production *= BigDouble.Pow((BigDouble)(1.0 + (double)level), productionLevelExponent);
-
-        // slight negative bias relative to baseCost so expensive upgrades don't automatically dominate.
-        if (upgrade.baseCost > 0.0)
+        int milestones = level / 25;
+        if (milestones > 0)
         {
-            production *= BigDouble.Pow((BigDouble)upgrade.baseCost, productionCostBias);
+            production *= (1.0 + 0.25 * milestones);
         }
-
-        // existing milestone bonus (double every 25 levels)
-        int milestoneBonus = level / 25;
-        if (milestoneBonus > 0)
-            production *= BigDouble.Pow(2.0, milestoneBonus);
-
-        // apply achievement multiplier (>= 1.0)
-        double achMultiplier = GetAchievementMultiplier();
-        production *= (BigDouble)achMultiplier;
-
-        if (BigDouble.IsInfinity(production) || BigDouble.IsNaN(production))
-            production = double.MaxValue;
 
         return production;
     }
+
+
+
+
+
 
     // Safe lookup for player achievement data. Uses reflection so it won't break if the
     // specific achievement field isn't present in currentData. Returns >= 1.0.
