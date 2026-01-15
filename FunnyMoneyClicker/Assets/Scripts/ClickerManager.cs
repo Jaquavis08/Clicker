@@ -21,6 +21,7 @@ public class ClickerManager : MonoBehaviour
     private Vector3 originalScale;
     private Vector3 targetScale;
 
+    //public AnimationCurve test;
 
     public TMP_Text moneyText;
 

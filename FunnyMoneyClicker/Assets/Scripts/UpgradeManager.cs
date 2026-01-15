@@ -207,11 +207,24 @@ public class UpgradeManager : MonoBehaviour
 
     private BigDouble GetUpgradeCost(UpgradeData upgrade, int level)
     {
-        double baseCost = upgrade.baseCost; // 15
+        // Convert base cost to BigDouble for consistent arithmetic
+        BigDouble baseCost = (BigDouble)upgrade.baseCost;
         double step = 2.5;
 
-        double cost = baseCost + level * step;
-        return new BigDouble(System.Math.Ceiling(cost));
+        // Compute the incremental multiplier: costIncreaseRate ^ step
+        BigDouble increment = BigDouble.Pow((BigDouble)costIncreaseRate, step);
+
+        // Compute total cost: baseCost + level * increment
+        BigDouble cost = baseCost + ((BigDouble)level) * increment;
+
+        // Round up to a whole number price
+        cost = BigDouble.Ceiling(cost);
+
+        // Defensive clamp for invalid results
+        if (BigDouble.IsInfinity(cost) || BigDouble.IsNaN(cost))
+            cost = new BigDouble(double.MaxValue);
+
+        return cost;
     }
 
 

@@ -27434,27 +27434,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgrades:
   - upgradeName: Upgrade1
-    baseCost: 10
-    baseProduction: 1
+    baseCost: 15
+    baseProduction: 0.6
     costIncreaseRate: 1.1
     productionIncreaseRate: 1.05
     baseInterval: 1
     levelText: {fileID: 158707050}
     costText: {fileID: 1950203457}
     rateText: {fileID: 1880781065}
-    currentTime: 0
+    currentTime: 0.22686678
   - upgradeName: Upgrade2
-    baseCost: 100
-    baseProduction: 5
+    baseCost: 1000
+    baseProduction: 4.85
     costIncreaseRate: 1.1
     productionIncreaseRate: 1.05
     baseInterval: 1
     levelText: {fileID: 3470006}
     costText: {fileID: 24663962}
     rateText: {fileID: 1937046845}
-    currentTime: 0
+    currentTime: 0.22686678
   - upgradeName: Upgrade3
-    baseCost: 1000
+    baseCost: 100000
     baseProduction: 25
     costIncreaseRate: 1.1
     productionIncreaseRate: 1.05
@@ -27464,7 +27464,7 @@ MonoBehaviour:
     rateText: {fileID: 1587347591}
     currentTime: 0
   - upgradeName: Upgrade4
-    baseCost: 10000
+    baseCost: 100000
     baseProduction: 100
     costIncreaseRate: 1.1
     productionIncreaseRate: 1.05
@@ -27474,7 +27474,7 @@ MonoBehaviour:
     rateText: {fileID: 2125466536}
     currentTime: 0
   - upgradeName: Upgrade5
-    baseCost: 100000
+    baseCost: 1000000
     baseProduction: 500
     costIncreaseRate: 1.1
     productionIncreaseRate: 1.05
@@ -27484,7 +27484,7 @@ MonoBehaviour:
     rateText: {fileID: 1642579206}
     currentTime: 0
   - upgradeName: Upgrade6
-    baseCost: 1000000
+    baseCost: 10000000
     baseProduction: 2500
     costIncreaseRate: 1.1
     productionIncreaseRate: 1.05
@@ -27494,8 +27494,8 @@ MonoBehaviour:
     rateText: {fileID: 668952071}
     currentTime: 0
   - upgradeName: Upgrade7
-    baseCost: 10000000
-    baseProduction: 12500
+    baseCost: 100000000
+    baseProduction: 50000
     costIncreaseRate: 1.1
     productionIncreaseRate: 1.05
     baseInterval: 1
@@ -27504,8 +27504,8 @@ MonoBehaviour:
     rateText: {fileID: 994048430}
     currentTime: 0
   - upgradeName: Upgrade8
-    baseCost: 100000000
-    baseProduction: 60000
+    baseCost: 100000000000
+    baseProduction: 500000000
     costIncreaseRate: 1.1
     productionIncreaseRate: 1.05
     baseInterval: 1
@@ -27515,8 +27515,8 @@ MonoBehaviour:
     currentTime: 0
   totalRateText: {fileID: 2144008324}
   moneyPerSecond:
-    mantissa: 0
-    exponent: 0
+    mantissa: 6.669
+    exponent: 1
   baseInterval: 1
   baseRepeatDelay: 0.25
   minRepeatDelay: 0.05
