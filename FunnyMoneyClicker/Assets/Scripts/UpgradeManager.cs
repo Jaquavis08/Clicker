@@ -14,7 +14,7 @@ public class UpgradeManager : MonoBehaviour
     public TMP_Text totalRateText;
     public BigDouble moneyPerSecond;
 
-    private const double costIncreaseRate = 1.7; // default fallback
+    private const double costIncreaseRate = 1.2; // default fallback
     private const double productionIncreaseRate = 1.55; // default fallback
 
     // Tunables for the production balancing curve (adjust to taste)
@@ -63,40 +63,13 @@ public class UpgradeManager : MonoBehaviour
 
         for (int i = 0; i < upgrades.Count; i++)
         {
-            var upgrade = upgrades[i];
-            int level = SaveDataController.currentData.upgradeLevels[i];
-
-            // Respect inspector values (use defaults only when not set)
-            if (upgrade.costIncreaseRate <= 0f) upgrade.costIncreaseRate = (float)costIncreaseRate;
-            if (upgrade.productionIncreaseRate <= 0f) upgrade.productionIncreaseRate = (float)productionIncreaseRate;
-            if (upgrade.baseInterval <= 0f) upgrade.baseInterval = baseInterval;
-
-            BigDouble cost = GetUpgradeCost(upgrade, level);
-            BigDouble production = GetProduction(upgrade, level);
-
-            // Calculate raw efficiency (production per unit cost). Guard divide-by-zero.
-            BigDouble efficiency = (cost > BigDouble.Zero) ? (production / cost) : production;
-
-            // Compute an index-based target efficiency so targets are deterministic and
-            // won't change when player levels other upgrades.
-            BigDouble indexFactor = BigDouble.Pow((BigDouble)minEfficiencyFactor, i);
-            BigDouble targetEfficiency = baselineEfficiency * indexFactor;
-
-            // If current efficiency is below deterministic target, boost production to match it.
-            // This keeps higher-tier upgrades at or above a predictable efficiency relative to upgrade 0.
-            if (efficiency < targetEfficiency && cost > BigDouble.Zero)
-            {
-                production = targetEfficiency * cost;
-                efficiency = targetEfficiency;
-            }
-
-            // Use the computed cost/production when updating UI / awarding income.
-            totalRate += HandleUpgrade(upgrade, i, cost, production);
+            totalRate += HandleUpgrade(upgrades[i], i);
         }
+
+        moneyPerSecond = totalRate;
 
         if (totalRateText != null)
         {
-            moneyPerSecond = totalRate;
             totalRateText.text = $"+${NumberFormatter.Format(moneyPerSecond)} / {NumberFormatter.Format(baseInterval)}s";
         }
 
@@ -141,9 +114,15 @@ public class UpgradeManager : MonoBehaviour
     }
 
     // Now accepts precomputed cost & production so we can enforce monotonicity centrally.
-    private BigDouble HandleUpgrade(UpgradeData upgrade, int index, BigDouble cost, BigDouble production)
+    private BigDouble HandleUpgrade(UpgradeData upgrade, int index)
     {
+        if (upgrade.costIncreaseRate != costIncreaseRate) upgrade.costIncreaseRate = (float)costIncreaseRate;
+        if (upgrade.productionIncreaseRate != productionIncreaseRate) upgrade.productionIncreaseRate = (float)productionIncreaseRate;
+        if (upgrade.baseInterval != baseInterval) upgrade.baseInterval = baseInterval;
+
         int level = SaveDataController.currentData.upgradeLevels[index];
+        BigDouble cost = GetUpgradeCost(upgrade, level);
+        BigDouble production = GetProduction(upgrade, level);
 
         if (level > 0)
         {
@@ -170,7 +149,7 @@ public class UpgradeManager : MonoBehaviour
                 upgrade.rateText.text = "";
         }
 
-        return (level > 0) ? (production / upgrade.baseInterval) : BigDouble.Zero;
+        return (level > 0) ? (production / upgrade.baseInterval) : 0f;
     }
 
     public void BuyUpgrade(int index)
@@ -207,25 +186,24 @@ public class UpgradeManager : MonoBehaviour
 
     private BigDouble GetUpgradeCost(UpgradeData upgrade, int level)
     {
-        // Convert base cost to BigDouble for consistent arithmetic
+        // Base cost and exponential rate
         BigDouble baseCost = (BigDouble)upgrade.baseCost;
-        double step = 2.5;
+        BigDouble rate = (BigDouble)upgrade.costIncreaseRate;
 
-        // Compute the incremental multiplier: costIncreaseRate ^ step
-        BigDouble increment = BigDouble.Pow((BigDouble)costIncreaseRate, step);
+        // Exponential cost scaling
+        // level 0 => baseCost
+        BigDouble cost = baseCost * BigDouble.Pow(rate, level);
 
-        // Compute total cost: baseCost + level * increment
-        BigDouble cost = baseCost + ((BigDouble)level) * increment;
-
-        // Round up to a whole number price
+        // Round up to whole currency units
         cost = BigDouble.Ceiling(cost);
 
-        // Defensive clamp for invalid results
+        // Safety clamp
         if (BigDouble.IsInfinity(cost) || BigDouble.IsNaN(cost))
             cost = new BigDouble(double.MaxValue);
 
         return cost;
     }
+
 
 
 
@@ -275,16 +253,20 @@ public class UpgradeManager : MonoBehaviour
     {
         if (level <= 0) return BigDouble.Zero;
 
+        // Linear production
         BigDouble production = (BigDouble)upgrade.baseProduction * level;
 
+        // Milestone bonus every 25 levels
         int milestones = level / 25;
         if (milestones > 0)
         {
-            production *= (1.0 + 0.25 * milestones);
+            production *= BigDouble.Pow(1.25, milestones);
         }
 
         return production;
     }
+
+    // Formual : amount per sec / upgrade cost ~=  .../ per sec
 
 
 
