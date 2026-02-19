@@ -18,7 +18,7 @@ MonoBehaviour:
       exponent: 0
     gems: 0
     lastTierIndex: 0
-    lastSaveTime: -8584389261187032116
+    lastSaveTime: -8584301741715480539
     offlineEarningsMultiplier: 0
     unlockedSkins:
     - 1
@@ -27,4 +27,4 @@ MonoBehaviour:
     powerLevels: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
     gridItems: []
     inventoryData:
-      itemIds: 01000000
+      itemIds: 

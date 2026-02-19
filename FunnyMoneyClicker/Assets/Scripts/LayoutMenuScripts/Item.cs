@@ -30,8 +30,6 @@ public enum Rarity
 
 public enum ItemType
 {
-    Upgrader,
-    Dropper,
-    Processor,
-    Special
+    Money,
+    
 }

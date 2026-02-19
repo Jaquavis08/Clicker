@@ -13,7 +13,8 @@ public class GridManager : MonoBehaviour
 
     public double CalculateTotalModifier()
     {
-        double totalMultiplier = 1.0;
+        //double totalMultiplier = 1.0;
+        double moneyMultiplier = 1.0;
         double totalAdditive = 0.0;
 
         foreach (var slot in gridSlots)
@@ -25,22 +26,13 @@ public class GridManager : MonoBehaviour
 
             switch (item.itemType)
             {
-                case ItemType.Upgrader:
-                    totalMultiplier *= 1 + item.value;
-                    break;
-                case ItemType.Dropper:
-                    totalAdditive += item.value;
-                    break;
-                case ItemType.Processor:
-                    totalMultiplier *= 1 + item.value * 0.5;
-                    break;
-                case ItemType.Special:
-                    totalMultiplier *= 2;
+                case ItemType.Money:
+                    moneyMultiplier *= 1 + item.value;
                     break;
             }
         }
-
-        double finalValue = (1.0 + totalAdditive) * totalMultiplier;
+        print("Money Multiplier: " + moneyMultiplier);
+        double finalValue = (1.0 + totalAdditive) * moneyMultiplier;
         return finalValue;
     }
 
