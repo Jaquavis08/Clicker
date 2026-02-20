@@ -195,7 +195,8 @@ public class SaveDataController : MonoBehaviour
 
         currentData.lastSaveTime = DateTime.Now.ToBinary();
 
-        SaveInventoryAndGrid();
+        // Save runes first
+        RuneInventoryManager.Instance?.SaveRunesToData();
 
         string fullDir = Path.Combine(Application.persistentDataPath, filePath);
         if (!Directory.Exists(fullDir)) Directory.CreateDirectory(fullDir);
@@ -216,27 +217,6 @@ public class SaveDataController : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogError($"Failed to save data: {e.Message}");
-        }
-    }
-
-    private void SaveInventoryAndGrid()
-    {
-        if (currentData == null) return;
-
-        // --- Save Grid ---
-        if (GridManager.instance != null)
-            currentData.gridItems = GridManager.instance.GetGridSaveData();
-
-        // --- Save Inventory ---
-        currentData.inventoryData.itemIds.Clear();
-        if (InventoryManager.instance != null && InventoryManager.instance.inventoryContents != null)
-        {
-            foreach (Transform child in InventoryManager.instance.inventoryContents)
-            {
-                DraggableItem draggable = child.GetComponent<DraggableItem>();
-                if (draggable != null && draggable.item != null)
-                    currentData.inventoryData.itemIds.Add(draggable.item.id);
-            }
         }
     }
 
@@ -282,7 +262,6 @@ public class SaveDataController : MonoBehaviour
                 SaveAll();
             }
 
-            LoadInventoryAndGrid();
         }
         catch (Exception e)
         {
@@ -290,38 +269,12 @@ public class SaveDataController : MonoBehaviour
             currentData = defaultData.defaultData;
             SaveAll();
         }
-    }
 
-    private void LoadInventoryAndGrid()
-    {
-        if (currentData == null) return;
-
-        // --- Load Inventory ---
-        if (InventoryManager.instance != null && InventoryManager.instance.inventoryContents != null)
+        // Load runes from saved data
+        if (RuneInventoryManager.Instance != null)
         {
-            // Clear existing inventory
-            foreach (Transform child in InventoryManager.instance.inventoryContents)
-                Destroy(child.gameObject);
-
-            // Spawn items from saved inventory
-            foreach (int itemId in currentData.inventoryData.itemIds)
-            {
-                Item item = ItemDatabase.instance.GetItemById(itemId);
-                if (item == null) continue;
-
-                GameObject newItem = Instantiate(ItemDatabase.instance.itemPrefab, InventoryManager.instance.inventoryContents);
-                DraggableItem draggable = newItem.GetComponent<DraggableItem>();
-                draggable.item = item;
-
-                newItem.transform.localPosition = Vector3.zero;
-                newItem.transform.localRotation = Quaternion.identity;
-                newItem.transform.localScale = Vector3.one;
-            }
+            RuneInventoryManager.Instance.LoadRunesFromData(RuneInventoryManager.Instance.runeDatabase.allRunes);
         }
-
-        // --- Load Grid ---
-        if (GridManager.instance != null)
-            GridManager.instance.LoadGridFromSave(currentData.gridItems);
     }
 
 

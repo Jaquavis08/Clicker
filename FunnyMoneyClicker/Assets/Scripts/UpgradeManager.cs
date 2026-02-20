@@ -253,10 +253,6 @@ public class UpgradeManager : MonoBehaviour
 
         // Allow runes to provide extra effective levels
         int effectiveLevel = level;
-        if (Runes.instance != null)
-        {
-            effectiveLevel = Runes.instance.GetEffectiveUpgradeLevel(index, level);
-        }
 
         // Linear production based on effective level
         BigDouble production = (BigDouble)upgrade.baseProduction * effectiveLevel;
@@ -269,10 +265,6 @@ public class UpgradeManager : MonoBehaviour
         }
 
         // Apply rune per-upgrade / global upgrade multipliers if present
-        if (Runes.instance != null)
-        {
-            production = Runes.instance.ApplyUpgradeProduction(production, index);
-        }
 
         return production;
     }

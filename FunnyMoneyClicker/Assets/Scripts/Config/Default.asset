@@ -18,13 +18,16 @@ MonoBehaviour:
       exponent: 0
     gems: 0
     lastTierIndex: 0
-    lastSaveTime: -8584301741715480539
+    lastSaveTime: -8584300480680051042
     offlineEarningsMultiplier: 0
     unlockedSkins:
     - 1
     equippedSkinId: 1
     upgradeLevels: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
     powerLevels: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
-    gridItems: []
-    inventoryData:
-      itemIds: 
+    inventoryRunes:
+    - runeId: 1
+      quantity: 1
+    - runeId: 2
+      quantity: 1
+    equippedRuneIds: []
