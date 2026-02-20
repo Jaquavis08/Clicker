@@ -161,6 +161,10 @@ public class ClickerManager : MonoBehaviour
     public void Click()
     {
         BigDouble finalValue = moneyValue;
+        #region
+        finalValue += RuneInventoryManager.Instance.RuneMoneyBoost * finalValue;
+
+        #endregion
         isCrit = Random.value < critChance;
         StartShrinkEffect();
 
@@ -168,8 +172,9 @@ public class ClickerManager : MonoBehaviour
 
         if (isCrit)
         {
-            finalValue *= critMultiplier * RuneInventoryManager.Instance.RuneClickBoost;
+            finalValue *= critMultiplier;
             MoneyEffect(finalValue, true);
+
 
                 ParticleSystem1.Play();
                 ParticleSystem2.Play();

@@ -110,7 +110,7 @@ public class RuneInventoryManager : MonoBehaviour
 
         RefreshInventoryUI();
         RefreshEquippedUI();
-
+        RuneMustiplayer();
         Debug.Log("Unequipped " + rune.runeName);
     }
 
@@ -296,10 +296,19 @@ public class RuneInventoryManager : MonoBehaviour
 
     public void RuneMustiplayer()
     {
+        //anthony, the multiplayer is not going to 0, thats because equipped rune list is never null, so i puut a count to reset it 
         double moreClick = 0;
         double moreMoney = 0;
         double moreLuck = 0;
-
+        //this  works its reseting when theres no runes pls dont reset it PLS DONT CHANGE AHHHHHHH 
+        
+        if(equippedRunes.Count == 0)
+        {
+            RuneClickBoost = moreClick;
+            RuneMoneyBoost = moreMoney;
+            RuneLuckBoost = moreLuck;
+            return;
+        }
         foreach (var rune in equippedRunes)
         {
             // Example: Apply boost multiplier to player stats
