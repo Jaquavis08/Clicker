@@ -168,7 +168,7 @@ public class ClickerManager : MonoBehaviour
 
         if (isCrit)
         {
-            finalValue *= critMultiplier;
+            finalValue *= critMultiplier * RuneInventoryManager.Instance.RuneClickBoost;
             MoneyEffect(finalValue, true);
 
                 ParticleSystem1.Play();

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RuneInventoryManager : MonoBehaviour
@@ -29,6 +31,12 @@ public class RuneInventoryManager : MonoBehaviour
 
     public static RuneInventoryManager Instance;
     public RuneDatabase runeDatabase;
+
+    public GameObject infoParent;
+
+    public double RuneClickBoost = 0;
+    public double RuneMoneyBoost = 0;
+    public double RuneLuckBoost = 0;
 
     void Awake()
     {
@@ -75,7 +83,7 @@ public class RuneInventoryManager : MonoBehaviour
         // Add to equipped list
         equippedRunes.Add(rune);
 
-        // Refresh UI
+        /// Refresh UI
         RefreshInventoryUI();
         RefreshEquippedUI();
 
@@ -173,6 +181,8 @@ public class RuneInventoryManager : MonoBehaviour
 
                 RuneButton rb = newRuneUI.GetComponent<RuneButton>();
                 rb.Setup(equippedRunes[i], false, i); // false = equipped button, slot index
+                StatsUpdate(newRuneUI.GetComponent<RuneButton>().runeItem);
+                RuneMustiplayer();
             }
         }
     }
@@ -274,6 +284,47 @@ public class RuneInventoryManager : MonoBehaviour
         RefreshInventoryUI();
 
         Debug.Log("Added random rune to inventory: " + randomRune.runeName);
+    }
+
+    public void StatsUpdate(RuneItem rune)
+    {
+        infoParent.transform.GetChild(0).transform.GetComponent<TMP_Text>().text = rune.runeName;
+        infoParent.transform.GetChild(1).transform.GetComponent<TMP_Text>().text = rune.type.ToString();
+        infoParent.transform.GetChild(2).transform.GetComponent<TMP_Text>().text = rune.rarity.ToString();
+        infoParent.transform.GetChild(3).transform.GetComponent<TMP_Text>().text = rune.boostmultiplier.ToString();
+    }
+
+    public void RuneMustiplayer()
+    {
+        double moreClick = 0;
+        double moreMoney = 0;
+        double moreLuck = 0;
+
+        foreach (var rune in equippedRunes)
+        {
+            // Example: Apply boost multiplier to player stats
+            switch(rune.type)
+            {
+                case runeType.MoreClick:
+                    moreClick += rune.boostmultiplier;
+                    break;
+                case runeType.MoreMoney:
+                    moreMoney += rune.boostmultiplier;
+                    break;
+                case runeType.MoreLuck:
+                    moreLuck += rune.boostmultiplier;
+                    break;
+                    // Add more cases as needed
+            }
+            // playerStats.ApplyBoost(boost);
+            Debug.LogError(moreClick);
+            Debug.LogError(moreMoney);
+            Debug.LogError(moreLuck);
+
+            RuneClickBoost = moreClick;
+            RuneMoneyBoost = moreMoney;
+            RuneLuckBoost = moreLuck;
+        }
     }
 
 }
