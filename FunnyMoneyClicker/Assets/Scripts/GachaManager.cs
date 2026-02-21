@@ -137,8 +137,10 @@ public class GachaManager : MonoBehaviour
     // ------------------ RARITY LOGIC ------------------ //
     private string RollRarity()
     {
-        // Convert luckBonus (0–100) into a multiplier (1.0–2.0)
-        float luckFactor = 1f + (luckBonus / 100f);
+        float totalLuck = luckBonus + ((float)RuneInventoryManager.Instance?.RuneLuckBoost);
+
+        // Convert luck to multiplier
+        float luckFactor = 1f + (totalLuck / 100f);
 
         // Boost rarer chances proportionally and reduce common
         float adjustedCommon = commonChance / luckFactor;

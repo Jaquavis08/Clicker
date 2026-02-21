@@ -12,4 +12,4 @@ public class RuneItem : ScriptableObject
 }
 
 public enum runeRarity { Common, Uncommon, Rare, Epic, Legendary }
-public enum runeType { MoreClick, MoreMoney, MoreLuck }
+public enum runeType { MoreGems, MoreMoney, MoreLuck }

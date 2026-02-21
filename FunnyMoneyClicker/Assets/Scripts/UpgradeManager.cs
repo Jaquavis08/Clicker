@@ -265,6 +265,7 @@ public class UpgradeManager : MonoBehaviour
         }
 
         // Apply rune per-upgrade / global upgrade multipliers if present
+        production *= (1 + RuneInventoryManager.Instance.RuneMoneyBoost);
 
         return production;
     }

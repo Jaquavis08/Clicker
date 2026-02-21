@@ -316,6 +316,12 @@ public class SaveDataController : MonoBehaviour
         float multiplier = currentData.offlineEarningsMultiplier;
 
         BigDouble earnings = moneyPerSecond * timeAway.TotalSeconds * multiplier;
+
+        if (RuneInventoryManager.Instance != null)
+        {
+            earnings *= (1 + RuneInventoryManager.Instance.RuneMoneyBoost);
+        }
+
         BigDouble maxEarnings = (moneyPerSecond * 5) * (3600 * 24); // 24-hour cap
         earnings = BigDouble.Min(earnings, maxEarnings);
 

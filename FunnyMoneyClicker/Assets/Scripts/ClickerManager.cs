@@ -160,11 +160,9 @@ public class ClickerManager : MonoBehaviour
 
     public void Click()
     {
-        BigDouble finalValue = moneyValue;
-        #region
-        finalValue += RuneInventoryManager.Instance.RuneMoneyBoost * finalValue;
+        BigDouble finalValue = moneyValue * (1 + RuneInventoryManager.Instance.RuneMoneyBoost);
 
-        #endregion
+
         isCrit = Random.value < critChance;
         StartShrinkEffect();
 

@@ -34,7 +34,7 @@ public class RuneInventoryManager : MonoBehaviour
 
     public GameObject infoParent;
 
-    public double RuneClickBoost = 0;
+    public double RuneGemsBoost = 0;
     public double RuneMoneyBoost = 0;
     public double RuneLuckBoost = 0;
 
@@ -110,7 +110,7 @@ public class RuneInventoryManager : MonoBehaviour
 
         RefreshInventoryUI();
         RefreshEquippedUI();
-        RuneMustiplayer();
+        //RuneMustiplayer();
         Debug.Log("Unequipped " + rune.runeName);
     }
 
@@ -182,9 +182,9 @@ public class RuneInventoryManager : MonoBehaviour
                 RuneButton rb = newRuneUI.GetComponent<RuneButton>();
                 rb.Setup(equippedRunes[i], false, i); // false = equipped button, slot index
                 StatsUpdate(newRuneUI.GetComponent<RuneButton>().runeItem);
-                RuneMustiplayer();
             }
         }
+        RuneMustiplayer();
     }
 
 
@@ -297,14 +297,14 @@ public class RuneInventoryManager : MonoBehaviour
     public void RuneMustiplayer()
     {
         //anthony, the multiplayer is not going to 0, thats because equipped rune list is never null, so i puut a count to reset it 
-        double moreClick = 0;
+        double moreGems = 0;
         double moreMoney = 0;
         double moreLuck = 0;
         //this  works its reseting when theres no runes pls dont reset it PLS DONT CHANGE AHHHHHHH 
         
         if(equippedRunes.Count == 0)
         {
-            RuneClickBoost = moreClick;
+            RuneGemsBoost = moreGems;
             RuneMoneyBoost = moreMoney;
             RuneLuckBoost = moreLuck;
             return;
@@ -314,8 +314,8 @@ public class RuneInventoryManager : MonoBehaviour
             // Example: Apply boost multiplier to player stats
             switch(rune.type)
             {
-                case runeType.MoreClick:
-                    moreClick += rune.boostmultiplier;
+                case runeType.MoreGems:
+                    moreGems += rune.boostmultiplier;
                     break;
                 case runeType.MoreMoney:
                     moreMoney += rune.boostmultiplier;
@@ -326,11 +326,11 @@ public class RuneInventoryManager : MonoBehaviour
                     // Add more cases as needed
             }
             // playerStats.ApplyBoost(boost);
-            Debug.LogError(moreClick);
+            Debug.LogError(moreGems);
             Debug.LogError(moreMoney);
             Debug.LogError(moreLuck);
 
-            RuneClickBoost = moreClick;
+            RuneGemsBoost = moreGems;
             RuneMoneyBoost = moreMoney;
             RuneLuckBoost = moreLuck;
         }
