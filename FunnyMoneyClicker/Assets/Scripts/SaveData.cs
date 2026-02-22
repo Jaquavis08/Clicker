@@ -12,6 +12,8 @@ public class SaveData
     [JsonConverter(typeof(BigDoubleConverter))]
     public BigDouble moneyCount;
     public double gems;
+    public double Reincarnations;
+
     public int lastTierIndex;
     public long lastSaveTime;
     public float offlineEarningsMultiplier = 0f; // 10% per hour by default = 0.1
